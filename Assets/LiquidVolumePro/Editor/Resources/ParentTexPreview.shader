@@ -1,4 +1,4 @@
-﻿Shader "LiquidVolume/Editor/ParentTexPreview"
+Shader "LiquidVolume/Editor/ParentTexPreview"
 {
 	Properties
 	{
@@ -40,7 +40,7 @@
 				return o;
 			}
 			
-			half4 frag (v2f i) : SV_Target
+			fixed4 frag (v2f i) : SV_Target
 			{
                 float4 depth = tex2D(_VLFrontBufferTexture, i.uv);
                 #if LIQUID_VOLUME_FP_RENDER_TEXTURES

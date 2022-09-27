@@ -1,4 +1,4 @@
-﻿Shader "LiquidVolume/Editor/DepthTexPreview"
+Shader "LiquidVolume/Editor/DepthTexPreview"
 {
 	Properties
 	{
@@ -13,7 +13,7 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-            #pragma multi_compile_local _ LIQUID_VOLUME_FP_RENDER_TEXTURES
+            #pragma multi_compile _ LIQUID_VOLUME_FP_RENDER_TEXTURES
 
 			#include "UnityCG.cginc"
 
@@ -40,7 +40,7 @@
 				return o;
 			}
 			
-			half4 frag (v2f i) : SV_Target
+			fixed4 frag (v2f i) : SV_Target
 			{
 				float4 depth = tex2D(_VLBackBufferTexture, i.uv);
                 #if LIQUID_VOLUME_FP_RENDER_TEXTURES

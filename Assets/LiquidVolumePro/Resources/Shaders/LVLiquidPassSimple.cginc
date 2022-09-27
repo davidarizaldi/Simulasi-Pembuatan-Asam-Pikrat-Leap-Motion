@@ -1,6 +1,6 @@
 ﻿#include "LVLiquidPassBase.cginc"
 
-	    half4 raymarch(float4 vertex, float3 rd, float t0, float t1) {
+	    fixed4 raymarch(float4 vertex, float3 rd, float t0, float t1) {
 
 	        float3 wpos = wsCameraPos + rd * t0;
 	        
@@ -17,7 +17,7 @@
 			// ray-march smoke
 			float tmin, tmax;
 			#if defined(LIQUID_VOLUME_SMOKE)
-			half4 sumSmoke = half4(0,0,0,0);
+			fixed4 sumSmoke = fixed4(0,0,0,0);
 			if (wpos.y > _LevelPos) {
 				tmin = t0;
 				tmax = rd.y<0 ? min(t2,t1) : t1;
@@ -27,8 +27,8 @@
 				float4 disp = float4(0, _Time.x * _Turbulence.x * _Size.y * _SmokeSpeed, 0, 0);
                 BEGIN_LOOP(k,_SmokeRaySteps,5)
 					float py = (_LevelPos - rpos.y)/_Size.y;
-					half deep = exp(py * _SmokeAtten);
-					half4 lc  = _SmokeColor;
+					fixed deep = exp(py * _SmokeAtten);
+					fixed4 lc  = _SmokeColor;
 					lc.rgb *= lc.aaa;
 					lc *= deep;
 					sumSmoke += lc * (1.0-sumSmoke.a);
@@ -38,7 +38,7 @@
 			#endif
 			
 			// ray-march liquid
-			half4 sum = half4(0,0,0,0);
+			fixed4 sum = fixed4(0,0,0,0);
 			tmax = t1, tmin = t0;
 			if (wpos.y > _LevelPos) {
 				if (rd.y<0) {
@@ -55,8 +55,8 @@
 				float4 rpos  = float4(_WorldSpaceCameraPos + rd * tmin, 0);	// does not matter to move to level pos
 				rpos.y -= _LevelPos;
                 BEGIN_LOOP(k,_LiquidRaySteps,5)
-					half deep = exp((rpos.y/_Size.y) * _DeepAtten);
-					half4 lc  = _Color1;
+					fixed deep = exp((rpos.y/_Size.y) * _DeepAtten);
+					fixed4 lc  = _Color1;
 					lc.a *= _Color1.a;
 					lc.rgb *= lc.aaa;
 					lc.rgb *= deep;

@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8759772561165728552}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.7765703e-10, y: 0.12210001, z: -0.0000000011059456}
+  m_LocalPosition: {x: 0, y: 0.122099996, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8759772561165297420}
@@ -55,7 +55,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -67,7 +66,6 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -107,6 +105,7 @@ MonoBehaviour:
   _liquidScale2: 5
   _alpha: 1
   _emissionColor: {r: 0, g: 0, b: 0, a: 1}
+  _emissionBrightness: 0
   _ditherShadows: 1
   _murkiness: 1
   _turbulence1: 0.3
@@ -131,15 +130,17 @@ MonoBehaviour:
   _smokeSpeed: 5
   _fixMesh: 0
   originalMesh: {fileID: 0}
-  originalPivotOffset: {x: 0.000000077569226, y: -0.048769876, z: -0.0005000822}
+  originalPivotOffset: {x: 0.00000007699157, y: -0.04876989, z: -0.0005000811}
   _pivotOffset: {x: 0, y: 0, z: 0}
   _autoCloseMesh: 0
   _upperLimit: 1.5
   _lowerLimit: -1.5
   _subMeshIndex: 0
-  _flaskMaterial: {fileID: 0}
+  _flaskColor: {r: 1, g: 1, b: 1, a: 0}
+  _flaskTint: {r: 0, g: 0, b: 0, a: 1}
   _flaskThickness: 0.03
-  _glossinessInternal: 0.5
+  _flaskGlossinessExternal: 0.767
+  _flaskGlossinessInternal: 0.5
   _scatteringEnabled: 0
   _scatteringPower: 5
   _scatteringAmount: 0.3
@@ -167,6 +168,7 @@ MonoBehaviour:
   _rotationLevelBias: 0
   _ignoreGravity: 0
   _reactToForces: 0
+  _textureAlpha: 1
   _extentsScale: {x: 1, y: 1, z: 1}
   _noiseVariation: 1
   _allowViewFromInside: 0
@@ -325,7 +327,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -337,7 +338,6 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -437,7 +437,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -449,7 +448,6 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

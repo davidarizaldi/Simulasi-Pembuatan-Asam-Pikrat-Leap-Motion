@@ -3,15 +3,13 @@
 /*         Created by Kronnect        */
 /**************************************/
 
-// Enable floating point render textures
-#define LIQUID_VOLUME_FP_RENDER_TEXTURES
-
 // Displays sliced liquid volume
 //#define DEBUG_SLICE
 
 using UnityEngine;
 using UnityEngine.Rendering;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiquidVolumeFX.MIConvexHull;
 using System.Linq;
@@ -22,6 +20,7 @@ using UnityEditor;
 #endif
 
 namespace LiquidVolumeFX {
+
     public enum TOPOLOGY {
         Sphere = 0,
         Cylinder = 1,
@@ -31,9 +30,11 @@ namespace LiquidVolumeFX {
 
     public enum DETAIL {
         Simple = 0,
-        SimpleNoFlask = 1,
         Default = 10,
         DefaultNoFlask = 11,
+        BumpTexture = 20,
+        Reflections = 30,
+        Smoke = 40,
         Multiple = 50,
         MultipleNoFlask = 51
     }
@@ -58,10 +59,6 @@ namespace LiquidVolumeFX {
 
         public static bool allowsRefraction(this DETAIL detail) {
             return detail != DETAIL.DefaultNoFlask && detail != DETAIL.MultipleNoFlask;
-        }
-
-        public static bool usesFlask(this DETAIL detail) {
-            return detail == DETAIL.Simple || detail == DETAIL.Default || detail == DETAIL.Multiple;
         }
 
     }
@@ -159,6 +156,8 @@ namespace LiquidVolumeFX {
             get { return _topology; }
             set {
                 if (_topology != value) {
+                    if (_topology == TOPOLOGY.Irregular)
+                        CleanupCommandBuffer();
                     _topology = value;
                     UpdateMaterialProperties();
                 }
@@ -398,6 +397,23 @@ namespace LiquidVolumeFX {
                 }
             }
         }
+
+
+        [SerializeField]
+        [Range(0, 8f)]
+        float _emissionBrightness;
+
+        public float emissionBrightness {
+            get { return _emissionBrightness; }
+            set {
+                if (_emissionBrightness != value) {
+                    _emissionBrightness = value;
+                    UpdateMaterialProperties();
+                }
+            }
+        }
+
+
         [SerializeField]
         bool _ditherShadows = true;
 
@@ -790,15 +806,29 @@ namespace LiquidVolumeFX {
             }
         }
 
+        [SerializeField]
+        [ColorUsage(true)]
+        Color _flaskColor = new Color(1, 1, 1, 0);
+
+        public Color flaskColor {
+            get { return _flaskColor; }
+            set {
+                if (_flaskColor != value) {
+                    _flaskColor = value;
+                    UpdateMaterialProperties();
+                }
+            }
+        }
 
         [SerializeField]
-        Material _flaskMaterial;
+        [ColorUsage(true)]
+        Color _flaskTint = new Color(0, 0, 0, 1);
 
-        public Material flaskMaterial {
-            get { return _flaskMaterial; }
+        public Color flaskTint {
+            get { return _flaskTint; }
             set {
-                if (_flaskMaterial != value) {
-                    _flaskMaterial = value;
+                if (_flaskTint != value) {
+                    _flaskTint = value;
                     UpdateMaterialProperties();
                 }
             }
@@ -820,13 +850,27 @@ namespace LiquidVolumeFX {
 
         [SerializeField]
         [Range(0, 1)]
-        float _glossinessInternal = 0.3f;
+        float _flaskGlossinessExternal = 0.767f;
 
-        public float glossinessInternal {
-            get { return _glossinessInternal; }
+        public float flaskGlossinessExternal {
+            get { return _flaskGlossinessExternal; }
             set {
-                if (_glossinessInternal != value) {
-                    _glossinessInternal = value;
+                if (_flaskGlossinessExternal != value) {
+                    _flaskGlossinessExternal = value;
+                    UpdateMaterialProperties();
+                }
+            }
+        }
+
+        [SerializeField]
+        [Range(0, 1)]
+        float _flaskGlossinessInternal = 0.5f;
+
+        public float flaskGlossinessInternal {
+            get { return _flaskGlossinessInternal; }
+            set {
+                if (_flaskGlossinessInternal != value) {
+                    _flaskGlossinessInternal = value;
                     UpdateMaterialProperties();
                 }
             }
@@ -1201,6 +1245,21 @@ namespace LiquidVolumeFX {
             }
         }
 
+
+        [SerializeField]
+        [Range(0, 1f)]
+        float _textureAlpha = 1f;
+
+        public float textureAlpha {
+            get { return _textureAlpha; }
+            set {
+                if (_textureAlpha != value) {
+                    _textureAlpha = value;
+                    UpdateMaterialProperties();
+                }
+            }
+        }
+
         [SerializeField]
         Vector3 _extentsScale = Vector3.one;
 
@@ -1467,10 +1526,10 @@ namespace LiquidVolumeFX {
 
 
         #endregion
-#if LIQUID_VOLUME_FP_RENDER_TEXTURES
-        public static bool useFPRenderTextures => true;
-#else
-        public static bool useFPRenderTextures => false;
+
+        public static bool useFPRenderTextures = true;
+#if UNITY_EDITOR
+        static int fpRenderTextureCheckFrame = -1;
 #endif
 
         // ---- INTERNAL CODE ----
@@ -1479,7 +1538,6 @@ namespace LiquidVolumeFX {
         const int SHADER_KEYWORD_IGNORE_GRAVITY_INDEX = 2;
         const int SHADER_KEYWORD_NON_AABB_INDEX = 3;
         const int SHADER_KEYWORD_TOPOLOGY_INDEX = 4;
-        const int SHADER_KEYWORD_REFRACTION_INDEX = 5;
 
         const string SHADER_KEYWORD_DEPTH_AWARE = "LIQUID_VOLUME_DEPTH_AWARE";
         const string SHADER_KEYWORD_DEPTH_AWARE_CUSTOM_PASS = "LIQUID_VOLUME_DEPTH_AWARE_PASS";
@@ -1490,17 +1548,14 @@ namespace LiquidVolumeFX {
         const string SHADER_KEYWORD_CYLINDER = "LIQUID_VOLUME_CYLINDER";
         const string SHADER_KEYWORD_IRREGULAR = "LIQUID_VOLUME_IRREGULAR";
         const string SHADER_KEYWORD_FP_RENDER_TEXTURE = "LIQUID_VOLUME_FP_RENDER_TEXTURES";
-        const string SHADER_KEYWORD_USE_REFRACTION = "LIQUID_VOLUME_USE_REFRACTION";
-
         const string SPILL_POINT_GIZMO = "SpillPointGizmo";
 
-        [NonSerialized]
-        public Material liqMat;
-        Material liqMatSimple, liqMatDefaultNoFlask, liqMatMultipleNoFlask;
+        Material liqMat;
+        Material liqMatSimple, liqMatDefault, liqMatDefaultNoFlask, liqMatBump, liqMatReflections, liqMatSmoke, liqMatMultiple, liqMatMultipleNoFlask;
         Mesh mesh;
-        [NonSerialized]
-        public Renderer mr;
-        readonly static List<Material> mrSharedMaterials = new List<Material>();
+        Renderer mr;
+        static List<Material> mrSharedMaterials = new List<Material>();
+        bool wasRefractionBlur, wasBackBuffer, wasFrontBuffer;
         Vector3 lastPosition, lastScale;
         Quaternion lastRotation;
         string[] shaderKeywords;
@@ -1585,8 +1640,9 @@ namespace LiquidVolumeFX {
             if (_depthAwareCustomPass && transform.parent == null) {
                 _depthAwareCustomPass = false;
             }
+            CheckFPRenderTextureSetting();
             InitLayers();
-            UpdateMaterialPropertiesNow();
+            RefreshMaterialProperties();
             PointLightsInitialize();
             if (!Application.isPlaying) {
                 if (_detail.isMultiple()) {
@@ -1623,21 +1679,30 @@ namespace LiquidVolumeFX {
 
 
         void OnDestroy() {
+            CleanupCommandBuffer();
 
             RestoreOriginalMesh();
 
             liqMat = null;
-            if (liqMatSimple != null) {
-                DestroyImmediate(liqMatSimple);
-                liqMatSimple = null;
+            if (liqMatDefault != null) {
+                DestroyImmediate(liqMatDefault);
+                liqMatDefault = null;
             }
             if (liqMatDefaultNoFlask != null) {
                 DestroyImmediate(liqMatDefaultNoFlask);
                 liqMatDefaultNoFlask = null;
             }
-            if (liqMatMultipleNoFlask != null) {
-                DestroyImmediate(liqMatMultipleNoFlask);
-                liqMatMultipleNoFlask = null;
+            if (liqMatSimple != null) {
+                DestroyImmediate(liqMatSimple);
+                liqMatSimple = null;
+            }
+            if (liqMatBump != null) {
+                DestroyImmediate(liqMatBump);
+                liqMatBump = null;
+            }
+            if (liqMatReflections != null) {
+                DestroyImmediate(liqMatReflections);
+                liqMatReflections = null;
             }
 
             if (noise3DTex != null) {
@@ -1649,10 +1714,6 @@ namespace LiquidVolumeFX {
                     }
                 }
             }
-
-            LiquidVolumeDepthPrePassRenderFeature.RemoveLiquidFromBackRenderers(this);
-            LiquidVolumeDepthPrePassRenderFeature.RemoveLiquidFromFrontRenderers(this);
-
         }
 
 
@@ -1661,11 +1722,25 @@ namespace LiquidVolumeFX {
 
             if (shouldUpdateMaterialProperties || !Application.isPlaying) {
                 shouldUpdateMaterialProperties = false;
-                UpdateMaterialPropertiesNow();
+                RefreshMaterialProperties();
+            }
+
+            if (act && _depthAware) {
+                Camera.current.depthTextureMode |= DepthTextureMode.Depth;
             }
 
             if (act && _allowViewFromInside) {
                 CheckInsideOut();
+            }
+
+
+            bool useRefraction = _refractionBlur && _detail.allowsRefraction();
+            if (!act || (!useRefraction && wasRefractionBlur)) {
+                CleanupRefractionBuffer();
+                wasRefractionBlur = false;
+            } else if (useRefraction) {
+                SetupRefractionBuffer();
+                wasRefractionBlur = true;
             }
 
             if (_detail.isMultiple()) {
@@ -1678,19 +1753,25 @@ namespace LiquidVolumeFX {
                 UpdateLightEffects();
             }
 
-            if (!act || _topology != TOPOLOGY.Irregular) {
-                LiquidVolumeDepthPrePassRenderFeature.RemoveLiquidFromBackRenderers(this);
+            if (!act || (_topology != TOPOLOGY.Irregular && wasBackBuffer)) {
+                CleanupBackFacesBuffer();
+                wasBackBuffer = false;
             } else if (_topology == TOPOLOGY.Irregular) {
-                LiquidVolumeDepthPrePassRenderFeature.AddLiquidToBackRenderers(this);
+                SetupBackFacesBuffer(GetComponent<Renderer>());
+                wasBackBuffer = true;
             }
 
-            Transform parent = transform.parent;
-            if (parent != null) {
-                Renderer parentRenderer = GetComponentInParent<Renderer>();
-                if (!act || !_depthAwareCustomPass) {
-                    LiquidVolumeDepthPrePassRenderFeature.RemoveLiquidFromFrontRenderers(this);
-                } else if (_depthAwareCustomPass) {
-                    LiquidVolumeDepthPrePassRenderFeature.AddLiquidToFrontRenderers(this);
+            if (!act || (!_depthAwareCustomPass && wasFrontBuffer)) {
+                CleanupFrontFacesBuffer();
+                wasFrontBuffer = false;
+            } else if (_depthAwareCustomPass) {
+                Transform parent = transform.parent;
+                if (parent != null) {
+                    Renderer parentRenderer = parent.GetComponent<Renderer>();
+                    if (parentRenderer != null) {
+                        SetupFrontFacesBuffer(parentRenderer);
+                        wasFrontBuffer = true;
+                    }
                 }
             }
             if (_debugSpillPoint) {
@@ -1699,14 +1780,14 @@ namespace LiquidVolumeFX {
 
 #if UNITY_EDITOR
             // Since Unity materials do not support color/vector arrays we need to submit them everytime to avoid losing the uniform values inside Unity Editor
-            if (_detail.isMultiple()) {
+            if (_detail.isMultiple())
                 UploadMaterialArrays();
-            }
 #endif
         }
 
         public void OnWillRenderObject() {
             RenderObject();
+            liqMat.SetVector(ShaderParams.CustomWorldSpaceCameraPos, Camera.current.transform.position);
         }
 
         void FixedUpdate() {
@@ -1729,6 +1810,10 @@ namespace LiquidVolumeFX {
 
         void OnDidApplyAnimationProperties() {  // support for animating property based fields
             shouldUpdateMaterialProperties = true;
+        }
+
+        void OnDisable() {
+            CleanupCommandBuffer();
         }
 
         #endregion
@@ -1776,6 +1861,7 @@ namespace LiquidVolumeFX {
                     ClearMeshCache();
                 }
                 meshCache[mesh] = meshData;
+
             } else {
                 verticesUnsorted = meshData.verticesUnsorted;
                 verticesIndices = meshData.indices;
@@ -2019,24 +2105,52 @@ namespace LiquidVolumeFX {
             if (Application.isPlaying) {
                 shouldUpdateMaterialProperties = true;
             } else {
-                UpdateMaterialPropertiesNow();
+                RefreshMaterialProperties();
             }
 
         }
 
-        void UpdateMaterialPropertiesNow() {
+        void RefreshMaterialProperties() {
             if (!gameObject.activeInHierarchy)
                 return;
 
             switch (_detail) {
                 case DETAIL.Simple:
-                case DETAIL.SimpleNoFlask:
                     if (liqMatSimple == null) {
                         liqMatSimple = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeSimple")) as Material;
                     }
                     liqMat = liqMatSimple;
                     break;
+                case DETAIL.DefaultNoFlask:
+                    if (liqMatDefaultNoFlask == null) {
+                        liqMatDefaultNoFlask = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeDefaultNoFlask")) as Material;
+                    }
+                    liqMat = liqMatDefaultNoFlask;
+                    break;
+                case DETAIL.BumpTexture:
+                    if (liqMatBump == null) {
+                        liqMatBump = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeBump")) as Material;
+                    }
+                    liqMat = liqMatBump;
+                    break;
+                case DETAIL.Reflections:
+                    if (liqMatReflections == null) {
+                        liqMatReflections = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeReflections")) as Material;
+                    }
+                    liqMat = liqMatReflections;
+                    break;
+                case DETAIL.Smoke:
+                    if (liqMatSmoke == null) {
+                        liqMatSmoke = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeSmoke")) as Material;
+                    }
+                    liqMat = liqMatSmoke;
+                    break;
                 case DETAIL.Multiple:
+                    if (liqMatMultiple == null) {
+                        liqMatMultiple = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeMultiple")) as Material;
+                    }
+                    liqMat = liqMatMultiple;
+                    break;
                 case DETAIL.MultipleNoFlask:
                     if (liqMatMultipleNoFlask == null) {
                         liqMatMultipleNoFlask = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeMultipleNoFlask")) as Material;
@@ -2044,15 +2158,11 @@ namespace LiquidVolumeFX {
                     liqMat = liqMatMultipleNoFlask;
                     break;
                 default:
-                    if (liqMatDefaultNoFlask == null) {
-                        liqMatDefaultNoFlask = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeDefaultNoFlask")) as Material;
+                    if (liqMatDefault == null) {
+                        liqMatDefault = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeDefault")) as Material;
                     }
-                    liqMat = liqMatDefaultNoFlask;
+                    liqMat = liqMatDefault;
                     break;
-            }
-
-            if (_flaskMaterial == null) {
-                _flaskMaterial = Instantiate(Resources.Load<Material>("Materials/Flask"));
             }
 
             if (liqMat == null)
@@ -2062,6 +2172,12 @@ namespace LiquidVolumeFX {
 
             if (currentDetail != _detail) {
                 currentDetail = _detail;
+                if (_detail == DETAIL.Reflections) {
+                    _flaskTint = Color.white;
+                    _flaskGlossinessExternal = 0.1f;
+                } else {
+                    _flaskTint = new Color(0, 0, 0, 1f);
+                }
                 requireLayersUpdate = true;
             }
 
@@ -2070,7 +2186,7 @@ namespace LiquidVolumeFX {
             }
 
             UpdateLevels();
-            if (mr == null) 
+            if (mr == null)
                 return;
 
             // Try to compute submesh index heuristically if this is the first time the liquid has been added to a multi-material mesh
@@ -2081,7 +2197,7 @@ namespace LiquidVolumeFX {
                     if (_subMeshIndex >= 0)
                         break;
                     for (int k = 0; k < sharedMaterialsCount; k++) {
-                        if (mrSharedMaterials[k] != null && mrSharedMaterials[k] != _flaskMaterial && mrSharedMaterials[k].name.ToUpper().Contains(defaultContainerNames[w])) {
+                        if (mrSharedMaterials[k] != null && mrSharedMaterials[k].name.ToUpper().Contains(defaultContainerNames[w])) {
                             _subMeshIndex = k;
                             break;
                         }
@@ -2093,35 +2209,15 @@ namespace LiquidVolumeFX {
 
             if (sharedMaterialsCount > 1 && _subMeshIndex >= 0 && _subMeshIndex < sharedMaterialsCount) {
                 mrSharedMaterials[_subMeshIndex] = liqMat;
+                mr.sharedMaterials = mrSharedMaterials.ToArray();
             } else {
-                mrSharedMaterials.Clear();
-                mrSharedMaterials.Add(liqMat);
+                mr.sharedMaterial = liqMat;
             }
-
-            if (_flaskMaterial != null) {
-                bool shouldUseFlaskMaterial = _detail.usesFlask();
-                if (shouldUseFlaskMaterial && !mrSharedMaterials.Contains(_flaskMaterial)) {
-                    // empty slot?
-                    for (int k=0;k<mrSharedMaterials.Count;k++) {
-                        if (mrSharedMaterials[k] == null) {
-                            mrSharedMaterials[k] = _flaskMaterial;
-                            shouldUseFlaskMaterial = false;
-                        }
-                    }
-                    if (shouldUseFlaskMaterial) {
-                        mrSharedMaterials.Add(_flaskMaterial);
-                    }
-                } else if (!shouldUseFlaskMaterial && mrSharedMaterials.Contains(_flaskMaterial)) {
-                    mrSharedMaterials.Remove(_flaskMaterial);
-                }
-                _flaskMaterial.renderQueue = _renderQueue + 1;
-            }
-            mr.sharedMaterials = mrSharedMaterials.ToArray();
 
             liqMat.SetFloat(ShaderParams.DitherStrength, _ditherStrength);
             liqMat.SetColor(ShaderParams.Color1, ApplyGlobalAlpha(_liquidColor1));
             liqMat.SetColor(ShaderParams.Color2, ApplyGlobalAlpha(_liquidColor2));
-            liqMat.SetColor(ShaderParams.EmissionColor, _emissionColor);
+            liqMat.SetColor(ShaderParams.EmissionColor, _emissionColor * _emissionBrightness);
 
             if (_useLightColor && _directionalLight != null) {
                 Color lightColor = _directionalLight.color;
@@ -2129,14 +2225,14 @@ namespace LiquidVolumeFX {
             } else {
                 liqMat.SetColor(ShaderParams.LightColor, Color.white);
             }
-
+            liqMat.SetFloat(ShaderParams.Glossiness, _flaskGlossinessExternal);
             int scatteringPower = _scatteringPower;
             float scatteringAmount = _scatteringAmount;
             if (!_scatteringEnabled) {
                 scatteringPower = 0;
                 scatteringAmount = 0;
             }
-            liqMat.SetVector(ShaderParams.GlossinessInt, new Vector4((1f - _glossinessInternal) * 96f + 1f, Mathf.Pow(2, scatteringPower), scatteringAmount, _glossinessInternal));
+            liqMat.SetVector(ShaderParams.GlossinessInt, new Vector4(_flaskGlossinessInternal * 96f + 1f, Mathf.Pow(2, scatteringPower), scatteringAmount, 0));
             liqMat.SetFloat(ShaderParams.DoubleSidedBias, _doubleSidedBias);
             liqMat.SetFloat(ShaderParams.BackDepthBias, -_backDepthBias);
 
@@ -2166,6 +2262,9 @@ namespace LiquidVolumeFX {
             liqMat.SetFloat(ShaderParams.SmokeRaySteps, smokeRaySteps);
 
             liqMat.SetFloat(ShaderParams.LiquidRaySteps, _liquidRaySteps);
+            liqMat.SetFloat(ShaderParams.FlaskBlurIntensity, _blurIntensity * (_refractionBlur ? 1f : 0f));
+            liqMat.SetColor(ShaderParams.FlaskColor, _flaskColor);
+            liqMat.SetColor(ShaderParams.FlaskTint, _flaskTint * _flaskTint.a);
 
             liqMat.SetColor(ShaderParams.FoamColor, ApplyGlobalAlpha(_foamColor));
             liqMat.SetFloat(ShaderParams.FoamRaySteps, _foamThickness > 0 ? _foamRaySteps : 1);
@@ -2174,7 +2273,28 @@ namespace LiquidVolumeFX {
             liqMat.SetFloat(ShaderParams.FoamBottom, _foamVisibleFromBottom ? 1f : 0f);
             liqMat.SetFloat(ShaderParams.FoamTurbulence, _foamTurbulence);
 
+            liqMat.SetFloat(ShaderParams.FlaskTexAlpha, _textureAlpha);
+
             switch (_detail) {
+                case DETAIL.BumpTexture:
+                    liqMat.SetTexture(ShaderParams.FlaskBumpMap, _bumpMap);
+                    liqMat.SetFloat(ShaderParams.FlaskBumpStrength, _bumpStrength);
+                    liqMat.SetTextureScale(ShaderParams.FlaskBumpMap, Vector2.one * _bumpDistortionScale);
+                    liqMat.SetTextureOffset(ShaderParams.FlaskBumpMap, _bumpDistortionOffset);
+                    liqMat.SetTexture(ShaderParams.FlaskDispMap, _distortionMap);
+                    liqMat.SetTextureScale(ShaderParams.FlaskDispMap, Vector2.one * _bumpDistortionScale);
+                    liqMat.SetTextureOffset(ShaderParams.FlaskDispMap, _bumpDistortionOffset);
+                    liqMat.SetFloat(ShaderParams.FlaskDispAmount, _distortionAmount);
+                    liqMat.SetTexture(ShaderParams.FlaskTex, _texture);
+                    liqMat.SetTextureScale(ShaderParams.FlaskTex, _textureScale);
+                    liqMat.SetTextureOffset(ShaderParams.FlaskTex, _textureOffset);
+                    break;
+                case DETAIL.Reflections:
+                    if (_reflectionTexture == null) {
+                        _reflectionTexture = Resources.Load<Cubemap>("Textures/Reflections");
+                    }
+                    liqMat.SetTexture(ShaderParams.RefractTex, _reflectionTexture);
+                    break;
                 case DETAIL.Multiple:
                 case DETAIL.MultipleNoFlask:
                     UpdateBubblesProperties();
@@ -2227,35 +2347,22 @@ namespace LiquidVolumeFX {
                 }
             }
 
-            liqMat.renderQueue = _renderQueue;
 
+            liqMat.renderQueue = _renderQueue;
             UpdateInsideOut();
 
-            if (_topology == TOPOLOGY.Irregular) {
-                if (prevThickness != _flaskThickness) {
-                    prevThickness = _flaskThickness;
-                }
+            if (_topology == TOPOLOGY.Irregular && prevThickness != _flaskThickness) {
+                prevThickness = _flaskThickness;
+                CleanupBackFacesBuffer();
             }
+
+
         }
 
         Color ApplyGlobalAlpha(Color originalColor) {
             return new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a * _alpha);
         }
 
-
-        void GetRenderer() {
-            MeshFilter mf = GetComponent<MeshFilter>();
-            if (mf != null) {
-                mesh = mf.sharedMesh;
-                mr = GetComponent<MeshRenderer>();
-            } else {
-                SkinnedMeshRenderer smr = GetComponent<SkinnedMeshRenderer>();
-                if (smr != null) {
-                    mesh = smr.sharedMesh;
-                    mr = smr;
-                }
-            }
-        }
 
         void UpdateLevels(bool updateShaderKeywords = true) {
 
@@ -2266,10 +2373,18 @@ namespace LiquidVolumeFX {
                 return;
 
             if (mesh == null) {
-                GetRenderer();
+                MeshFilter mf = GetComponent<MeshFilter>();
+                if (mf != null) {
+                    mesh = mf.sharedMesh;
+                    mr = GetComponent<MeshRenderer>();
+                } else {
+                    SkinnedMeshRenderer smr = GetComponent<SkinnedMeshRenderer>();
+                    if (smr != null) {
+                        mesh = smr.sharedMesh;
+                        mr = smr;
+                    }
+                }
                 ReadVertices();
-            } else if (mr == null) {
-                GetRenderer();
             }
             if (mesh == null || mr == null) {
                 return;
@@ -2350,9 +2465,9 @@ namespace LiquidVolumeFX {
                     float volume = volumeFunction(thisLevel, mrCenter, extents.y);
                     float volumeDiff = Mathf.Abs(volumeRef - volume);
                     if (volumeDiff < minVolumeDiff) {
-                        #if DEBUG_SLICE
+#if DEBUG_SLICE
                             approxVolume = volume;
-                        #endif
+#endif
                         minVolumeDiff = volumeDiff;
                         nearestLevel = thisLevel;
                     }
@@ -2373,7 +2488,9 @@ namespace LiquidVolumeFX {
             }
 
             liquidLevelPos = mr.bounds.center.y - extents.y;
-            liquidLevelPos += extents.y * 2f * thisLevel + rotationAdjustment;
+            if (_detail != DETAIL.Smoke) {
+                liquidLevelPos += extents.y * 2f * thisLevel + rotationAdjustment;
+            }
 
 #if DEBUG_SLICE
             Debug.Log("Ref: " + volumeRef + " Vol: " + approxVolume + " Level: " + thisLevel);
@@ -2397,8 +2514,8 @@ namespace LiquidVolumeFX {
             liqMat.SetVector(ShaderParams.Scale, new Vector4(_smokeScale / scaleFactor, _foamScale / scaleFactor, _liquidScale1 / scaleFactor, _liquidScale2 / scaleFactor));
             liqMat.SetVector(ShaderParams.Center, transform.position);
 
-            if (shaderKeywords == null || shaderKeywords.Length != 6) {
-                shaderKeywords = new string[6];
+            if (shaderKeywords == null || shaderKeywords.Length == 0) {
+                shaderKeywords = new string[5];
             }
             for (int k = 0; k < shaderKeywords.Length; k++) {
                 shaderKeywords[k] = null;
@@ -2437,10 +2554,6 @@ namespace LiquidVolumeFX {
                 default:
                     shaderKeywords[SHADER_KEYWORD_TOPOLOGY_INDEX] = SHADER_KEYWORD_IRREGULAR;
                     break;
-            }
-            if (_refractionBlur && _detail.allowsRefraction()) {
-                liqMat.SetFloat(ShaderParams.FlaskBlurIntensity, _blurIntensity * (_refractionBlur ? 1f : 0f));
-                shaderKeywords[SHADER_KEYWORD_REFRACTION_INDEX] = SHADER_KEYWORD_USE_REFRACTION;
             }
             if (updateShaderKeywords) {
                 liqMat.shaderKeywords = shaderKeywords;
@@ -2484,7 +2597,9 @@ namespace LiquidVolumeFX {
         float GetMeshVolumeUnderLevelFast(float level01, Vector3 zeroPoint, float yExtent) {
 
             float level = mr.bounds.center.y - yExtent;
-            level += yExtent * 2f * level01;
+            if (_detail != DETAIL.Smoke) {
+                level += yExtent * 2f * level01;
+            }
 
             float vol = 0;
             for (int k = 0; k < verticesIndices.Length; k += 3) {
@@ -2516,7 +2631,9 @@ namespace LiquidVolumeFX {
         float GetMeshVolumeUnderLevel(float level01, Vector3 zeroPoint, float yExtent) {
 
             float level = mr.bounds.center.y - yExtent;
-            level += yExtent * 2f * level01;
+            if (_detail != DETAIL.Smoke) {
+                level += yExtent * 2f * level01;
+            }
 
             cutPlaneCenter = Vector3.zero;
             cutPoints.Clear();
@@ -2658,7 +2775,7 @@ namespace LiquidVolumeFX {
         void UpdateTurbulence() {
             if (liqMat == null)
                 return;
-            float visibleLevel = levelMultipled > 0 ? 1f: 0f; // (_level<=0 || _level>=1f) ? 0.1f: 1f;	// commented out to allow animation even level is 0 or full
+            float visibleLevel = 1f; // (_level<=0 || _level>=1f) ? 0.1f: 1f;	// commented out to allow animation even level is 0 or full
             float isInsideContainer = (camInside && _allowViewFromInside) ? 0f : 1f;
             turb.x = _turbulence1 * visibleLevel * isInsideContainer;
             turb.y = Mathf.Max(_turbulence2, turbulenceDueForces) * visibleLevel * isInsideContainer;
@@ -2736,24 +2853,235 @@ namespace LiquidVolumeFX {
             if (liqMat == null)
                 return;
             if (_allowViewFromInside && camInside) {
-                liqMat.SetInt(ShaderParams.CullMode, (int)CullMode.Front);
-                liqMat.SetInt(ShaderParams.ZTestMode, (int)CompareFunction.Always);
-                if (_flaskMaterial != null) {
-                    _flaskMaterial.SetInt(ShaderParams.CullMode, (int)CullMode.Front);
-                    _flaskMaterial.SetInt(ShaderParams.ZTestMode, (int)CompareFunction.Always);
-                }
+                liqMat.SetInt(ShaderParams.CullMode, (int)UnityEngine.Rendering.CullMode.Front);
+                liqMat.SetInt(ShaderParams.ZTestMode, (int)UnityEngine.Rendering.CompareFunction.Always);
             } else {
-                liqMat.SetInt(ShaderParams.CullMode, (int)CullMode.Back);
-                liqMat.SetInt(ShaderParams.ZTestMode, (int)CompareFunction.LessEqual);
-                if (_flaskMaterial != null) {
-                    _flaskMaterial.SetInt(ShaderParams.CullMode, (int)CullMode.Back);
-                    _flaskMaterial.SetInt(ShaderParams.ZTestMode, (int)CompareFunction.LessEqual);
-                }
+                liqMat.SetInt(ShaderParams.CullMode, (int)UnityEngine.Rendering.CullMode.Back);
+                liqMat.SetInt(ShaderParams.ZTestMode, (int)UnityEngine.Rendering.CompareFunction.LessEqual);
             }
             UpdateTurbulence();
         }
 
         #endregion
+
+
+        #region CommandBuffer setup
+
+        private void CleanupCommandBuffer() {
+            CleanupRefractionBuffer();
+            CleanupBackFacesBuffer();
+            CleanupFrontFacesBuffer();
+            wasBackBuffer = wasRefractionBlur = wasFrontBuffer = false;
+        }
+
+        static Dictionary<Camera, CommandBuffer> m_CamerasBlur = new Dictionary<Camera, CommandBuffer>();
+        static Material blurMat;
+
+        internal static void CleanupRefractionBuffer() {
+            foreach (var cam in m_CamerasBlur) {
+                if (cam.Key) {
+                    cam.Key.RemoveCommandBuffer(CameraEvent.AfterImageEffectsOpaque, cam.Value);
+                }
+            }
+            m_CamerasBlur.Clear();
+            if (blurMat != null) {
+                DestroyImmediate(blurMat);
+                blurMat = null;
+            }
+        }
+
+        internal static void SetupRefractionBuffer() {
+            var cam = Camera.current;
+            if (!cam)
+                return;
+
+            if (m_CamerasBlur.ContainsKey(cam))
+                return;
+
+            if (blurMat == null) {
+                blurMat = Instantiate(Resources.Load<Material>("Materials/LiquidVolumeBlur")) as Material;
+                blurMat.hideFlags = HideFlags.DontSave;
+            }
+
+            CommandBuffer buf = new CommandBuffer();
+            buf.name = "Volumetric Liquid Background Blur";
+            m_CamerasBlur[cam] = buf;
+
+            int screenCopyID = Shader.PropertyToID("_VLScreenCopyTexture");
+            buf.GetTemporaryRT(screenCopyID, -1, -1, 0, FilterMode.Bilinear);
+            buf.Blit(BuiltinRenderTextureType.CurrentActive, screenCopyID);
+
+            int blurredID = Shader.PropertyToID("_VLTemp1");
+            int blurredID2 = Shader.PropertyToID("_VLTemp2");
+            buf.GetTemporaryRT(blurredID, -2, -2, 0, FilterMode.Bilinear);
+            buf.GetTemporaryRT(blurredID2, -3, -3, 0, FilterMode.Bilinear);
+
+            buf.Blit(screenCopyID, blurredID2, blurMat, 0);
+            buf.ReleaseTemporaryRT(screenCopyID);
+
+            buf.Blit(blurredID2, blurredID, blurMat, 1);
+            buf.ReleaseTemporaryRT(blurredID2);
+
+            buf.SetGlobalTexture(ShaderParams.GlobalRefractionTexture, blurredID);
+
+            cam.AddCommandBuffer(CameraEvent.AfterImageEffectsOpaque, buf);
+
+        }
+
+        #endregion
+
+        #region Backbuffer
+
+        static Dictionary<Camera, CommandBuffer> m_CamerasBackBuffer = new Dictionary<Camera, CommandBuffer>();
+        static Material backBufferMat;
+        static List<Renderer> bbRenderers = new List<Renderer>();
+
+        internal static void SetupBackFacesBuffer(Renderer renderer) {
+            var cam = Camera.current;
+            if (!cam || renderer == null)
+                return;
+
+            Renderer[] renderers = renderer.GetComponentsInChildren<Renderer>();
+            for (int k = 0; k < renderers.Length; k++) {
+                if (!bbRenderers.Contains(renderers[k])) {
+                    CleanupBackFacesCameras();
+                    break;
+                }
+            }
+
+            if (m_CamerasBackBuffer.ContainsKey(cam)) {
+                return;
+            }
+
+            if (backBufferMat == null) {
+                backBufferMat = new Material(Shader.Find("LiquidVolume/ZWriteBack")) as Material;
+                backBufferMat.hideFlags = HideFlags.DontSave;
+            }
+
+            for (int k = 0; k < renderers.Length; k++) {
+                if (!bbRenderers.Contains(renderers[k])) {
+                    bbRenderers.Add(renderers[k]);
+                }
+            }
+            //bbRenderers.Add(renderer);
+            CommandBuffer buf = new CommandBuffer();
+            buf.name = "Volumetric Liquid BackBuffer";
+            m_CamerasBackBuffer[cam] = buf;
+
+            int backBufferID = Shader.PropertyToID("_VLBackBufferTexture");
+            if (LiquidVolume.useFPRenderTextures) {
+                buf.GetTemporaryRT(backBufferID, -1, -1, 24, FilterMode.Point, RenderTextureFormat.RHalf, RenderTextureReadWrite.Linear);
+                buf.SetRenderTarget(backBufferID);
+                buf.ClearRenderTarget(true, true, new Color(cam.farClipPlane, 0, 0, 0), 0f);
+                buf.EnableShaderKeyword(SHADER_KEYWORD_FP_RENDER_TEXTURE);
+            } else {
+                buf.GetTemporaryRT(backBufferID, -1, -1, 24, FilterMode.Point, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+                buf.SetRenderTarget(backBufferID);
+                buf.ClearRenderTarget(true, true, new Color(0.9882353f, 0.4470558f, 0.75f, 0f), 0f);
+                buf.DisableShaderKeyword(SHADER_KEYWORD_FP_RENDER_TEXTURE);
+            }
+            bbRenderers.ForEach((Renderer obj) => {
+                if (obj != null && obj.gameObject.activeSelf) {
+                    LiquidVolume liquidVolume = obj.GetComponent<LiquidVolume>();
+                    if (liquidVolume != null) {
+                        backBufferMat.SetFloat(ShaderParams.FlaskThickness, 1.0f - liquidVolume.flaskThickness);
+                    } else {
+                        backBufferMat.SetFloat(ShaderParams.FlaskThickness, 1.0f);
+                    }
+                    buf.DrawRenderer(obj, backBufferMat);
+                }
+            });
+            cam.AddCommandBuffer(CameraEvent.AfterImageEffectsOpaque, buf);
+        }
+
+        internal static void CleanupBackFacesBuffer() {
+            CleanupBackFacesCameras();
+            if (backBufferMat != null) {
+                DestroyImmediate(backBufferMat);
+                backBufferMat = null;
+            }
+            bbRenderers.Clear();
+        }
+
+
+        internal static void CleanupBackFacesCameras() {
+            foreach (var cam in m_CamerasBackBuffer) {
+                if (cam.Key) {
+                    cam.Key.RemoveCommandBuffer(CameraEvent.AfterImageEffectsOpaque, cam.Value);
+                }
+            }
+            m_CamerasBackBuffer.Clear();
+        }
+
+        #endregion
+
+        #region FrontBuffer
+
+        static Dictionary<Camera, CommandBuffer> m_CamerasFrontBuffer = new Dictionary<Camera, CommandBuffer>();
+        static Material frontBufferMat;
+        static List<Renderer> fbRenderers = new List<Renderer>();
+
+        internal static void SetupFrontFacesBuffer(Renderer renderer) {
+            var cam = Camera.current;
+            if (!cam)
+                return;
+
+            if (!fbRenderers.Contains(renderer))
+                CleanupFrontFacesCameras();
+
+            if (m_CamerasFrontBuffer.ContainsKey(cam)) {
+                return;
+            }
+
+            if (frontBufferMat == null) {
+                frontBufferMat = new Material(Shader.Find("LiquidVolume/ZWriteFront")) as Material;
+                frontBufferMat.hideFlags = HideFlags.DontSave;
+            }
+
+            fbRenderers.Add(renderer);
+            CommandBuffer buf = new CommandBuffer();
+            buf.name = "Volumetric Liquid FrontBuffer";
+            m_CamerasFrontBuffer[cam] = buf;
+
+            int frontBufferID = Shader.PropertyToID("_VLFrontBufferTexture");
+            if (useFPRenderTextures) {
+                buf.GetTemporaryRT(frontBufferID, -1, -1, 24, FilterMode.Point, RenderTextureFormat.RHalf, RenderTextureReadWrite.Linear);
+                buf.SetRenderTarget(frontBufferID);
+                buf.ClearRenderTarget(true, true, new Color(cam.farClipPlane, 0, 0, 0), 1f);
+                buf.EnableShaderKeyword(SHADER_KEYWORD_FP_RENDER_TEXTURE);
+            } else {
+                buf.GetTemporaryRT(frontBufferID, -1, -1, 24, FilterMode.Point, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+                buf.SetRenderTarget(frontBufferID);
+                buf.ClearRenderTarget(true, true, new Color(0.9882353f, 0.4470558f, 0.75f, 0f), 1f);
+                buf.DisableShaderKeyword(SHADER_KEYWORD_FP_RENDER_TEXTURE);
+            }
+            fbRenderers.ForEach((Renderer obj) => {
+                buf.DrawRenderer(obj, frontBufferMat);
+            });
+            cam.AddCommandBuffer(CameraEvent.AfterImageEffectsOpaque, buf);
+        }
+
+        internal static void CleanupFrontFacesBuffer() {
+            CleanupFrontFacesCameras();
+            if (frontBufferMat != null) {
+                DestroyImmediate(frontBufferMat);
+                frontBufferMat = null;
+            }
+            fbRenderers.Clear();
+        }
+
+
+        internal static void CleanupFrontFacesCameras() {
+            foreach (var cam in m_CamerasFrontBuffer) {
+                if (cam.Key) {
+                    cam.Key.RemoveCommandBuffer(CameraEvent.AfterImageEffectsOpaque, cam.Value);
+                }
+            }
+            m_CamerasFrontBuffer.Clear();
+        }
+
+        #endregion
+
 
 
         #region Public API
@@ -2779,8 +3107,8 @@ namespace LiquidVolumeFX {
                 return;
             }
             if (effect == BuoyancyEffect.PositionOnly) {
-                Vector4 shaderTurb = liqMat.GetVector(ShaderParams.Turbulence);
-                float sizeY = liqMat.GetVector(ShaderParams.Size).y;
+                Vector4 shaderTurb = liqMat.GetVector("_Turbulence");
+                float sizeY = liqMat.GetVector("_Size").y;
                 float turbFactor = shaderTurb.y * 0.05f * sizeY * _foamTurbulence;
                 float turbulence1 = Mathf.Sin(transform.position.x * shaderTurb.z + transform.position.z * shaderTurb.w + turbulenceSpeed * 4f) * turbFactor;
                 float y1 = liquidLevelPos + turbulence1;
@@ -2794,13 +3122,13 @@ namespace LiquidVolumeFX {
                 if (root == null) {
                     Debug.LogError("No root specified when calling MoveToLiquidSurface(..). Usually the root is a parent object that receives the buoyancy position and rotation changes.");
                 }
-                Vector4 shaderTurb = liqMat.GetVector(ShaderParams.Turbulence);
+                Vector4 shaderTurb = liqMat.GetVector("_Turbulence");
                 Collider collider = transform.GetComponent<Collider>();
                 if (collider == null) {
                     Debug.LogError("No collider found in object used when calling MoveToLiquidSurface(..) of Liquid Volume.");
                     return;
                 }
-                float sizeY = liqMat.GetVector(ShaderParams.Size).y;
+                float sizeY = liqMat.GetVector("_Size").y;
                 float turbFactor = shaderTurb.y * 0.05f * sizeY * _foamTurbulence;
                 Vector3 min = collider.bounds.min;
                 Vector3 max = collider.bounds.max;
@@ -2976,6 +3304,7 @@ namespace LiquidVolumeFX {
         }
 
         readonly List<Vertex> hullVertices = new List<Vertex>();
+
         [SerializeField]
         Mesh fixedMesh, closedMesh;
 
@@ -2990,7 +3319,6 @@ namespace LiquidVolumeFX {
 
             mesh = Instantiate(mesh);
             mesh.name = mf.sharedMesh.name; // keep original name to detect if user assigns a different mesh to meshfilter and discard originalMesh reference
-
             Vector3[] vertices = mesh.vertices;
 
             if (closeMesh) {
@@ -3448,7 +3776,6 @@ namespace LiquidVolumeFX {
                 }
             }
 
-
             UploadMaterialArrays();
 
 #if UNITY_WEBGL
@@ -3695,7 +4022,37 @@ namespace LiquidVolumeFX {
             liqMat.SetTexture(ShaderParams.NoiseTexUnwrapped, null);
         }
 
-#endregion
+        #endregion
+
+        #region FP Render Texture comp setting
+
+        public void CheckFPRenderTextureSetting() {
+#if UNITY_EDITOR
+            if (Time.frameCount != fpRenderTextureCheckFrame) {
+                fpRenderTextureCheckFrame = Time.frameCount;
+                Shader shader = Shader.Find("LiquidVolume/ZWriteBack");
+                if (shader == null) return;
+                string path = AssetDatabase.GetAssetPath(shader);
+                path = System.IO.Path.GetDirectoryName(path) + "/LVLiquidPassBase.cginc";
+                string[] lines = System.IO.File.ReadAllLines(path, System.Text.Encoding.UTF8);
+                for (int k = 0; k < lines.Length; k++) {
+                    if (lines[k].Contains(SHADER_KEYWORD_FP_RENDER_TEXTURE)) {
+                        if (lines[k].TrimStart().StartsWith("//")) {
+                            useFPRenderTextures = false;
+                        } else {
+                            useFPRenderTextures = true;
+                        }
+                        break;
+                    }
+                }
+            }
+#endif
+            CleanupCommandBuffer();
+        }
+
+
+        #endregion
+
 
     }
 }

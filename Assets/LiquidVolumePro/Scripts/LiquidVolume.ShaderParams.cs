@@ -7,6 +7,7 @@ namespace LiquidVolumeFX {
         static class ShaderParams {
 
             public static int BubblesData = Shader.PropertyToID("_BubblesData");
+            public static int CustomWorldSpaceCameraPos = Shader.PropertyToID("_CustomWorldSpaceCameraPos");
             public static int PointLightInsideAtten = Shader.PropertyToID("_PointLightInsideAtten");
             public static int PointLightColorArray = Shader.PropertyToID("_PointLightColor");
             public static int PointLightPositionArray = Shader.PropertyToID("_PointLightPosition");
@@ -26,12 +27,20 @@ namespace LiquidVolumeFX {
             public static int SmokeRaySteps = Shader.PropertyToID("_SmokeRaySteps");
             public static int LiquidRaySteps = Shader.PropertyToID("_LiquidRaySteps");
             public static int FlaskBlurIntensity = Shader.PropertyToID("_FlaskBlurIntensity");
+            public static int FlaskColor = Shader.PropertyToID("_FlaskColor");
+            public static int FlaskTint = Shader.PropertyToID("_FlaskTint");
             public static int FoamColor = Shader.PropertyToID("_FoamColor");
             public static int FoamRaySteps = Shader.PropertyToID("_FoamRaySteps");
             public static int FoamDensity = Shader.PropertyToID("_FoamDensity");
             public static int FoamWeight = Shader.PropertyToID("_FoamWeight");
             public static int FoamBottom = Shader.PropertyToID("_FoamBottom");
             public static int FoamTurbulence = Shader.PropertyToID("_FoamTurbulence");
+            public static int FlaskTexAlpha = Shader.PropertyToID("_FlaskTexAlpha");
+            public static int FlaskBumpMap = Shader.PropertyToID("_BumpMap");
+            public static int FlaskBumpStrength = Shader.PropertyToID("_BumpStrength");
+            public static int FlaskDispMap = Shader.PropertyToID("_DispMap");
+            public static int FlaskDispAmount = Shader.PropertyToID("_DispAmount");
+            public static int FlaskTex = Shader.PropertyToID("_FlaskTex");
             public static int RefractTex = Shader.PropertyToID("_RefractTex");
             public static int FlaskThickness = Shader.PropertyToID("_FlaskThickness");
             public static int Size = Shader.PropertyToID("_Size");
@@ -51,8 +60,9 @@ namespace LiquidVolumeFX {
             public static int DitherStrength = Shader.PropertyToID("_DitherStrength");
             public static int Color1 = Shader.PropertyToID("_Color1");
             public static int Color2 = Shader.PropertyToID("_Color2");
-            public static int EmissionColor = Shader.PropertyToID("_EmissionColor");
             public static int LightColor = Shader.PropertyToID("_LightColor");
+            public static int EmissionColor = Shader.PropertyToID("_EmissionColor");
+            public static int Glossiness = Shader.PropertyToID("_Glossiness");
             public static int LevelPos = Shader.PropertyToID("_LevelPos");
             public static int UpperLimit = Shader.PropertyToID("_UpperLimit");
             public static int LowerLimit = Shader.PropertyToID("_LowerLimit");

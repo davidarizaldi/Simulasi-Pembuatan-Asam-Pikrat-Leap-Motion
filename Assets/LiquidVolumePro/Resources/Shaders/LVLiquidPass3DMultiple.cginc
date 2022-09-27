@@ -40,8 +40,8 @@
         #define SAMPLE_NOISE_UNWRAPPED(pos) GetNoiseUnwrapped(pos)
 
 #else
-        half4 _LayersColors[256];
-        half4 _LayersColors2[256];
+        fixed4 _LayersColors[256];
+        fixed4 _LayersColors2[256];
         float4 _LayersProperties[256];
 
         #define SET_LAYER_INDEX(y) int layerIndex = clamp((int)(-255.0 * y / _SizeWorld), 0, 255);
@@ -63,7 +63,7 @@
         
 
 
-		half4 raymarch(float4 vertex, float3 rd, float t0, float t1) {
+		fixed4 raymarch(float4 vertex, float3 rd, float t0, float t1) {
 
 	        float3 wpos = wsCameraPos + rd * t0;
 	        
@@ -86,7 +86,7 @@
 			// ray-march smoke
 			float tmin, tmax;
 			#if defined(LIQUID_VOLUME_SMOKE)
-			half4 sumSmoke = half4(0,0,0,0);
+			fixed4 sumSmoke = fixed4(0,0,0,0);
 			if (wpos.y > _LevelPos) {
 				tmin = t0;
 				tmax = rd.y<0 ? min(t2,t1) : t1;
@@ -95,12 +95,12 @@
 				float4 rpos = float4(wsCameraPos + rd * tmin, 0);
 				float4 disp = float4(0, _Time.x * _Turbulence.x * _Size.y * _SmokeSpeed, 0, 0);
                 BEGIN_LOOP(k,_SmokeRaySteps,5)
-                    half n = SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.x).r;
+                    fixed n = SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.x).r;
 					float py = (_LevelPos - rpos.y)/_Size.y;
 					n = saturate(n + py * _SmokeHeightAtten);
-					half4 lc  = half4(_SmokeColor.rgb, n * _SmokeColor.a);
+					fixed4 lc  = fixed4(_SmokeColor.rgb, n * _SmokeColor.a);
 					lc.rgb *= lc.aaa;
-					half deep = exp(py * _SmokeAtten);
+					fixed deep = exp(py * _SmokeAtten);
 					lc *= deep;
 					sumSmoke += lc * (1.0-sumSmoke.a);
                     rpos += dir;
@@ -120,7 +120,7 @@
 			} else if (rd.y<0) {
 				tmax = min(t2, t1);
 			}
-			half4 sumFoam  = half4(0,0,0,0);
+			fixed4 sumFoam  = fixed4(0,0,0,0);
 			if (tmax>tmin) {
 				float stepSize = (tmax - tmin) / (float)_FoamRaySteps;
 				float4 dir  = float4(rd * stepSize, 0);
@@ -133,10 +133,10 @@
 					float h = saturate( rpos.y / foamThickness );
 					float n = saturate(SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.y ).r + _FoamDensity);
 					if (n>h) {
-						half4 lc  = half4(_FoamColor.rgb, n-h);
+						fixed4 lc  = fixed4(_FoamColor.rgb, n-h);
 						lc.a   *= _FoamColor.a;
 						lc.rgb *= lc.aaa;
-						half deep = saturate(rpos.y * _FoamWeight / foamThickness);
+						fixed deep = saturate(rpos.y * _FoamWeight / foamThickness);
 						lc *= deep;
 						sumFoam += lc * (1.0 - sumFoam.a);
 					}
@@ -155,7 +155,7 @@
 				tmin = t0;
 				tmax = min(t2,t1);
 			}
-			half4 sum = half4(0,0,0,0);
+			fixed4 sum = fixed4(0,0,0,0);
 			if (tmax>tmin) {
                 float4 rpos  = float4(wsCameraPos + rd * tmin, 0); // tmin or t0 ? does not matter to move to level pos; tmin will make bubbles position correct, so we stick with tmin (t0 may reduce banding on certain cases)
 				float stepSize = (t1-t0) / (float)_LiquidRaySteps;
@@ -180,24 +180,24 @@
                     // murkiness
                     float4 properties = SAMPLE_LAYER_PROPERTIES(layerIndex);
                     float layerScale = properties.y;
-					half n = SAMPLE_NOISE_3D(_NoiseTex, (xpos - disp * layerTurbulence) * layerScale).r;
+					fixed n = SAMPLE_NOISE_3D(_NoiseTex, (xpos - disp * layerTurbulence) * layerScale).r;
                     
 					// accumulate color
-                    half muddy = properties.x;
-                    half4 layerColor = SAMPLE_LAYER_COLOR(layerIndex);
-                    half4 layerColor2 = SAMPLE_LAYER_COLOR2(layerIndex);
-                    half4 lc  = lerp(layerColor, layerColor2, smoothstep(0, 1.0, n) * muddy);
+                    fixed muddy = properties.x;
+                    fixed4 layerColor = SAMPLE_LAYER_COLOR(layerIndex);
+                    fixed4 layerColor2 = SAMPLE_LAYER_COLOR2(layerIndex);
+                    fixed4 lc  = lerp(layerColor, layerColor2, smoothstep(0, 1.0, n) * muddy);
 					lc.a = layerColor.a;
 					lc.rgb *= lc.aaa;
 					sum += lc * (1.0-sum.a);
 
                     // bubbles; uses tex3Dlod
                     #if defined(LIQUID_VOLUME_BUBBLES)
-                        half4 ba = SAMPLE_NOISE_UNWRAPPED ( (xpos - float4(turbulence, 0, turbulence, 0)) * _BubblesData.x - float4(0, _BubblesData.y, 0,0) );
-                        half4 bb = SAMPLE_NOISE_UNWRAPPED ( (xpos + float4(turbulence, 0, turbulence, 0)) * _BubblesData.x - float4(0.5, _BubblesData.y * 1.5 + 0.5, 0.5, 0) );
-                        half4 b = ba+bb;
-                        half3 bnorm = b.yzw - 1.0;
-                        half fresnel = abs(dot(rd, bnorm));
+                        fixed4 ba = SAMPLE_NOISE_UNWRAPPED ( (xpos - float4(turbulence, 0, turbulence, 0)) * _BubblesData.x - float4(0, _BubblesData.y, 0,0) );
+                        fixed4 bb = SAMPLE_NOISE_UNWRAPPED ( (xpos + float4(turbulence, 0, turbulence, 0)) * _BubblesData.x - float4(0.5, _BubblesData.y * 1.5 + 0.5, 0.5, 0) );
+                        fixed4 b = ba+bb;
+                        fixed3 bnorm = b.yzw - 1.0;
+                        fixed fresnel = abs(dot(rd, bnorm));
                         lc.rgb += fresnel * _BubblesData.z;
                         lc.a = fresnel;
                         lc.rgb *= lc.aaa; // 0.1
@@ -213,20 +213,20 @@
 			// Final blend
 			if (wpos.y>_LevelPos) {
 				#if defined(LIQUID_VOLUME_SMOKE)
-				    half4 lfoam = sumFoam * (1.0 - sumSmoke.a);
-				    half4 liquid = sum * (1.0 - lfoam.a) * (1.0 - sumSmoke.a);
+				    fixed4 lfoam = sumFoam * (1.0 - sumSmoke.a);
+				    fixed4 liquid = sum * (1.0 - lfoam.a) * (1.0 - sumSmoke.a);
 				    sum = sumSmoke + lfoam + liquid;
 				#else
-				    half4 liquid = sum * (1.0 - sumFoam.a);
+				    fixed4 liquid = sum * (1.0 - sumFoam.a);
 				    sum = sumFoam + liquid;
 				#endif
 			} else {
-				half4 lfoam = sumFoam * (1.0 - sum.a);
+				fixed4 lfoam = sumFoam * (1.0 - sum.a);
 				sum = sum + lfoam;
 			}
 
 			#if !UNITY_COLORSPACE_GAMMA
-				sum.rgb = SRGBToLinear(sum.rgb);
+				sum.rgb = GammaToLinearSpace(sum.rgb);
 			#endif
 
 			return sum;

@@ -1,8 +1,6 @@
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEditor;
 using System.IO;
-using UnityEngine.Rendering;
 
 namespace LiquidVolumeFX {
     [CustomEditor(typeof(LiquidVolume)), CanEditMultipleObjects]
@@ -16,11 +14,12 @@ namespace LiquidVolumeFX {
         const string LV_SHADER_FEATURE_SMOKE = "LIQUID_VOLUME_SMOKE";
         const string LV_SHADER_FEATURE_BUBBLES = "LIQUID_VOLUME_BUBBLES";
         const string LV_SHADER_FEATURE_FP_RENDER_TEXTURES = "LIQUID_VOLUME_FP_RENDER_TEXTURES";
+        const string LV_SHADER_FEATURE_MONOSCOPIC = "LIQUID_VOLUME_MONOSCOPIC";
         const string LV_SHADER_FEATURE_ORTHO = "LIQUID_VOLUME_ORTHO";
         const string LV_SHADER_FEATURE_NOISE3D = "LIQUID_VOLUME_USE_NOISE3D";
         
 
-        static readonly string[] sectionNames = new string[] {
+        static string[] sectionNames = new string[] {
             "Liquid Settings",
             "Foam Settings",
             "Smoke Settings",
@@ -36,17 +35,20 @@ namespace LiquidVolumeFX {
         const int PHYSICS_SETTINGS = 4;
         const int ADVANCED_SETTINGS = 5;
         const int SHADER_VARIANTS = 6;
-        SerializedProperty renderQueue, topology, detail, subMeshIndex, depthAware, irregularDepthDebug, depthAwareOffset, depthAwareCustomPass, depthAwareCustomPassDebug, ignoreGravity, reactToForces;
+        SerializedProperty topology, detail, subMeshIndex, depthAware, irregularDepthDebug, depthAwareOffset, depthAwareCustomPass, depthAwareCustomPassDebug, ignoreGravity, reactToForces;
         SerializedProperty doubleSidedBias, rotationLevelCompensation, backDepthBias;
-        SerializedProperty level, levelMultipler, liquidColor1, liquidColor2, liquidScale1, liquidScale2, alpha, emissionColor, useLightColor, directionalLight;
+        SerializedProperty level, levelMultipler, liquidColor1, liquidColor2, liquidScale1, liquidScale2, alpha, emissionColor, emissionBrightness, useLightColor, directionalLight;
         SerializedProperty liquidLayers, layersAdjustmentSpeed, layersAdjustmentCompact, ditherStrength, smoothContactSurface;
         SerializedProperty ditherShadows, murkiness, turbulence1, turbulence2, frecuency, speed;
         SerializedProperty sparklingIntensity, sparklingAmount, deepObscurance;
         SerializedProperty foamColor, foamScale, foamThickness, foamDensity, foamWeight, foamVisibleFromBottom, foamTurbulence;
         SerializedProperty smokeEnabled, smokeColor, smokeScale, smokeBaseObscurance, smokeSpeed, smokeHeightAtten;
-        SerializedProperty flaskMaterial, flaskThickness, glossinessInternal, refractionBlur, blurIntensity;
+        SerializedProperty flaskColor, flaskTint, flaskThickness, flaskGlossinessExternal, flaskGlossinessInternal, refractionBlur, blurIntensity;
         SerializedProperty scatteringEnabled, scatteringPower, scatteringAmount;
         SerializedProperty liquidRaySteps, foamRaySteps, fixMesh, pivotOffset, autoCloseMesh, smokeRaySteps, extentsScale, upperLimit, lowerLimit, noiseVariation, allowViewFromInside;
+        SerializedProperty bumpMap, bumpStrength, bumpDistortionScale, bumpDistortionOffset, distortionMap, texture, textureAlpha, textureScale, textureOffset;
+        SerializedProperty distortionAmount, renderQueue;
+        SerializedProperty reflectionTexture;
         SerializedProperty physicsMass, physicsAngularDamp;
         SerializedProperty debugSpillPoint;
         SerializedProperty bubblesSeed, bubblesAmount, bubblesSizeMin, bubblesSizeMax, bubblesScale, bubblesBrightness, bubblesVerticalSpeed;
@@ -57,7 +59,7 @@ namespace LiquidVolumeFX {
         string[] shaderFilenames;
         string[] shaderPaths;
         Material matDepthPreview, matParentPreview;
-        bool shaderFeatureScattering, shaderFeatureSmoke, shaderFeatureBubbles, shaderFeatureFPRenderTextures, shaderFeatureOrtho, shaderFeatureNoise;
+        bool shaderFeatureScattering, shaderFeatureSmoke, shaderFeatureBubbles, shaderFeatureFPRenderTextures, shaderFeatureMonoscopic, shaderFeatureOrtho, shaderFeatureNoise;
 
         void OnEnable() {
             titleColor = EditorGUIUtility.isProSkin ? new Color(0.52f, 0.66f, 0.9f) : new Color(0.12f, 0.16f, 0.4f);
@@ -88,6 +90,7 @@ namespace LiquidVolumeFX {
             emissionColor = serializedObject.FindProperty("_emissionColor");
             useLightColor = serializedObject.FindProperty("_useLightColor");
             directionalLight = serializedObject.FindProperty("_directionalLight");
+            emissionBrightness = serializedObject.FindProperty("_emissionBrightness");
             ditherShadows = serializedObject.FindProperty("_ditherShadows");
             murkiness = serializedObject.FindProperty("_murkiness");
             turbulence1 = serializedObject.FindProperty("_turbulence1");
@@ -116,9 +119,11 @@ namespace LiquidVolumeFX {
             smokeHeightAtten = serializedObject.FindProperty("_smokeHeightAtten");
             smokeSpeed = serializedObject.FindProperty("_smokeSpeed");
 
-            flaskMaterial = serializedObject.FindProperty("_flaskMaterial");
+            flaskColor = serializedObject.FindProperty("_flaskColor");
+            flaskTint = serializedObject.FindProperty("_flaskTint");
             flaskThickness = serializedObject.FindProperty("_flaskThickness");
-            glossinessInternal = serializedObject.FindProperty("_glossinessInternal");
+            flaskGlossinessExternal = serializedObject.FindProperty("_flaskGlossinessExternal");
+            flaskGlossinessInternal = serializedObject.FindProperty("_flaskGlossinessInternal");
             refractionBlur = serializedObject.FindProperty("_refractionBlur");
             blurIntensity = serializedObject.FindProperty("_blurIntensity");
 
@@ -135,6 +140,18 @@ namespace LiquidVolumeFX {
             allowViewFromInside = serializedObject.FindProperty("_allowViewFromInside");
             renderQueue = serializedObject.FindProperty("_renderQueue");
 
+            bumpMap = serializedObject.FindProperty("_bumpMap");
+            bumpStrength = serializedObject.FindProperty("_bumpStrength");
+            bumpDistortionScale = serializedObject.FindProperty("_bumpDistortionScale");
+            bumpDistortionOffset = serializedObject.FindProperty("_bumpDistortionOffset");
+            distortionMap = serializedObject.FindProperty("_distortionMap");
+            distortionAmount = serializedObject.FindProperty("_distortionAmount");
+            texture = serializedObject.FindProperty("_texture");
+            textureAlpha = serializedObject.FindProperty("_textureAlpha");
+            textureScale = serializedObject.FindProperty("_textureScale");
+            textureOffset = serializedObject.FindProperty("_textureOffset");
+
+            reflectionTexture = serializedObject.FindProperty("_reflectionTexture");
             reactToForces = serializedObject.FindProperty("_reactToForces");
             ignoreGravity = serializedObject.FindProperty("_ignoreGravity");
             physicsMass = serializedObject.FindProperty("_physicsMass");
@@ -170,21 +187,31 @@ namespace LiquidVolumeFX {
         }
 
         void RefreshShaders() {
-            if (shaderNames == null || shaderNames.Length != 3) {
-                shaderNames = new string[3];
+            if (shaderNames == null || shaderNames.Length < 8) {
+                shaderNames = new string[8];
                 shaderNames[0] = "Simple";
-                shaderNames[1] = "Default No Flask";
-                shaderNames[2] = "Multiple No Flask";
-                shaderFilenames = new string[3];
+                shaderNames[1] = "Default";
+                shaderNames[2] = "Default No Flask";
+                shaderNames[3] = "Reflections";
+                shaderNames[4] = "Bump Texture";
+                shaderNames[5] = "Smoke";
+                shaderNames[6] = "Multiple";
+                shaderNames[7] = "Multiple No Flask";
+                shaderFilenames = new string[8];
                 shaderFilenames[0] = "LiquidVolumeSimple";
-                shaderFilenames[1] = "LiquidVolumeDefaultNoFlask";
-                shaderFilenames[2] = "LiquidVolumeMultipleNoFlask";
-                shaderPaths = new string[3];
+                shaderFilenames[1] = "LiquidVolumeDefault";
+                shaderFilenames[2] = "LiquidVolumeDefaultNoFlask";
+                shaderFilenames[3] = "LiquidVolumeReflections";
+                shaderFilenames[4] = "LiquidVolumeBump";
+                shaderFilenames[5] = "LiquidVolumeSmoke";
+                shaderFilenames[6] = "LiquidVolumeMultiple";
+                shaderFilenames[7] = "LiquidVolumeMultipleNoFlask";
+                shaderPaths = new string[8];
             }
-            if (shaders == null || shaders.Length != 3) {
-                shaders = new bool[3];
+            if (shaders == null || shaders.Length < 8) {
+                shaders = new bool[8];
             }
-            string path = AssetDatabase.GetAssetPath(Shader.Find("LiquidVolume/DepthPrePass"));
+            string path = AssetDatabase.GetAssetPath(Shader.Find("LiquidVolume/Blur"));
             if (path == null) {
                 Debug.LogError("Could not fetch shaders folder path.");
                 return;
@@ -200,20 +227,18 @@ namespace LiquidVolumeFX {
             shaderFeatureSmoke = GetShaderOptionState(LV_SHADER_FEATURE_SMOKE);
             shaderFeatureBubbles = GetShaderOptionState(LV_SHADER_FEATURE_BUBBLES);
             shaderFeatureFPRenderTextures = GetShaderOptionState(LV_SHADER_FEATURE_FP_RENDER_TEXTURES);
+            shaderFeatureMonoscopic = GetShaderOptionState(LV_SHADER_FEATURE_MONOSCOPIC);
             shaderFeatureOrtho = GetShaderOptionState(LV_SHADER_FEATURE_ORTHO);
             shaderFeatureNoise = GetShaderOptionState(LV_SHADER_FEATURE_NOISE3D);
         }
 
         public override void OnInspectorGUI() {
 
-            UniversalRenderPipelineAsset pipe = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
-            if (pipe == null) {
-                EditorGUILayout.HelpBox("Universal Rendering Pipeline asset is not set in 'Project Settings / Graphics' !", MessageType.Error);
-                EditorGUILayout.Separator();
-                GUI.enabled = false;
-            }
-
+#if UNITY_5_6_OR_NEWER
             serializedObject.UpdateIfRequiredOrScript();
+#else
+			serializedObject.UpdateIfDirtyOrScript ();
+#endif
 
             if (sectionHeaderStyle == null) {
                 sectionHeaderStyle = new GUIStyle(EditorStyles.foldout);
@@ -243,19 +268,12 @@ namespace LiquidVolumeFX {
             EditorGUILayout.PropertyField(topology, new GUIContent("Topology", "Shape of the volume."));
 
             if (topology.intValue == (int)TOPOLOGY.Irregular) {
-                if (!LiquidVolumeDepthPrePassRenderFeature.installed) {
-                    EditorGUILayout.HelpBox("You must add the Liquid Volume Depth PrePass Render Feature to the URP renderer asset.", MessageType.Warning);
-                    if (GUILayout.Button("Go to Universal Rendering Pipeline Asset")) {
-                        Selection.activeObject = pipe;
-                    }
-                    EditorGUILayout.Separator();
-                }
                 EditorGUILayout.PropertyField(irregularDepthDebug, new GUIContent("Debug Depth", "Shows depth texture."));
                 if (irregularDepthDebug.boolValue) {
                     if (matDepthPreview == null) {
                         matDepthPreview = Resources.Load<Material>("DebugDepthTexPreview");
                     }
-                    if (shaderFeatureFPRenderTextures) matDepthPreview.EnableKeyword(LV_SHADER_FEATURE_FP_RENDER_TEXTURES); else matDepthPreview.DisableKeyword(LV_SHADER_FEATURE_FP_RENDER_TEXTURES);
+                    if (shaderFeatureFPRenderTextures) matDepthPreview.EnableKeyword("LIQUID_VOLUME_FP_RENDER_TEXTURES"); else matDepthPreview.DisableKeyword("LIQUID_VOLUME_FP_RENDER_TEXTURES");
                     Rect space = EditorGUILayout.BeginVertical();
                     GUILayout.Space(EditorGUIUtility.currentViewWidth);
                     EditorGUILayout.EndVertical();
@@ -266,23 +284,15 @@ namespace LiquidVolumeFX {
 
 
             EditorGUILayout.PropertyField(detail, new GUIContent("Detail", "Amount of detail of the liquid effect. The 'Simple' setting does not use 3D textures which makes it compatible with mobile."));
-            if ((detail.intValue == (int)DETAIL.Simple && !shaders[0]) || (detail.intValue == (int)DETAIL.SimpleNoFlask && !shaders[0]) ||
-                (detail.intValue == (int)DETAIL.Default && !shaders[1]) || (detail.intValue == (int)DETAIL.DefaultNoFlask && !shaders[1]) ||
-                (detail.intValue == (int)DETAIL.Multiple && !shaders[2]) || (detail.intValue == (int)DETAIL.MultipleNoFlask && !shaders[2])) {
+            if ((detail.intValue == (int)DETAIL.Simple && !shaders[0]) || (detail.intValue == (int)DETAIL.Default && !shaders[1]) || (detail.intValue == (int)DETAIL.DefaultNoFlask && !shaders[2]) || (detail.intValue == (int)DETAIL.Reflections && !shaders[3]) ||
+                (detail.intValue == (int)DETAIL.BumpTexture && !shaders[4]) || (detail.intValue == (int)DETAIL.Smoke && !shaders[5]) || (detail.intValue == (int)DETAIL.Multiple && !shaders[6]) || (detail.intValue == (int)DETAIL.MultipleNoFlask && !shaders[7])) {
                 EditorGUILayout.HelpBox("This detail is currently not available. Shader has been removed or cannot be found.", MessageType.Warning);
             }
 
-            DETAIL detailed = (DETAIL)detail.intValue;
+            int detailed = detail.intValue;
 
             EditorGUILayout.PropertyField(depthAware, new GUIContent("Depth Aware", "Enabled z-testing inside liquid volume. Useful if volume contains other objects in addition to liquid, don't enable otherwise. 2D objects inside the liquid volume needs to use an opaque cutout shader that writes to z-buffer (Standard Shader CutOut mode is a good option)."));
             if (depthAware.boolValue) {
-                if (!pipe.supportsCameraDepthTexture) {
-                    EditorGUILayout.HelpBox("Depth Texture option is required for this option (depth aware). Check Universal Rendering Pipeline asset!", MessageType.Warning);
-                    if (GUILayout.Button("Go to Universal Rendering Pipeline Asset")) {
-                        Selection.activeObject = pipe;
-                    }
-                    EditorGUILayout.Separator();
-                }
                 EditorGUILayout.PropertyField(depthAwareOffset, new GUIContent("   Depth Offset", "Optional offset to avoid any clipping issues."));
             }
             if (target != null) {
@@ -316,49 +326,51 @@ namespace LiquidVolumeFX {
                 requireLayersUpdate = true;
             }
 
-            EditorGUILayout.Separator();
-            expandSection[LIQUID_SETTINGS] = EditorGUILayout.Foldout(expandSection[LIQUID_SETTINGS], sectionNames[LIQUID_SETTINGS], sectionHeaderStyle);
+            if (detailed != (int)DETAIL.Smoke) {
+                EditorGUILayout.Separator();
+                expandSection[LIQUID_SETTINGS] = EditorGUILayout.Foldout(expandSection[LIQUID_SETTINGS], sectionNames[LIQUID_SETTINGS], sectionHeaderStyle);
 
-            if (expandSection[LIQUID_SETTINGS]) {
+                if (expandSection[LIQUID_SETTINGS]) {
 
-                if (detailed == DETAIL.Multiple || detailed == DETAIL.MultipleNoFlask) {
-                    EditorGUILayout.LabelField(new GUIContent("Fill Level", "Fill level of the volume."), new GUIContent(string.Format("{0:0.0000}", level.floatValue)));
-                    EditorGUILayout.PropertyField(layersAdjustmentSpeed, new GUIContent("Global Adjustment Speed"));
-                    EditorGUILayout.PropertyField(layersAdjustmentCompact, new GUIContent("Compact Layers", "Avoid gaps between layers when reordering layers."));
-                    EditorGUILayout.PropertyField(ditherStrength, new GUIContent("Dither Strength"));
-                    EditorGUI.BeginChangeCheck();
-                    EditorGUILayout.PropertyField(smoothContactSurface, new GUIContent("Contact Surface Smoothness"));
-                    EditorGUILayout.PropertyField(liquidLayers, new GUIContent("Layers"), true);
-                    if (EditorGUI.EndChangeCheck()) {
-                        requireLayersUpdate = true;
-                    }
-                    if (shaderFeatureBubbles) {
+                    if (detailed == (int)DETAIL.Multiple || detailed == (int)DETAIL.MultipleNoFlask) {
+                        EditorGUILayout.LabelField(new GUIContent("Fill Level", "Fill level of the volume."), new GUIContent(string.Format("{0:0.0000}", level.floatValue)));
+                        EditorGUILayout.PropertyField(layersAdjustmentSpeed, new GUIContent("Global Adjustment Speed"));
+                        EditorGUILayout.PropertyField(layersAdjustmentCompact, new GUIContent("Compact Layers", "Avoid gaps between layers when reordering layers."));
+                        EditorGUILayout.PropertyField(ditherStrength, new GUIContent("Dither Strength"));
                         EditorGUI.BeginChangeCheck();
-                        EditorGUILayout.PropertyField(bubblesSeed);
-                        EditorGUILayout.PropertyField(bubblesAmount);
-                        EditorGUILayout.PropertyField(bubblesSizeMin);
-                        EditorGUILayout.PropertyField(bubblesSizeMax);
+                        EditorGUILayout.PropertyField(smoothContactSurface, new GUIContent("Contact Surface Smoothness"));
+                        EditorGUILayout.PropertyField(liquidLayers, new GUIContent("Layers"), true);
                         if (EditorGUI.EndChangeCheck()) {
-                            requireBubblesUpdate = true;
+                            requireLayersUpdate = true;
+                            requestRedraw = true;
                         }
-                        EditorGUILayout.PropertyField(bubblesScale);
-                        EditorGUILayout.PropertyField(bubblesBrightness);
-                        EditorGUILayout.PropertyField(bubblesVerticalSpeed);
+                        if (shaderFeatureBubbles) {
+                            EditorGUI.BeginChangeCheck();
+                            EditorGUILayout.PropertyField(bubblesSeed);
+                            EditorGUILayout.PropertyField(bubblesAmount);
+                            EditorGUILayout.PropertyField(bubblesSizeMin);
+                            EditorGUILayout.PropertyField(bubblesSizeMax);
+                            if (EditorGUI.EndChangeCheck()) {
+                                requireBubblesUpdate = true;
+                            }
+                            EditorGUILayout.PropertyField(bubblesScale);
+                            EditorGUILayout.PropertyField(bubblesBrightness);
+                            EditorGUILayout.PropertyField(bubblesVerticalSpeed);
+                        } else {
+                            if (bubblesAmount.intValue > 0) {
+                                bubblesAmount.intValue = 0;
+                            }
+                        }
                     } else {
-                        if (bubblesAmount.intValue > 0) {
-                            bubblesAmount.intValue = 0;
+                        EditorGUILayout.PropertyField(level, new GUIContent("Level", "Fill level of the volume."));
+                        EditorGUILayout.PropertyField(liquidColor1, new GUIContent("Color 1"));
+                        if (detailed >= 10) {
+                            EditorGUILayout.PropertyField(liquidScale1, new GUIContent("Scale 1", "Scale applied to the 1st texture of the liquid."));
+                            EditorGUILayout.PropertyField(liquidColor2, new GUIContent("Color 2"));
+                            EditorGUILayout.PropertyField(liquidScale2, new GUIContent("Scale 2", "Scale applied to the 2nd texture of the liquid."));
+                            EditorGUILayout.PropertyField(murkiness, new GUIContent("Murkiness", "The purity of the liquid. 0 = crystal clear, 1 = full of mud/dirt."));
                         }
                     }
-                } else {
-                    EditorGUILayout.PropertyField(level, new GUIContent("Level", "Fill level of the volume."));
-                    EditorGUILayout.PropertyField(liquidColor1, new GUIContent("Color 1"));
-                    if (detailed != DETAIL.Simple && detailed != DETAIL.SimpleNoFlask) {
-                        EditorGUILayout.PropertyField(liquidScale1, new GUIContent("Scale 1", "Scale applied to the 1st texture of the liquid."));
-                        EditorGUILayout.PropertyField(liquidColor2, new GUIContent("Color 2"));
-                        EditorGUILayout.PropertyField(liquidScale2, new GUIContent("Scale 2", "Scale applied to the 2nd texture of the liquid."));
-                        EditorGUILayout.PropertyField(murkiness, new GUIContent("Murkiness", "The purity of the liquid. 0 = crystal clear, 1 = full of mud/dirt."));
-                    }
-                }
 
                 EditorGUILayout.PropertyField(useLightColor, new GUIContent("Use Light Color"));
                 if (useLightColor.boolValue) {
@@ -366,77 +378,83 @@ namespace LiquidVolumeFX {
                     EditorGUILayout.PropertyField(directionalLight, new GUIContent("Directional Light"));
                     EditorGUI.indentLevel--;
                 }
-                EditorGUILayout.PropertyField(emissionColor, new GUIContent("Emission"));
-                EditorGUILayout.PropertyField(glossinessInternal, new GUIContent("Glossiness", "The glossiness of the internal face of the crystal."));
-                EditorGUILayout.PropertyField(ditherShadows, new GUIContent("Dither Shadow", "Enable to apply a dither to the liquid shadow, simulating partially transparent shadows. For best results enable soft shadows in quality settings."));
-                EditorGUILayout.PropertyField(turbulence1, new GUIContent("Turbulence 1", "Low-amplitude turbulence."));
-                EditorGUILayout.PropertyField(turbulence2, new GUIContent("Turbulence 2", "High-amplitude turbulence."));
-                EditorGUILayout.PropertyField(frecuency, new GUIContent("Frecuency", "Frecuency of the turbulence. Increase to produce shorter waves."));
-                EditorGUILayout.PropertyField(speed, new GUIContent("Speed", "Speed of the turbulence animation."));
+                    EditorGUILayout.PropertyField(emissionColor, new GUIContent("Emission Color"));
+                    EditorGUILayout.PropertyField(emissionBrightness, new GUIContent("Emission Brightness"));
+                    EditorGUILayout.PropertyField(ditherShadows, new GUIContent("Dither Shadow", "Enable to apply a dither to the liquid shadow, simulating partially transparent shadows. For best results enable soft shadows in quality settings."));
+                    EditorGUILayout.PropertyField(turbulence1, new GUIContent("Turbulence 1", "Low-amplitude turbulence."));
+                    EditorGUILayout.PropertyField(turbulence2, new GUIContent("Turbulence 2", "High-amplitude turbulence."));
+                    EditorGUILayout.PropertyField(frecuency, new GUIContent("Frecuency", "Frecuency of the turbulence. Increase to produce shorter waves."));
+                    EditorGUILayout.PropertyField(speed, new GUIContent("Speed", "Speed of the turbulence animation."));
 
-                if (detailed != DETAIL.Multiple && detailed != DETAIL.MultipleNoFlask) {
-                    if (detailed != DETAIL.Simple && detailed != DETAIL.SimpleNoFlask) {
-                        EditorGUILayout.PropertyField(sparklingIntensity, new GUIContent("Sparkling Intensity", "Brightness of the sparkling / glitter particles."));
-                        EditorGUILayout.PropertyField(sparklingAmount, new GUIContent("Sparkling Amount", "Amount of sparkling / glitter particles."));
-                    }
-
-                    EditorGUILayout.PropertyField(deepObscurance, new GUIContent("Deep Obscurance", "Makes the bottom of the liquid darker."));
-
-                    if (!shaderFeatureScattering) {
-                        EditorGUILayout.LabelField("Light Scattering", "(feature disabled in Shader Features section)");
-                    } else {
-                        EditorGUILayout.PropertyField(scatteringEnabled, new GUIContent("Light Scattering", "Enables backlight to pass through liquid producing a light diffusion effect."));
-                        if (scatteringEnabled.boolValue) {
-                            EditorGUILayout.PropertyField(scatteringPower, new GUIContent("   Power", "Power (exponent) of the light scattering equation."));
-                            EditorGUILayout.PropertyField(scatteringAmount, new GUIContent("   Amount", "Final multiplier or falloff for the light scattering effect."));
+                    if (detailed != (int)DETAIL.Multiple && detailed != (int)DETAIL.MultipleNoFlask) {
+                        if (detailed >= 10) {
+                            EditorGUILayout.PropertyField(sparklingIntensity, new GUIContent("Sparkling Intensity", "Brightness of the sparkling / glitter particles."));
+                            EditorGUILayout.PropertyField(sparklingAmount, new GUIContent("Sparkling Amount", "Amount of sparkling / glitter particles."));
                         }
-                        EditorGUILayout.PropertyField(pointLightsEnabled, new GUIContent("Point Lights", "Enables point light simulation inside the container."));
-                        if (pointLightsEnabled.boolValue) {
-                            EditorGUILayout.Separator();
-                            if (GUILayout.Button("Randomize Point Lights")) {
-                                ((LiquidVolume)target).PointLightsRandomize();
-                                requestRedraw = true;
+
+                        EditorGUILayout.PropertyField(deepObscurance, new GUIContent("Deep Obscurance", "Makes the bottom of the liquid darker."));
+
+                        if (!shaderFeatureScattering) {
+                            EditorGUILayout.LabelField("Light Scattering", "(feature disabled in Shader Features section)");
+                        } else {
+                            EditorGUILayout.PropertyField(scatteringEnabled, new GUIContent("Light Scattering", "Enables backlight to pass through liquid producing a light diffusion effect."));
+                            if (scatteringEnabled.boolValue) {
+                                EditorGUILayout.PropertyField(scatteringPower, new GUIContent("   Power", "Power (exponent) of the light scattering equation."));
+                                EditorGUILayout.PropertyField(scatteringAmount, new GUIContent("   Amount", "Final multiplier or falloff for the light scattering effect."));
                             }
-                            EditorGUILayout.PropertyField(pointLightsScatteringAmount, new GUIContent("   Global Scattering", "Configure global point light in-scattering value."), true);
-                            EditorGUILayout.PropertyField(pointLightsIntensity, new GUIContent("   Global Intensity", "Configure global point light intensitiy multiplier."), true);
-                            EditorGUILayout.PropertyField(pointLightInsideAtten, new GUIContent("   Inside Atten", "Increase to reduce point light brightness within intensity sphere or if point light is collinear to avoid screen burn."));
-                            EditorGUILayout.PropertyField(pointLightParams, new GUIContent("   Point Lights", "Configure individual lights"), true);
+                            EditorGUILayout.PropertyField(pointLightsEnabled, new GUIContent("Point Lights", "Enables point light simulation inside the container."));
+                            if (pointLightsEnabled.boolValue) {
+                                EditorGUILayout.Separator();
+                                if (GUILayout.Button("Randomize Point Lights")) {
+                                    ((LiquidVolume)target).PointLightsRandomize();
+                                    requestRedraw = true;
+                                }
+                                EditorGUILayout.PropertyField(pointLightsScatteringAmount, new GUIContent("   Global Scattering", "Configure global point light in-scattering value."), true);
+                                EditorGUILayout.PropertyField(pointLightsIntensity, new GUIContent("   Global Intensity", "Configure global point light intensitiy multiplier."), true);
+                                EditorGUILayout.PropertyField(pointLightInsideAtten, new GUIContent("   Inside Atten", "Increase to reduce point light brightness within intensity sphere or if point light is collinear to avoid screen burn."));
+                                EditorGUILayout.PropertyField(pointLightParams, new GUIContent("   Point Lights", "Configure individual lights"), true);
+                            }
                         }
                     }
+
+                    if (detailed == 0) {
+                        EditorGUILayout.PropertyField(foamVisibleFromBottom, new GUIContent("Visible From Bottom", "If foam is visible through liquid when container is viewed from bottom."));
+                    }
+
                 }
 
-                if (detailed == 0) {
-                    EditorGUILayout.PropertyField(foamVisibleFromBottom, new GUIContent("Visible From Bottom", "If foam is visible through liquid when container is viewed from bottom."));
+                if (detailed >= 10) {
+                    EditorGUILayout.Separator();
+                    expandSection[FOAM_SETTINGS] = EditorGUILayout.Foldout(expandSection[FOAM_SETTINGS], sectionNames[FOAM_SETTINGS], sectionHeaderStyle);
+
+                    if (expandSection[FOAM_SETTINGS]) {
+                        EditorGUILayout.PropertyField(foamColor, new GUIContent("Color"));
+                        EditorGUILayout.PropertyField(foamScale, new GUIContent("Scale", "Scale applied to the texture used for the foam."));
+                        EditorGUILayout.PropertyField(foamThickness, new GUIContent("Thickness"));
+                        EditorGUILayout.PropertyField(foamDensity, new GUIContent("Density"));
+                        EditorGUILayout.PropertyField(foamWeight, new GUIContent("Weight", "The greater the value the denser the foam at the bottom line with the liquid."));
+                        EditorGUILayout.PropertyField(foamTurbulence, new GUIContent("Turbulence", "Multiplier to liquid turbulence that affects foam. Set this to zero to produce a static foam."));
+                        EditorGUILayout.PropertyField(foamVisibleFromBottom, new GUIContent("Visible From Bottom", "If foam is visible through liquid when container is viewed from bottom."));
+                    }
                 }
             }
-
-            if (detailed != DETAIL.Simple && detailed != DETAIL.SimpleNoFlask) {
-                EditorGUILayout.Separator();
-                expandSection[FOAM_SETTINGS] = EditorGUILayout.Foldout(expandSection[FOAM_SETTINGS], sectionNames[FOAM_SETTINGS], sectionHeaderStyle);
-
-                if (expandSection[FOAM_SETTINGS]) {
-                    EditorGUILayout.PropertyField(foamColor, new GUIContent("Color"));
-                    EditorGUILayout.PropertyField(foamScale, new GUIContent("Scale", "Scale applied to the texture used for the foam."));
-                    EditorGUILayout.PropertyField(foamThickness, new GUIContent("Thickness"));
-                    EditorGUILayout.PropertyField(foamDensity, new GUIContent("Density"));
-                    EditorGUILayout.PropertyField(foamWeight, new GUIContent("Weight", "The greater the value the denser the foam at the bottom line with the liquid."));
-                    EditorGUILayout.PropertyField(foamTurbulence, new GUIContent("Turbulence", "Multiplier to liquid turbulence that affects foam. Set this to zero to produce a static foam."));
-                    EditorGUILayout.PropertyField(foamVisibleFromBottom, new GUIContent("Visible From Bottom", "If foam is visible through liquid when container is viewed from bottom."));
-                }
-            }
-
 
             EditorGUILayout.Separator();
             expandSection[SMOKE_SETTINGS] = EditorGUILayout.Foldout(expandSection[SMOKE_SETTINGS], sectionNames[SMOKE_SETTINGS], sectionHeaderStyle);
 
+            if (detailed == (int)DETAIL.Smoke) {
+                if (!smokeEnabled.boolValue) {
+                    smokeEnabled.boolValue = true;
+                }
+            }
             if (expandSection[SMOKE_SETTINGS]) {
-                if (!shaderFeatureSmoke) {
+                if (!shaderFeatureSmoke && detailed != (int)DETAIL.Smoke) {
                     EditorGUILayout.LabelField("Visible", "(feature disabled in Shader Features section)");
                 } else {
                     EditorGUILayout.PropertyField(smokeEnabled, new GUIContent("Visible"));
                     if (smokeEnabled.boolValue) {
                         EditorGUILayout.PropertyField(smokeColor, new GUIContent("Color"));
-                        if (detailed != DETAIL.Simple && detailed != DETAIL.SimpleNoFlask) {
+                        if (detailed >= 10) {
                             EditorGUILayout.PropertyField(smokeScale, new GUIContent("Scale", "Scale applied to the texture used for the smoke."));
                             EditorGUILayout.PropertyField(smokeSpeed, new GUIContent("Speed"));
                             EditorGUILayout.PropertyField(smokeHeightAtten, new GUIContent("Height Reduction", "Reduces height of smoke."));
@@ -451,23 +469,38 @@ namespace LiquidVolumeFX {
 
             if (expandSection[FLASK_SETTINGS]) {
                 EditorGUILayout.PropertyField(flaskThickness, new GUIContent("Thickness", "Separation between liquid and container."));
-                if (detailed.usesFlask()) {
-                    EditorGUILayout.PropertyField(flaskMaterial, new GUIContent("Material"));
-                    if (detailed.allowsRefraction()) {
-                        EditorGUILayout.PropertyField(refractionBlur, new GUIContent("Refraction Blur", "Blurs background visible through the flask."));
-                        if (refractionBlur.boolValue) {
-                            if (!pipe.supportsCameraOpaqueTexture) {
-                                EditorGUILayout.HelpBox("Opaque Texture option is required for this option (refraction effect). Check Universal Rendering Pipeline asset!", MessageType.Warning);
-                                if (GUILayout.Button("Go to Universal Rendering Pipeline Asset")) {
-                                    Selection.activeObject = pipe;
-                                }
-                                EditorGUILayout.Separator();
-                            }
-
-                            EditorGUILayout.PropertyField(blurIntensity, new GUIContent("   Intensity"));
+                if (detailed != (int)DETAIL.DefaultNoFlask && detailed != (int)DETAIL.Smoke && detailed != (int)DETAIL.MultipleNoFlask) {
+                    EditorGUILayout.PropertyField(flaskColor, new GUIContent("Color", "Tint color applied to the crystal."));
+                    EditorGUILayout.PropertyField(flaskTint, new GUIContent("Emission", "Emission color applied to the crystal."));
+                    EditorGUILayout.PropertyField(flaskGlossinessExternal, new GUIContent("Glossiness External", "The glossiness of the external face of the crystal."));
+                    if (detailed != 30) {
+                        EditorGUILayout.PropertyField(flaskGlossinessInternal, new GUIContent("Glossiness Internal", "The glossiness of the internal face of the crystal."));
+                    } else {
+                        EditorGUILayout.PropertyField(reflectionTexture, new GUIContent("Reflections", "Assign a cubemap texture for the reflections effect."));
+                        EditorGUILayout.PropertyField(textureAlpha, new GUIContent("Alpha"));
+                    }
+                    if (detailed == 20) {
+                        EditorGUILayout.PropertyField(texture, new GUIContent("Texture", "Assign a texture for the liquid container."));
+                        EditorGUILayout.PropertyField(textureAlpha, new GUIContent("   Alpha"));
+                        EditorGUILayout.PropertyField(textureScale, new GUIContent("   Scale"));
+                        EditorGUILayout.PropertyField(textureOffset, new GUIContent("   Offset"));
+                        EditorGUILayout.PropertyField(bumpMap, new GUIContent("Bump Map", "Assign a normal map for the liquid container."));
+                        if (bumpMap.objectReferenceValue != null) {
+                            EditorGUILayout.PropertyField(bumpStrength);
                         }
                     }
-                    EditorGUILayout.HelpBox("Customize additional settings in the flask material itself.", MessageType.Info);
+                    if (((DETAIL)detailed).allowsRefraction()) {
+                        EditorGUILayout.PropertyField(refractionBlur, new GUIContent("Refraction Blur", "Blurs background visible through the flask."));
+                        if (refractionBlur.boolValue) {
+                            EditorGUILayout.PropertyField(blurIntensity, new GUIContent("   Intensity"));
+                            EditorGUILayout.PropertyField(distortionMap, new GUIContent("   Distortion Map", "Assign a displacement map in this slot for the crystal distortion."));
+                            EditorGUILayout.PropertyField(distortionAmount, new GUIContent("   Distortion Amount"));
+                        }
+                    }
+                    if (bumpMap.objectReferenceValue != null || refractionBlur.boolValue) {
+                        EditorGUILayout.PropertyField(bumpDistortionScale, new GUIContent("Bump/Distortion Scale", "Texture scale of the bump and distortion map textures."));
+                        EditorGUILayout.PropertyField(bumpDistortionOffset, new GUIContent("Bump/Distortion Offset", "Texture offset of the bump and distortion map textures."));
+                    }
                 }
             }
 
@@ -490,9 +523,15 @@ namespace LiquidVolumeFX {
 
                 EditorGUILayout.PropertyField(subMeshIndex, new GUIContent("SubMesh Index", "Used in multi-material meshes. Set the index of the submesh that represent the glass or container."));
                 EditorGUILayout.PropertyField(smokeRaySteps, new GUIContent("Smoke Ray Steps", "Number of samples per pixel used to build the smoke color."));
-                EditorGUILayout.PropertyField(liquidRaySteps, new GUIContent("Liquid Ray Steps", "Number of samples per pixel used to build the liquid color."));
-                EditorGUILayout.PropertyField(foamRaySteps, new GUIContent("Foam Ray Steps", "Number of samples per pixel used to build the foam color."));
-                EditorGUILayout.PropertyField(noiseVariation, new GUIContent("Noise Variation", "Choose between 3 different 3D textures."));
+                if (detailed != (int)DETAIL.Smoke) {
+                    EditorGUILayout.PropertyField(liquidRaySteps, new GUIContent("Liquid Ray Steps", "Number of samples per pixel used to build the liquid color."));
+                }
+                if (detailed >= 1) {
+                    if (detailed != (int)DETAIL.Smoke) {
+                        EditorGUILayout.PropertyField(foamRaySteps, new GUIContent("Foam Ray Steps", "Number of samples per pixel used to build the foam color."));
+                    }
+                    EditorGUILayout.PropertyField(noiseVariation, new GUIContent("Noise Variation", "Choose between 3 different 3D textures."));
+                }
                 EditorGUILayout.PropertyField(levelMultipler, new GUIContent("Fill Level Multiplier", "A global fill level multiplier. Helps limiting the maximum level while allowing the level values to range from 0 to 1."));
                 EditorGUILayout.PropertyField(upperLimit, new GUIContent("Upper Limit", "Upper limit for liquid, foam and smoke with respect to flask size."));
                 EditorGUILayout.PropertyField(lowerLimit, new GUIContent("Lower Limit", "Lower limit for liquid, foam and smoke with respect to flask size."));
@@ -562,6 +601,7 @@ namespace LiquidVolumeFX {
                         shaderFeatureSmoke = EditorGUILayout.Toggle("Smoke", shaderFeatureSmoke);
                         shaderFeatureBubbles = EditorGUILayout.Toggle(new GUIContent("Bubbles (Only Multiple)", "Enables bubbles (only on multiple detail level)"), shaderFeatureBubbles);
                         shaderFeatureFPRenderTextures = EditorGUILayout.Toggle(new GUIContent("Floating Point Buffers", "Use floating point render textures (default) for high precision depth calculation when using irregular topology. Old devices might not support floating point texture. If you experiment issues when running Liquid Volume on old devices, try disabling this feature."), shaderFeatureFPRenderTextures);
+                        shaderFeatureMonoscopic = EditorGUILayout.Toggle(new GUIContent("VR Use Center Cam", "Enable this option to use same camera position in VR when computing ray direction. This option reduces unfocused bubbles and other details in VR."), shaderFeatureMonoscopic);
                         shaderFeatureOrtho = EditorGUILayout.Toggle(new GUIContent("Orthographic Projection", "Enables compatibility with orthographic camera"), shaderFeatureOrtho);
                         shaderFeatureNoise = EditorGUILayout.Toggle(new GUIContent("Use Noise", "Enables usage of noise in shaders to add detail to liquids."), shaderFeatureNoise);
                         EditorGUILayout.BeginHorizontal();
@@ -737,14 +777,13 @@ namespace LiquidVolumeFX {
         #region Shader features support
 
         const string LV_SHADER_OPTIONS_FILE = "LVLiquidPassBase.cginc";
-        const string LV_SCRIPT_OPTIONS_FILE = "LiquidVolume.cs";
 
         void ToggleGLESCompatibility(bool state) {
             const string shaderDefine = "#define FORCE_GLES_COMPATIBILITY";
             const string constantDefine = "bool FORCE_GLES_COMPATIBILITY";
             const string glesConstant = "FORCE_GLES_COMPATIBILITY";
 
-            Shader shader = Shader.Find("LiquidVolume/DepthPrePass");
+            Shader shader = Shader.Find("LiquidVolume/Blur");
             if (shader != null) {
                 // Update shader
                 string path = AssetDatabase.GetAssetPath(shader);
@@ -788,8 +827,13 @@ namespace LiquidVolumeFX {
             SetShaderOptionState(LV_SHADER_FEATURE_SMOKE, shaderFeatureSmoke);
             SetShaderOptionState(LV_SHADER_FEATURE_BUBBLES, shaderFeatureBubbles);
             SetShaderOptionState(LV_SHADER_FEATURE_FP_RENDER_TEXTURES, shaderFeatureFPRenderTextures);
+            SetShaderOptionState(LV_SHADER_FEATURE_MONOSCOPIC, shaderFeatureMonoscopic);
             SetShaderOptionState(LV_SHADER_FEATURE_ORTHO, shaderFeatureOrtho);
             SetShaderOptionState(LV_SHADER_FEATURE_NOISE3D, shaderFeatureNoise);
+            
+            foreach (LiquidVolume lv in targets) {
+                lv.CheckFPRenderTextureSetting();
+            }
             AssetDatabase.Refresh();
         }
 
@@ -818,13 +862,7 @@ namespace LiquidVolumeFX {
         }
 
         void SetShaderOptionState(string option, bool state) {
-            SetShaderOptionState(option, LV_SHADER_OPTIONS_FILE, state);
-            SetShaderOptionState(option, LV_SCRIPT_OPTIONS_FILE, state);
-        }
-
-
-        void SetShaderOptionState(string option, string filename, bool state) {
-            string[] res = Directory.GetFiles(Application.dataPath, filename, SearchOption.AllDirectories);
+            string[] res = Directory.GetFiles(Application.dataPath, LV_SHADER_OPTIONS_FILE, SearchOption.AllDirectories);
             string path = null;
             for (int k = 0; k < res.Length; k++) {
                 if (res[k].Contains("LiquidVolume")) {

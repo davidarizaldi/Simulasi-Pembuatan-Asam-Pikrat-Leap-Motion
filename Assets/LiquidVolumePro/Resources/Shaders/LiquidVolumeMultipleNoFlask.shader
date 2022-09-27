@@ -2,7 +2,10 @@ Shader "LiquidVolume/MultipleNoFlask" {
 	Properties {
 		[HideInInspector] _DitherStrength ("Dither Strength", Float) = 0.5
 		[HideInInspector] _FoamColor ("Foam Color", Color) = (1,1,1,0.9)
+		[HideInInspector] _FlaskTint ("Flask Tint", Color) = (0,0,0)
+		[HideInInspector] _FlaskColor ("Flask Color", Color) = (0,0,0)
 		[HideInInspector] _FlaskThickness ("Flask Thickness", Vector) = (0.05,0.05,0.05)
+		[HideInInspector] _Glossiness ("Smoothness", Range(0,1)) = 0.5
 		[HideInInspector] _GlossinessInt ("Internal Smoothness", Vector) = (0.5, 180, 0.3)
 		[HideInInspector] _Muddy ("Muddy", Range(0,1)) = 1.0
 		[HideInInspector] _Turbulence ("Turbulence", Vector) = (1.0,1.0,1.0,0)
@@ -10,10 +13,8 @@ Shader "LiquidVolume/MultipleNoFlask" {
         [HideInInspector] _MurkinessSpeed("Murkiness Speed", Float) = 1
 		[HideInInspector] _SparklingIntensity ("Sparkling Intensity", Range(0,1)) = 1.0
 		[HideInInspector] _SparklingThreshold ("Sparkling Threshold", Range(0,1)) = 0.85
-
-		[HideInInspector] _LightColor ("Light Color", Color) = (1,1,1)
 		[HideInInspector] _EmissionColor ("Emission Color", Color) = (0,0,0)
-
+		[HideInInspector] _LightColor ("Light Color", Color) = (1,1,1)
 		[HideInInspector] _DeepAtten("Deep Atten", Range(0,10)) = 2.0
 		[HideInInspector] _LiquidRaySteps ("Liquid Ray Steps", Int) = 10
 		[HideInInspector] _SmokeColor ("Smoke Color", Color) = (0.7,0.7,0.7,0.1)
@@ -21,8 +22,8 @@ Shader "LiquidVolume/MultipleNoFlask" {
 		[HideInInspector] _SmokeRaySteps ("Smoke Ray Steps", Int) = 10
 		[HideInInspector] _SmokeSpeed ("Smoke Speed", Range(0,20)) = 5.0
 		[HideInInspector] _SmokeHeightAtten ("Smoke Height Atten", Range(0,1)) = 0.0
-		[HideInInspector] _Noise2Tex ("Noise Tex 2D3D", 2D) = "white"
-		[HideInInspector] _NoiseTex2D ("Noise Tex 2D", 2D) = "white"
+		_Noise2Tex ("Noise Tex 2D3D", 2D) = "white"
+		_NoiseTex2D ("Noise Tex 2D", 2D) = "white"
 		[HideInInspector] _FlaskBlurIntensity ("Flask Blur Intensity", Float) = 1.0
 		[HideInInspector] _FoamRaySteps ("Foam Ray Steps", Int) = 15
 		[HideInInspector] _FoamWeight ("Foam Weight", Float) = 10.0
@@ -56,49 +57,39 @@ Shader "LiquidVolume/MultipleNoFlask" {
 
 	}
 	SubShader {
-	Tags { "Queue" = "Transparent+1" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector"="True" "RenderType"="Transparent" "DisableBatching"="True" }
+	Tags { "Queue" = "Transparent+1" "IgnoreProjector"="True" "RenderType"="Transparent" "DisableBatching"="True" }
 
-	Pass {
-		// Shadow ==========================================================================================================================================================
-        Name "ShadowCaster"
+	// Shadow ==========================================================================================================================================================
+	Pass {	
 		Cull Front
 		Tags { "LightMode" = "ShadowCaster"  }
 
-		HLSLPROGRAM
+		CGPROGRAM
 		#pragma vertex vert
 		#pragma fragment frag
         #pragma multi_compile_shadowcaster
         #pragma fragmentoption ARB_precision_hint_fastest
 		#include "LVShadowPass.cginc"
-		ENDHLSL
+		ENDCG
 	} 
 
-	Pass {
-		// PBS Liquid ====================================================================================================================================
-        Name "ForwardLit"
-        Tags { "LightMode" = "UniversalForward" }
+	// PBS Liquid ====================================================================================================================================
 		ZWrite Off 
 		Cull [_CullMode]
 		ZTest [_ZTestMode]
-		Blend SrcAlpha OneMinusSrcAlpha
 
-		HLSLPROGRAM
+		CGPROGRAM
 		#pragma vertex vert
-		#pragma fragment frag
-		#define LIGHTING LightingWrappedSpecular
+		#pragma surface surf Simple alpha nolightmap nofog noinstancing noforwardadd noambient
 		#pragma fragmentoption ARB_precision_hint_fastest
 		#pragma target 3.0
-//		#pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-//		#pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
-		#pragma multi_compile_local __ LIQUID_VOLUME_USE_REFRACTION
-		#pragma multi_compile_local LIQUID_VOLUME_SPHERE LIQUID_VOLUME_CUBE LIQUID_VOLUME_CYLINDER LIQUID_VOLUME_IRREGULAR
-		#pragma multi_compile_local __ LIQUID_VOLUME_NON_AABB LIQUID_VOLUME_IGNORE_GRAVITY
-		#pragma multi_compile_local __ LIQUID_VOLUME_DEPTH_AWARE
-		#pragma multi_compile_local __ LIQUID_VOLUME_DEPTH_AWARE_PASS
+		#pragma multi_compile LIQUID_VOLUME_SPHERE LIQUID_VOLUME_CUBE LIQUID_VOLUME_CYLINDER LIQUID_VOLUME_IRREGULAR
+		#pragma multi_compile __ LIQUID_VOLUME_NON_AABB LIQUID_VOLUME_IGNORE_GRAVITY
+		#pragma multi_compile __ LIQUID_VOLUME_DEPTH_AWARE
+		#pragma multi_compile __ LIQUID_VOLUME_DEPTH_AWARE_PASS
 		#include "LVLiquidPass3DMultiple.cginc"
-		ENDHLSL
-    }
-
+		ENDCG
+        
 	}
 	
 	Fallback "Transparent/VertexLit"

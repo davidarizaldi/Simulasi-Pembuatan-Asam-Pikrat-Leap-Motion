@@ -53,7 +53,7 @@ namespace LiquidVolumeFX
 					GameObject oneSpill = Instantiate (dropTemplates[template]) as GameObject;
 					oneSpill.SetActive (true);
 					Rigidbody rb = oneSpill.GetComponent<Rigidbody> ();
-					rb.transform.position = spillPos + Random.insideUnitSphere * 0.01f;
+					rb.position = spillPos + Random.insideUnitSphere * 0.01f;
 					rb.AddForce(new Vector3 (Random.value - 0.5f, Random.value * 0.1f - 0.2f, Random.value - 0.5f));
 					StartCoroutine (DestroySpill (oneSpill));
 				}

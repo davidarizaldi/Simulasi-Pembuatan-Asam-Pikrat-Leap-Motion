@@ -2,7 +2,7 @@
 
         float _SparklingIntensity, _SparklingThreshold;
 
-		half4 raymarch(float4 vertex, float3 rd, float t0, float t1) {
+		fixed4 raymarch(float4 vertex, float3 rd, float t0, float t1) {
 
 	        float3 wpos = wsCameraPos + rd * t0;
 
@@ -23,7 +23,7 @@
 			// ray-march smoke
 			float tmin, tmax;
 			#if defined(LIQUID_VOLUME_SMOKE)
-			half4 sumSmoke = half4(0,0,0,0);
+			fixed4 sumSmoke = fixed4(0,0,0,0);
 			if (wpos.y > _LevelPos) {
 				tmin = t0;
 				tmax = rd.y<0 ? min(t2,t1) : t1;
@@ -32,12 +32,12 @@
 				float4 rpos = float4(wsCameraPos + rd * tmin, 0);
 				float4 disp = float4(0, _Time.x * _Turbulence.x * _Size.y * _SmokeSpeed, 0, 0);
                 BEGIN_LOOP(k,_SmokeRaySteps,5)
-					half n = SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.x).r;
+					fixed n = SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.x).r;
 					float py = (_LevelPos - rpos.y)/_Size.y;
 					n = saturate(n + py * _SmokeHeightAtten);
-					half4 lc  = half4(_SmokeColor.rgb, n * _SmokeColor.a);
+					fixed4 lc  = fixed4(_SmokeColor.rgb, n * _SmokeColor.a);
 					lc.rgb *= lc.aaa;
-					half deep = exp(py * _SmokeAtten);
+					fixed deep = exp(py * _SmokeAtten);
 					lc *= deep;
 					sumSmoke += lc * (1.0-sumSmoke.a);
                     rpos += dir;
@@ -57,7 +57,7 @@
 			} else if (rd.y<0) {
 				tmax = min(t2, t1);
 			}
-			half4 sumFoam  = half4(0,0,0,0);
+			fixed4 sumFoam  = fixed4(0,0,0,0);
 			if (tmax>tmin) {
 				float stepSize = (tmax - tmin) / (float)_FoamRaySteps;
 				float4 dir  = float4(rd * stepSize, 0);
@@ -69,10 +69,10 @@
 					float h = saturate( rpos.y / foamThickness );
 					float n = saturate(SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.y ).r + _FoamDensity);
 					if (n>h) {
-						half4 lc  = half4(_FoamColor.rgb, n-h);
+						fixed4 lc  = fixed4(_FoamColor.rgb, n-h);
 						lc.a   *= _FoamColor.a;
 						lc.rgb *= lc.aaa;
-						half deep = saturate(rpos.y * _FoamWeight / foamThickness);
+						fixed deep = saturate(rpos.y * _FoamWeight / foamThickness);
 						lc *= deep;
 
 						sumFoam += lc * (1.0 - sumFoam.a);
@@ -90,7 +90,7 @@
 				tmin = t0;
 				tmax = t1; // for raymarching texture we can ignore the fact that t2 could be nearer than t1 when viewed from below ( was min(t2,t1) )
 			}
-			half4 sum = half4(0,0,0,0);
+			fixed4 sum = fixed4(0,0,0,0);
 			if (tmax>tmin) {
 				float stepSize = (tmax-tmin) / (float)_LiquidRaySteps;
 				float4 dir   = float4(rd * stepSize, 0);
@@ -99,16 +99,16 @@
 				float4 disp  = float4(_Time.x * _Turbulence.y, _Time.x * 1.5, _Time.x * _Turbulence.y, 0) * (_Turbulence.y + _Turbulence.x) * _Size.y;
 				float4 disp2 = float4(0,_Time.x*5.0* (_Turbulence.y + _Turbulence.x) * _Size.y,0,0);
                 BEGIN_LOOP(k,_LiquidRaySteps,10)
-					half deep = exp((rpos.y/_Size.y) * _DeepAtten);
+					fixed deep = exp((rpos.y/_Size.y) * _DeepAtten);
 					half n = SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp) * _Scale.z).r;
-					half4 lc  = half4(_Color1.rgb, (1.0 - _Muddy) + n * _Muddy);
+					fixed4 lc  = fixed4(_Color1.rgb, (1.0 - _Muddy) + n * _Muddy);
 					lc.a *= _Color1.a;
 					lc.rgb *= lc.aaa;
 					lc.rgb *= deep;
 					sum += lc * (1.0-sum.a);
 					
 					n =  SAMPLE_NOISE_3D(_NoiseTex, (rpos - disp2) * _Scale.w ).r;
-					lc  = half4(_Color2.rgb + max(n-_SparklingThreshold, 0) * _SparklingIntensity, (1.0 - _Muddy) + n * _Muddy);
+					lc  = fixed4(_Color2.rgb + max(n-_SparklingThreshold, 0) * _SparklingIntensity, (1.0 - _Muddy) + n * _Muddy);
 					lc.a *= _Color2.a;
 					lc.rgb *= lc.aaa;
 					lc.rgb *= deep;
@@ -121,15 +121,15 @@
 			// Final blend
 			if (wpos.y>_LevelPos) {
 				#if defined(LIQUID_VOLUME_SMOKE)
-				half4 lfoam = sumFoam * (1.0 - sumSmoke.a);
-				half4 liquid = sum * (1.0 - lfoam.a) * (1.0 - sumSmoke.a);
+				fixed4 lfoam = sumFoam * (1.0 - sumSmoke.a);
+				fixed4 liquid = sum * (1.0 - lfoam.a) * (1.0 - sumSmoke.a);
 				sum = sumSmoke + lfoam + liquid;
 				#else
-				half4 liquid = sum * (1.0 - sumFoam.a);
+				fixed4 liquid = sum * (1.0 - sumFoam.a);
 				sum = sumFoam + liquid;
 				#endif
 			} else {
-				half4 lfoam = sumFoam * (1.0 - sum.a);
+				fixed4 lfoam = sumFoam * (1.0 - sum.a);
 				sum = sum + lfoam;
 			}
 			return sum;

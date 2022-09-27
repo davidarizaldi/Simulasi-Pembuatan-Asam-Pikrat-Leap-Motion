@@ -43,7 +43,7 @@
         return o;
     }
     
-    half4 frag (v2f i) : COLOR
+    fixed4 frag (v2f i) : COLOR
     {
     	float2 gridCoords = i.texcoord * 10.0;
 		float2 grd = abs(frac(gridCoords + 0.5) - 0.5);

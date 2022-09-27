@@ -14,17 +14,10 @@
 		    V2F_SHADOW_CASTER;
 		    float3 worldPos: TEXCOORD1;
 		    float4 vertex: TEXCOORD2;
-			UNITY_VERTEX_INPUT_INSTANCE_ID
-			UNITY_VERTEX_OUTPUT_STEREO
 		};
 
 		v2f vert(appdata_base v) {
     		v2f o;
-
-		    UNITY_SETUP_INSTANCE_ID(v);
-			UNITY_TRANSFER_INSTANCE_ID(v, o);
-			UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
 			o.vertex = v.vertex;
 			o.vertex.w = dot(o.vertex.xz, _Turbulence.zw) + _TurbulenceSpeed;
 			o.vertex.xz *= 0.1.xx * _Turbulence.xx;
@@ -36,9 +29,6 @@
 		}
 
 		float4 frag (v2f i) : SV_Target {
-            UNITY_SETUP_INSTANCE_ID(i);
-            UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-
 			float h = tex2D(_NoiseTex2D, i.vertex.xz).g;
 			float turbulence = (h - 0.5) * _Turbulence.x + sin(i.vertex.w) * _Turbulence.y;
 			turbulence *= 0.05 * _Size.y * _FoamTurbulence;
