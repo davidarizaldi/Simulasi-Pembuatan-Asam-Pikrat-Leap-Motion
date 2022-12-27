@@ -6,8 +6,11 @@ using UnityEngine;
 public class SpillBehaviour : MonoBehaviour
 {
     private LiquidVolume liquidVolume;
-    [SerializeField] private GameObject spillHere;
-    [SerializeField] private ParticleSystem spilledWater;
+    [SerializeField] private ParticleSystem waterParticle;
+    [SerializeField] private ParticleSystem waterParticleMedium;
+    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f;
+    [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
+    [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
 
     private bool isSpilling = false;
     private Vector3 spillPosition;
@@ -23,32 +26,40 @@ public class SpillBehaviour : MonoBehaviour
     void Update()
     {
         isSpilling = liquidVolume.GetSpillPoint(out spillPosition, out spillAmount);
-        
-        if (spilledWater.isStopped)
+
+        if (isSpilling)
         {
-            if (isSpilling)
+            spawnWater();
+        }
+    }
+
+    private void spawnWater()
+    {
+        if (liquidVolume.level <= underSomeLevel)
+        {
+            if (spillAmount < levelPerML2 * 10)
             {
-                spilledWater.Play();
-                spillHere.SetActive(true);
-                UpdateSpilling();
+                Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
+                liquidVolume.level -= levelPerML2;
+            }
+            else
+            {
+                Instantiate(waterParticleMedium, spillPosition, waterParticle.transform.rotation);
+                liquidVolume.level -= levelPerML2 * 10;
             }
         }
         else
         {
-            if (!isSpilling)
+            if (spillAmount < levelPerML * 10)
             {
-                spilledWater.Stop();
-                spillHere.SetActive(false);
+                Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
+                liquidVolume.level -= levelPerML;
             }
-            UpdateSpilling();
-            spillHere.transform.position = spillPosition;
+            else
+            {
+                Instantiate(waterParticleMedium, spillPosition, waterParticle.transform.rotation);
+                liquidVolume.level -= levelPerML * 10;
+            }
         }
-    }
-
-    private void UpdateSpilling()
-    {
-        spilledWater.transform.localScale = new Vector3(spillAmount, spillAmount, spillAmount) * 0.2f;
-        spilledWater.transform.position = spillPosition;
-        liquidVolume.level -= spillAmount * 0.1f;
     }
 }
