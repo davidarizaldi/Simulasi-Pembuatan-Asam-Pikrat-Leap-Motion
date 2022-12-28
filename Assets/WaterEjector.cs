@@ -5,6 +5,9 @@ using UnityEngine;
 public class WaterEjector : MonoBehaviour
 {
     [SerializeField] private ParticleSystem waterParticle;
+    [SerializeField] private ParticleSystem phenolParticle;
+    [SerializeField] private ParticleSystem sulfuricParticle;
+    [SerializeField] private ParticleSystem nitricParticle;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +21,18 @@ public class WaterEjector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(waterParticle, transform.position, waterParticle.transform.rotation);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Instantiate(phenolParticle, transform.position, waterParticle.transform.rotation);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Instantiate(sulfuricParticle, transform.position, waterParticle.transform.rotation);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Instantiate(nitricParticle, transform.position, waterParticle.transform.rotation);
         }
     }
 }

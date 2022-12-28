@@ -7,10 +7,9 @@ public class SpillBehaviour : MonoBehaviour
 {
     private LiquidVolume liquidVolume;
     [SerializeField] private ParticleSystem waterParticle;
-    [SerializeField] private ParticleSystem waterParticleMedium;
-    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f;
-    [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
-    [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
+    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002f; GraduatedCylinder100 = 0.010111f; Erlenmeyer250 = 0.002f
+    [SerializeField] private float underSomeLevel; // GraduatedCylinder100 = 0.05f;
+    [SerializeField] private float levelPerML2; // GraduatedCylinder100 = 0.005f;
 
     private bool isSpilling = false;
     private Vector3 spillPosition;
@@ -37,29 +36,13 @@ public class SpillBehaviour : MonoBehaviour
     {
         if (liquidVolume.level <= underSomeLevel)
         {
-            if (spillAmount < levelPerML2 * 10)
-            {
-                Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
-                liquidVolume.level -= levelPerML2;
-            }
-            else
-            {
-                Instantiate(waterParticleMedium, spillPosition, waterParticle.transform.rotation);
-                liquidVolume.level -= levelPerML2 * 10;
-            }
+            Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
+            liquidVolume.level -= levelPerML2;
         }
         else
         {
-            if (spillAmount < levelPerML * 10)
-            {
-                Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
-                liquidVolume.level -= levelPerML;
-            }
-            else
-            {
-                Instantiate(waterParticleMedium, spillPosition, waterParticle.transform.rotation);
-                liquidVolume.level -= levelPerML * 10;
-            }
+            Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
+            liquidVolume.level -= levelPerML;
         }
     }
 }

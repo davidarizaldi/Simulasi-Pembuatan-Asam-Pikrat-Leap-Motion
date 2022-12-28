@@ -14,6 +14,6 @@ public class MagnetSpin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(rotateChange * Time.deltaTime);
+        transform.Rotate(rotateChange * Time.deltaTime, Space.World);
     }
 }

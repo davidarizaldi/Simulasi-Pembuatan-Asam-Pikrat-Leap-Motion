@@ -7,54 +7,72 @@ public class MixBehaviour : MonoBehaviour
 {
     private LiquidVolume lv;
     private Rigidbody rb;
+    private Collider[] childrenColliders;
     [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f;
     [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
     [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
+    [SerializeField] private bool isPrimaryFlask;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         lv = transform.parent.GetComponent<LiquidVolume>();
-        UpdateColliderPos();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
+        childrenColliders = transform.parent.transform.parent.GetComponentsInChildren<Collider>();
+        foreach (Collider col in childrenColliders)
+        {
+            if (col != GetComponent<Collider>())
+            {
+                Physics.IgnoreCollision(col, GetComponent<Collider>());
+            }
+        }
+        UpdateColliderPos();
     }
 
     private void OnParticleCollision(GameObject other)
     {
-        AddLevel(other);
-        Destroy(other);
-        UpdateColliderPos();
+        if (other.CompareTag("Water Particle"))
+        {
+            AddLevel(other);
+            Destroy(other);
+            UpdateColliderPos();
+        }
     }
 
     void AddLevel(GameObject other)
     {
-        if (lv.level < underSomeLevel)
+        if (!isPrimaryFlask)
         {
-            if (other.name == "Water Particle" || other.name == "Water Particle(Clone)")
+            if (lv.level < underSomeLevel)
             {
                 lv.level += levelPerML2;
             }
-            else if (other.name == "Water Particle Medium Variant" || other.name == "Water Particle Medium Variant(Clone)")
+            else
             {
-                lv.level += levelPerML2 * 10;
+                lv.level += levelPerML;
             }
         }
         else
         {
-            if (other.name == "Water Particle" || other.name == "Water Particle(Clone)")
+            switch (other.name)
             {
-                lv.level += levelPerML;
+                case "Phenol Particle Variant(Clone)":
+                    lv.liquidLayers[0].amount += levelPerML;
+                    break;
+                case "Sulfuric Acid Particle Variant(Clone)":
+                    lv.liquidLayers[1].amount += levelPerML;
+                    break;
+                case "Nitric Acid Particle Variant(Clone)":
+                    lv.liquidLayers[2].amount += levelPerML;
+                    break;
+                case "Water Particle(Clone)":
+                    lv.liquidLayers[3].amount += levelPerML;
+                    break;
+                default:
+                    break;
             }
-            else if (other.name == "Water Particle Medium Variant" || other.name == "Water Particle Medium Variant(Clone)")
-            {
-                lv.level += levelPerML * 10;
-            }
+            lv.UpdateLayers();
         }
     }
 
