@@ -5,12 +5,14 @@ using UnityEngine;
 public class MagnetPull : MonoBehaviour
 {
     private Rigidbody rb;
-    [SerializeField] private Vector3 pos = new Vector3(0, 0.82f, 0);
+    [SerializeField] private GameObject magneticObject;
+    private Vector3 pos;
     
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        pos = magneticObject.transform.position;
     }
 
     // Update is called once per frame
