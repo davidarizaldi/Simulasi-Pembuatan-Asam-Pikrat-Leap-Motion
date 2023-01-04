@@ -18,6 +18,7 @@ public class HotplateSpinner : MonoBehaviour
         if (transform.hasChanged)
         {
             GetComponentInParent<HotplateBehaviour>().UpdateSpin(transform.localEulerAngles.z * 30);
+            GetComponentInParent<HotplateBehaviour>().UpdateDisplay(transform.localEulerAngles.z * 8);
             transform.hasChanged = false;
         }
     }
