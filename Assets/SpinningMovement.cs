@@ -6,7 +6,7 @@ public class SpinningMovement : MonoBehaviour
 {
     [SerializeField] private GameObject rotatorSpin;
     [SerializeField] private GameObject rotatorHeat;
-    [SerializeField] private float rotateChange = 5;
+    [SerializeField] private float rotateChange = 500;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +36,11 @@ public class SpinningMovement : MonoBehaviour
         {
             //rotatorHeat.transform.Rotate(new Vector3(0, 0, rotateChange) * Time.deltaTime, Space.Self);
             rotatorHeat.GetComponent<Rigidbody>().AddTorque(new Vector3(0, 0, -rotateChange));
+        }
+        if (Input.GetKey(KeyCode.Keypad5))
+        {
+            rotatorSpin.GetComponent<Rigidbody>().angularDrag = 1.0f;
+            rotatorHeat.GetComponent<Rigidbody>().angularDrag = 1.0f;
         }
     }
 }
