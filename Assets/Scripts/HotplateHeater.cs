@@ -17,6 +17,7 @@ public class HotplateHeater : MonoBehaviour
 
         if (transform.hasChanged)
         {
+            GetComponentInParent<HotplateBehaviour>().UpdateHeat(transform.localEulerAngles.z * 3 + 25.0f);
             transform.hasChanged = false;
         }
     }

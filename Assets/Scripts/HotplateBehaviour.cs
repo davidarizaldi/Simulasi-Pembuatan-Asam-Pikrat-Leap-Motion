@@ -7,6 +7,7 @@ public class HotplateBehaviour : MonoBehaviour
 {
     [SerializeField] private GameObject magnet;
     [SerializeField] private TMP_Text rpmDisplay;
+    private float temp;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,11 @@ public class HotplateBehaviour : MonoBehaviour
     public void UpdateSpin(float rotateChange)
     {
         magnet.GetComponent<MagnetSpin>().rotateChange = new Vector3(0, rotateChange, 0);
+    }
+
+    public void UpdateHeat(float temp)
+    {
+        this.temp = temp;
     }
 
     public void UpdateDisplay(float rpm)

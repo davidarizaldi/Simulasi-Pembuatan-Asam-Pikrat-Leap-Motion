@@ -8,7 +8,7 @@ public class MixBehaviour : MonoBehaviour
     private LiquidVolume lv;
     private Rigidbody rb;
     private Collider[] childrenColliders;
-    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f;
+    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f, ErlenMeyer250 = 0.002;
     [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
     [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
     [SerializeField] private bool isPrimaryFlask;
@@ -73,6 +73,7 @@ public class MixBehaviour : MonoBehaviour
                     break;
             }
             lv.UpdateLayers();
+            GameObject.Find("GameManager").GetComponent<GameManager>().UpdateLevel();
         }
     }
 
