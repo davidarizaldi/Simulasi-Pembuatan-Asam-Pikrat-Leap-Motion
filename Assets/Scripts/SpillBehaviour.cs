@@ -13,7 +13,6 @@ public class SpillBehaviour : MonoBehaviour
 
     private bool isSpilling = false;
     private Vector3 spillPosition;
-    private float spillAmount;
     
     // Start is called before the first frame update
     void Start()
@@ -24,15 +23,15 @@ public class SpillBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isSpilling = liquidVolume.GetSpillPoint(out spillPosition, out spillAmount);
+        isSpilling = liquidVolume.GetSpillPoint(out spillPosition);
 
         if (isSpilling)
         {
-            spawnWater();
+            SpawnWater();
         }
     }
 
-    private void spawnWater()
+    void SpawnWater()
     {
         if (liquidVolume.level <= underSomeLevel)
         {

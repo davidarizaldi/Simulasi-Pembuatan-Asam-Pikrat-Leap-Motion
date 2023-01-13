@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MagnetSpin : MonoBehaviour
 {
-    public Vector3 rotateChange;
+    private Vector3 rotateChange;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,5 +15,10 @@ public class MagnetSpin : MonoBehaviour
     void Update()
     {
         transform.Rotate(rotateChange * Time.deltaTime, Space.World);
+    }
+
+    public void UpdateRPM(float rpm)
+    {
+        rotateChange = new Vector3(0, (rpm * 6.0f), 0);
     }
 }

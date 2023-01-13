@@ -8,6 +8,7 @@ public class MixBehaviour : MonoBehaviour
     private LiquidVolume lv;
     private Rigidbody rb;
     private Collider[] childrenColliders;
+
     [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f, ErlenMeyer250 = 0.002;
     [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
     [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
@@ -27,6 +28,7 @@ public class MixBehaviour : MonoBehaviour
                 Physics.IgnoreCollision(col, GetComponent<Collider>());
             }
         }
+        Physics.IgnoreCollision(GetComponent<Collider>(), GameObject.Find("Magnet").transform.GetComponent<Collider>());
         UpdateColliderPos();
     }
 
@@ -73,13 +75,13 @@ public class MixBehaviour : MonoBehaviour
                     break;
             }
             lv.UpdateLayers();
-            GameObject.Find("GameManager").GetComponent<GameManager>().UpdateLevel();
+            GameObject.Find("GameManager").GetComponent<GameManager>().UpdateLevels();
         }
     }
 
     void UpdateColliderPos()
     {
-        Vector3 pos = new Vector3(transform.position.x, lv.liquidSurfaceYPosition - transform.localScale.y * 0.5f, transform.position.z);
+        Vector3 pos = new(transform.position.x, lv.liquidSurfaceYPosition - transform.localScale.y * 0.5f + 0.01f, transform.position.z);
         rb.position = pos;
         if (lv.level >= 1f)
         {

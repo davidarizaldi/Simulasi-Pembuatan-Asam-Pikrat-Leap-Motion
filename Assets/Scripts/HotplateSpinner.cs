@@ -17,13 +17,12 @@ public class HotplateSpinner : MonoBehaviour
 
         if (transform.hasChanged)
         {
-            GetComponentInParent<HotplateBehaviour>().UpdateSpin(transform.localEulerAngles.z * 30);
-            GetComponentInParent<HotplateBehaviour>().UpdateDisplay(transform.localEulerAngles.z * 8);
+            GetComponentInParent<HotplateBehaviour>().UpdateSpin(transform.localEulerAngles.z);
             transform.hasChanged = false;
         }
     }
 
-    private void LimitRotation()
+    void LimitRotation()
     {
         if (transform.localEulerAngles.z < 360 && transform.localEulerAngles.z > 180)
         {

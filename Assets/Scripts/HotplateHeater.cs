@@ -17,12 +17,12 @@ public class HotplateHeater : MonoBehaviour
 
         if (transform.hasChanged)
         {
-            GetComponentInParent<HotplateBehaviour>().UpdateHeat(transform.localEulerAngles.z * 3 + 25.0f);
+            GetComponentInParent<HotplateBehaviour>().UpdateHeat(transform.localEulerAngles.z);
             transform.hasChanged = false;
         }
     }
 
-    private void LimitRotation()
+    void LimitRotation()
     {
         if (transform.localEulerAngles.z < 360 && transform.localEulerAngles.z > 180)
         {
