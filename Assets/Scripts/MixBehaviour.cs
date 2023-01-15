@@ -67,6 +67,7 @@ public class MixBehaviour : MonoBehaviour
                     break;
                 case "Nitric Acid Particle Variant(Clone)":
                     lv.liquidLayers[2].amount += levelPerML;
+                    transform.parent.GetComponent<SmokeBehaviour>().NitricAcidAdded();
                     break;
                 case "Water Particle(Clone)":
                     lv.liquidLayers[3].amount += levelPerML;

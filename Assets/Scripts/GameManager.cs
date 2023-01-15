@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject mainFlask;
     [SerializeField] private Canvas objectiveHud;
+    [SerializeField] private Canvas centerPopup;
     private LiquidVolume mainFlaskLV;
     public static GameManager Instance;
 
@@ -37,8 +38,15 @@ public class GameManager : MonoBehaviour
         {
             new Objective("Heat Off"),
             new Objective("On Ice Bath"),
-            new Objective("Stirred"),
-            new Objective(2, "Nitric Acid", 20, "mL")
+            new Objective("On Hotplate"),
+            new Objective("Stirred")
+            
+        },
+        {
+            new Objective(2, "Nitric Acid", 20, "mL"),
+            new Objective(),
+            new Objective(),
+            new Objective()
         }
     };
 
@@ -59,9 +67,13 @@ public class GameManager : MonoBehaviour
             switch (practicumStep)
             {
                 case 1:
+                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowWaitFor(30));
                     mainFlaskLV.liquidLayers[0].color.a = 0.039f;
                     mainFlaskLV.liquidLayers[0].miscible = true;
                     mainFlaskLV.liquidLayers[1].miscible = true;
+                    break;
+                case 2:
+                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
                     break;
                 default:
                     break;
@@ -133,6 +145,18 @@ public class GameManager : MonoBehaviour
             else if (objectives[practicumStep, i].nama == "Heat Off")
             {
                 objectives[practicumStep, i].isDone = !value;
+            }
+        }
+        objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+    }
+
+    public void SetOnHotplate(bool value)
+    {
+        for (int i = 0; i < objectives.GetLength(1); i++)
+        {
+            if (objectives[practicumStep, i].nama == "On Hotplate")
+            {
+                objectives[practicumStep, i].isDone = value;
             }
         }
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
