@@ -44,6 +44,12 @@ public class GameManager : MonoBehaviour
         },
         {
             new Objective(2, "Nitric Acid", 20, "mL"),
+            new Objective("Stirred"),
+            new Objective(),
+            new Objective()
+        },
+        {
+            new Objective("Off Hotplate"),
             new Objective(),
             new Objective(),
             new Objective()
@@ -74,6 +80,10 @@ public class GameManager : MonoBehaviour
                     break;
                 case 2:
                     StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
+                    break;
+                case 3:
+                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
+                    mainFlaskLV.liquidLayers[2].miscible = true;
                     break;
                 default:
                     break;

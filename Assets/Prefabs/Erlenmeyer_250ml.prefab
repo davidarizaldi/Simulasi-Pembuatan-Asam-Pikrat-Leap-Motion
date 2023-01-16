@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 5213482657201988335}
   - component: {fileID: 5213482657202987055}
   - component: {fileID: 5213482657200830549}
+  - component: {fileID: 227008990}
   m_Layer: 0
   m_Name: LiquidVolume
   m_TagString: Untagged
@@ -624,12 +625,12 @@ MonoBehaviour:
   _foamWeight: 10
   _foamTurbulence: 1
   _foamVisibleFromBottom: 1
-  _smokeEnabled: 1
-  _smokeColor: {r: 0.7, g: 0.7, b: 0.7, a: 0.25}
-  _smokeScale: 0.25
-  _smokeBaseObscurance: 2.55
-  _smokeHeightAtten: 8.41
-  _smokeSpeed: 5
+  _smokeEnabled: 0
+  _smokeColor: {r: 0.64705884, g: 0.16470589, b: 0.16470589, a: 0.5019608}
+  _smokeScale: 0.01
+  _smokeBaseObscurance: 10
+  _smokeHeightAtten: 0
+  _smokeSpeed: 20
   _fixMesh: 0
   originalMesh: {fileID: 0}
   originalPivotOffset: {x: 0, y: 0, z: 0}
@@ -777,6 +778,19 @@ MonoBehaviour:
   pointLightInsideAtten: 0
   fixedMesh: {fileID: 0}
   closedMesh: {fileID: 0}
+--- !u!114 &227008990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5213482657200799469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c014c5f78fa2814488ee37119b8f0b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  externalSmoke: {fileID: 0}
 --- !u!1 &5213482657200799471
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,10 +6,12 @@ using UnityEngine;
 public class SmokeBehaviour : MonoBehaviour
 {
     private LiquidVolume lv;
+    [SerializeField] private ParticleSystem externalSmoke;
 
-    private float reactionVolume = 0.0f;
+    private static float reactionVolume = 0.0f;
     private readonly float maxReactionVolume = 20.0f;
-    private readonly float reactionDecay = 0.5f;
+    private float reactionPercent = 0.0f;
+    private readonly float reactionSmokeDuration = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -20,32 +22,41 @@ public class SmokeBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DecayReaction();
+        
     }
 
     public void NitricAcidAdded()
     {
         reactionVolume += 1.0f;
         lv.smokeEnabled = true;
+        StartCoroutine(ReactionSmokeDecay());
         UpdateSmoke();
     }
 
-    void DecayReaction()
+    IEnumerator ReactionSmokeDecay()
     {
-        if (reactionVolume > 0.0f)
+        yield return new WaitForSeconds(reactionSmokeDuration);
+        reactionVolume -= 1.0f;
+        if (reactionVolume == 0.0f)
         {
-            reactionVolume -= reactionDecay * Time.deltaTime;
-            if (reactionVolume < 0.0f)
-            {
-                reactionVolume = 0.0f;
-                lv.smokeEnabled = false;
-            }
-            UpdateSmoke();
+            lv.smokeEnabled = false;
         }
+        UpdateSmoke();
     }
 
     void UpdateSmoke()
     {
-        lv.smokeScale = reactionVolume / maxReactionVolume;
+        reactionPercent = reactionVolume / maxReactionVolume;
+
+        lv.smokeScale = reactionPercent * 0.25f;
+        lv.smokeBaseObscurance = 10.0f - reactionPercent * 10.0f;
+
+        UpdateExternalSmoke();
+    }
+
+    void UpdateExternalSmoke()
+    {
+        var em = externalSmoke.GetComponent<ParticleSystem>().emission;
+        em.rateOverTime = reactionPercent * 40.0f;
     }
 }

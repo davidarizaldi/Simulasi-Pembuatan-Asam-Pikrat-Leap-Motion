@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 220034005845925720}
   - component: {fileID: 8522702086096919050}
+  - component: {fileID: 901107779}
   m_Layer: 0
   m_Name: GraduatedCylinder_100ml
   m_TagString: Untagged
@@ -43,7 +44,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220034005845951352}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -51,6 +52,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &901107779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220034005845951352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f10fa40360571247a7ca806d6859557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _manager: {fileID: 0}
+  _ignoreHoverMode: 0
+  _isIgnoringAllHoverState: 0
+  _ignorePrimaryHover: 0
+  _ignoreContact: 0
+  _ignoreGraspingMode: 0
+  _ignoreGrasping: 0
+  _contactForceMode: 0
+  _allowMultiGrasp: 0
+  _moveObjectWhenGrasped: 1
+  graspedMovementType: 0
+  _overrideInteractionLayer: 0
+  _interactionLayer:
+    layerIndex: 0
+  _overrideNoContactLayer: 0
+  _noContactLayer:
+    layerIndex: 0
+  _eventTable:
+    _entries: []
 --- !u!1 &220034005845951354
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,6 +95,7 @@ GameObject:
   - component: {fileID: 220034005843025784}
   - component: {fileID: 220034005844024760}
   - component: {fileID: 220034005846050242}
+  - component: {fileID: 133384407160245809}
   m_Layer: 0
   m_Name: LiquidVolume
   m_TagString: Untagged
@@ -150,7 +183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _topology: 1
   _detail: 11
-  _level: 0.5
+  _level: 0
   _levelMultiplier: 1
   _liquidLayers: []
   _smoothContactSurface: 3
@@ -161,7 +194,7 @@ MonoBehaviour:
   _directionalLight: {fileID: 0}
   _liquidColor1: {r: 0, g: 1, b: 0, a: 0.039215688}
   _liquidScale1: 1
-  _liquidColor2: {r: 1, g: 0.7821765, b: 0, a: 0.039215688}
+  _liquidColor2: {r: 1, g: 0.7821765, b: 0, a: 0}
   _liquidScale2: 5
   _alpha: 1
   _emissionColor: {r: 0, g: 0, b: 0, a: 1}
@@ -335,6 +368,22 @@ MonoBehaviour:
   pointLightInsideAtten: 0
   fixedMesh: {fileID: 0}
   closedMesh: {fileID: 0}
+--- !u!114 &133384407160245809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220034005845951354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dff98848345184e987ab3c06153ff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterParticle: {fileID: 3584628004384545835, guid: 328bd0a81614a104e8f47b994e9f8f7b, type: 3}
+  levelPerML: 0.010111
+  underSomeLevel: 0.05
+  levelPerML2: 0.005
 --- !u!1 &220034005845951356
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,6 +402,7 @@ GameObject:
   - component: {fileID: 5070182384402594599}
   - component: {fileID: 1453726665488345375}
   - component: {fileID: 1823952134803534208}
+  - component: {fileID: 133384407160245806}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -438,7 +488,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -8036826557037476793, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: 2534964839176971238, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!64 &8072248134382858024
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -452,7 +502,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -3769051508775981215, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: -7387706064836869012, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!64 &6826896943139330987
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -466,7 +516,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 344875216250628128, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: 8691780276856062721, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!64 &3303150229017630044
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -480,7 +530,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -4890336955072352118, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: 6239881831769578202, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!64 &5070182384402594599
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -494,7 +544,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 7546969683297196056, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: 6255687079079774844, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!64 &1453726665488345375
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -508,7 +558,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -3516047719139928618, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: 3390558720134950976, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!64 &1823952134803534208
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -522,7 +572,21 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -81099915171691950, guid: 8301032ecf00dd049b97e40c2e64cdc9, type: 3}
+  m_Mesh: {fileID: -125435165217083709, guid: 50062c891451b8d4bad48b843211985a, type: 3}
+--- !u!64 &133384407160245806
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220034005845951356}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3163171260390484736, guid: 50062c891451b8d4bad48b843211985a, type: 3}
 --- !u!1 &220034005845951358
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,9 +677,33 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 220034005845925722}
     m_Modifications:
+    - target: {fileID: 18792733674914842, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
+      propertyPath: levelPerML
+      value: 0.010111
+      objectReference: {fileID: 0}
+    - target: {fileID: 18792733674914842, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
+      propertyPath: levelPerML2
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 18792733674914842, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
+      propertyPath: underSomeLevel
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 191643647208374723, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 191643647208374723, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 191643647208374723, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 191643647208374723, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 191643647208374723, guid: 8be61e85d8726a743909f6adc985b771, type: 3}
       propertyPath: m_LocalPosition.x

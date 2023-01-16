@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 2229937921961333145}
   - component: {fileID: 2229937921962333017}
   - component: {fileID: 2229937921960430399}
+  - component: {fileID: 481858051}
   m_Layer: 0
   m_Name: LiquidVolume
   m_TagString: Untagged
@@ -181,7 +182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _topology: 10
   _detail: 11
-  _level: 0.636
+  _level: 0.5
   _levelMultiplier: 1
   _liquidLayers: []
   _smoothContactSurface: 3
@@ -190,9 +191,9 @@ MonoBehaviour:
   _layersAdjustmentCompact: 1
   _useLightColor: 0
   _directionalLight: {fileID: 0}
-  _liquidColor1: {r: 0, g: 1, b: 1, a: 0.1}
+  _liquidColor1: {r: 0, g: 1, b: 0, a: 0.039215688}
   _liquidScale1: 1
-  _liquidColor2: {r: 1, g: 0, b: 0, a: 0.039215688}
+  _liquidColor2: {r: 1, g: 0, b: 0, a: 0}
   _liquidScale2: 5
   _alpha: 1
   _emissionColor: {r: 0, g: 0, b: 0, a: 1}
@@ -366,6 +367,22 @@ MonoBehaviour:
   pointLightInsideAtten: 0
   fixedMesh: {fileID: 0}
   closedMesh: {fileID: 0}
+--- !u!114 &481858051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2229937921960332699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dff98848345184e987ab3c06153ff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterParticle: {fileID: 556586873569751361, guid: bcf07bc3987d49c41b23f9c7814d8bf4, type: 3}
+  levelPerML: 0.002
+  underSomeLevel: 0
+  levelPerML2: 0
 --- !u!1 &2229937921960332701
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +491,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2229937921960038847}
   - component: {fileID: 2759656594284381702}
+  - component: {fileID: 1394143307}
   m_Layer: 0
   m_Name: FlorenceFlask_250ml
   m_TagString: Untagged
@@ -507,7 +525,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2229937921960332703}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -515,3 +533,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1394143307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2229937921960332703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f10fa40360571247a7ca806d6859557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _manager: {fileID: 0}
+  _ignoreHoverMode: 0
+  _isIgnoringAllHoverState: 0
+  _ignorePrimaryHover: 0
+  _ignoreContact: 0
+  _ignoreGraspingMode: 0
+  _ignoreGrasping: 0
+  _contactForceMode: 0
+  _allowMultiGrasp: 0
+  _moveObjectWhenGrasped: 1
+  graspedMovementType: 0
+  _overrideInteractionLayer: 0
+  _interactionLayer:
+    layerIndex: 0
+  _overrideNoContactLayer: 0
+  _noContactLayer:
+    layerIndex: 0
+  _eventTable:
+    _entries: []
