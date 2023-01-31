@@ -36,6 +36,8 @@ public class PracticumHudUIHandler : MonoBehaviour
             {
                 objectiveText[i].SetText(objective.nama + " (" + (objective.isDone ? "OK" : "X") + ")");
             }
+
+            objectiveText[i].color = (objective.isDone ? Color.green : Color.white);
         }
     }
 }

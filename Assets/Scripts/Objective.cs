@@ -10,18 +10,23 @@ public class Objective
     public string akhiran;
     public bool isDone;
 
-    public Objective(int id, string nama, float target, string akhiran)
+    public Objective(int id, string nama, float target, string akhiran, bool isDone = false)
     {
         this.id = id;
         this.nama = nama;
         this.target = target;
         this.akhiran = akhiran;
-        isDone = false;
+        this.isDone = isDone;
     }
 
     public Objective(string nama) : this(-1, nama, 0.0f, "")
     {
 
+    }
+
+    public Objective(string nama, bool isDone) : this(-1, nama, 0.0f, "", isDone)
+    {
+        
     }
 
     public Objective()

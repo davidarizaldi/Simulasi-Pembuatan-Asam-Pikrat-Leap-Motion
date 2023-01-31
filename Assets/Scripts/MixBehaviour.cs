@@ -67,7 +67,13 @@ public class MixBehaviour : MonoBehaviour
                     break;
                 case "Nitric Acid Particle Variant(Clone)":
                     lv.liquidLayers[2].amount += levelPerML;
-                    transform.parent.GetComponent<SmokeBehaviour>().NitricAcidAdded();
+                    if (GameManager.practicumStep == 2)
+                    {
+                        transform.parent.GetComponent<SmokeBehaviour>().NitricAcidAdded();
+                        lv.liquidLayers[0].color = new Color(0.647f, 0.165f, 0.165f, 0.502f);
+                        lv.liquidLayers[1].color = new Color(0.647f, 0.165f, 0.165f, 0.502f);
+                        lv.liquidLayers[2].color = new Color(0.647f, 0.165f, 0.165f, 0.502f);
+                    }
                     break;
                 case "Water Particle(Clone)":
                     lv.liquidLayers[3].amount += levelPerML;

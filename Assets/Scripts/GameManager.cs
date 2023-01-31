@@ -38,20 +38,26 @@ public class GameManager : MonoBehaviour
         {
             new Objective("Heat Off"),
             new Objective("On Ice Bath"),
-            new Objective("On Hotplate"),
-            new Objective("Stirred")
+            new Objective("On Hotplate", true),
+            new Objective("Stirred", true)
             
         },
         {
             new Objective(2, "Nitric Acid", 20, "mL"),
-            new Objective("Stirred"),
+            new Objective("Stirred", true),
+            new Objective("No Reaction Left", true),
+            new Objective()
+        },
+        {
+            new Objective("Stirred", true),
+            new Objective("Heated"),
             new Objective(),
             new Objective()
         },
         {
+            new Objective("Stir Off"),
+            new Objective("Heat Off"),
             new Objective("Off Hotplate"),
-            new Objective(),
-            new Objective(),
             new Objective()
         }
     };
@@ -80,10 +86,21 @@ public class GameManager : MonoBehaviour
                     break;
                 case 2:
                     StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
+                    mainFlaskLV.liquidLayers[2].miscible = true;
                     break;
                 case 3:
                     StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
-                    mainFlaskLV.liquidLayers[2].miscible = true;
+                    break;
+                case 4:
+                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowWaitFor(120));
+                    mainFlaskLV.liquidLayers[0].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                    mainFlaskLV.liquidLayers[1].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                    mainFlaskLV.liquidLayers[2].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                    mainFlaskLV.UpdateLayers();
+                    mainFlaskLV.liquidLayers[3].miscible = true;
+                    break;
+                case 5:
+                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
                     break;
                 default:
                     break;
@@ -110,7 +127,7 @@ public class GameManager : MonoBehaviour
             Objective objective = objectives[practicumStep, i];
             if (objective.target != 0.0f)
             {
-                if (mainFlaskLevels[i] >= objective.target)
+                if (mainFlaskLevels[objective.id] >= objective.target)
                 {
                     objective.isDone = true;
                 }
@@ -140,6 +157,10 @@ public class GameManager : MonoBehaviour
             {
                 objectives[practicumStep, i].isDone = value;
             }
+            else if (objectives[practicumStep, i].nama == "Stir Off")
+            {
+                objectives[practicumStep, i].isDone = !value;
+            }
         }
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
     }
@@ -167,6 +188,30 @@ public class GameManager : MonoBehaviour
             if (objectives[practicumStep, i].nama == "On Hotplate")
             {
                 objectives[practicumStep, i].isDone = value;
+            }
+        }
+        objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+    }
+
+    public void SetOnIceBath(bool value)
+    {
+        for (int i = 0; i < objectives.GetLength(1); i++)
+        {
+            if (objectives[practicumStep, i].nama == "On Ice Bath")
+            {
+                objectives[practicumStep, i].isDone = value;
+            }
+        }
+        objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+    }
+
+    public void CheckReaction(float volume)
+    {
+        for (int i = 0; i < objectives.GetLength(1); i++)
+        {
+            if (objectives[practicumStep, i].nama == "No Reaction Left")
+            {
+                objectives[practicumStep, i].isDone = (volume == 0.0f);
             }
         }
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();

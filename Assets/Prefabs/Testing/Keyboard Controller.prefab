@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8425941020044534062}
   - component: {fileID: 8425941020044534063}
+  - component: {fileID: 7417104437857685774}
   m_Layer: 0
-  m_Name: Spinning Movement Controller
+  m_Name: Keyboard Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,3 +48,18 @@ MonoBehaviour:
   rotatorSpin: {fileID: 0}
   rotatorHeat: {fileID: 0}
   rotateChange: 0.01
+--- !u!114 &7417104437857685774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8425941020044534060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467fc819af2b07f4f82e08327dc7ea20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainFlask: {fileID: 0}
+  iceBath: {fileID: 0}
+  speed: 0.5

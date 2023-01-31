@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class CenterPopupUIHandler : MonoBehaviour
 {
-    [SerializeField] TMP_Text popupText;
+    [SerializeField] private TMP_Text popupText;
+    [SerializeField] private GameObject TintedBackground;
+
     private readonly int popupDuration = 2;
     
     // Start is called before the first frame update
@@ -43,8 +45,10 @@ public class CenterPopupUIHandler : MonoBehaviour
         {
             popupText.SetText("Waiting for " + (minutes / 60) + "\nhours");
         }
-
+        TintedBackground.SetActive(true);
         yield return new WaitForSeconds(popupDuration);
+
         gameObject.SetActive(false);
+        TintedBackground.SetActive(false);
     }
 }
