@@ -349,6 +349,7 @@ GameObject:
   - component: {fileID: 5213482657200693963}
   - component: {fileID: 7951341493104546873}
   - component: {fileID: 1256923977}
+  - component: {fileID: 1415485461}
   m_Layer: 0
   m_Name: Erlenmeyer_250ml
   m_TagString: Untagged
@@ -421,6 +422,18 @@ MonoBehaviour:
     layerIndex: 0
   _eventTable:
     _entries: []
+--- !u!114 &1415485461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5213482657200799467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67822e0a8d3f2e246b7e919a2db1a3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5213482657200799469
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +594,7 @@ MonoBehaviour:
   - layerName: Layer 3
     amount: 0
     density: 1
-    color: {r: 0.6784314, g: 0.84705883, b: 0.9019608, a: 0.003921569}
+    color: {r: 0, g: 1, b: 1, a: 0.0627451}
     miscible: 0
     murkiness: 0
     murkColor: {r: 0, g: 0, b: 0, a: 1}
@@ -592,7 +605,7 @@ MonoBehaviour:
     baseLevel: 0
     currentBaseLevel: 0
     currentAmount: 0
-    currentColor: {r: 0.6784314, g: 0.84705883, b: 0.9019608, a: 0.003921569}
+    currentColor: {r: 0, g: 1, b: 1, a: 0.0627451}
     currentMurkiness: 0
     currentColor2: {r: 0, g: 0, b: 0, a: 1}
     currentBubblesOpacity: 0

@@ -6,7 +6,6 @@ public class IgnoreColliders : MonoBehaviour
 {
     [SerializeField] private GameObject[] ignoredObjects;
     private Collider[] colliders;
-    private Collider[] ignoredColliders;
 
     // Start is called before the first frame update
     void Start()

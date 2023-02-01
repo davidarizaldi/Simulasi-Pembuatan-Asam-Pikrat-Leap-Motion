@@ -9,6 +9,9 @@ public class WaterEjector : MonoBehaviour
     [SerializeField] private ParticleSystem sulfuricParticle;
     [SerializeField] private ParticleSystem nitricParticle;
 
+    private static int water = 200;
+    private bool pour = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +21,12 @@ public class WaterEjector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (pour && water > 0)
+        {
+            water--;
+            Instantiate(waterParticle, transform.position, waterParticle.transform.rotation);
+        }
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(waterParticle, transform.position, waterParticle.transform.rotation);
@@ -33,6 +42,18 @@ public class WaterEjector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             Instantiate(nitricParticle, transform.position, waterParticle.transform.rotation);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (pour == false)
+            {
+                pour = true;
+            }
+            else
+            {
+                pour = false;
+            }
         }
     }
 }

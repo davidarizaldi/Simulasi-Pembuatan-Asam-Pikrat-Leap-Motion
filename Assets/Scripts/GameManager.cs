@@ -49,15 +49,21 @@ public class GameManager : MonoBehaviour
             new Objective()
         },
         {
+            new Objective("Off Ice Bath"),
             new Objective("Stirred", true),
             new Objective("Heated"),
-            new Objective(),
             new Objective()
         },
         {
             new Objective("Stir Off"),
             new Objective("Heat Off"),
-            new Objective("Off Hotplate"),
+            new Objective(3, "Water", 200, "mL"),
+            new Objective()
+        },
+        {
+            new Objective("Picric Acid"),
+            new Objective(),
+            new Objective(),
             new Objective()
         }
     };
@@ -96,6 +102,8 @@ public class GameManager : MonoBehaviour
                     mainFlaskLV.liquidLayers[0].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
                     mainFlaskLV.liquidLayers[1].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
                     mainFlaskLV.liquidLayers[2].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                    mainFlaskLV.liquidLayers[3].color = new Color(0.0f, 1.0f, 0.25f, 0.5f);
+                    mainFlaskLV.liquidLayers[3].murkiness = 0.1f;
                     mainFlaskLV.UpdateLayers();
                     mainFlaskLV.liquidLayers[3].miscible = true;
                     break;
@@ -200,6 +208,10 @@ public class GameManager : MonoBehaviour
             if (objectives[practicumStep, i].nama == "On Ice Bath")
             {
                 objectives[practicumStep, i].isDone = value;
+            }
+            if (objectives[practicumStep, i].nama == "Off Ice Bath")
+            {
+                objectives[practicumStep, i].isDone = !value;
             }
         }
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
