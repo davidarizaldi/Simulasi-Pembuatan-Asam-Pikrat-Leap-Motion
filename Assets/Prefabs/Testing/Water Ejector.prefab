@@ -48,3 +48,4 @@ MonoBehaviour:
   phenolParticle: {fileID: 2580711262869384732, guid: c7e1ea5f0d6d52947a5c5f469311ebf6, type: 3}
   sulfuricParticle: {fileID: 556586873569751361, guid: bcf07bc3987d49c41b23f9c7814d8bf4, type: 3}
   nitricParticle: {fileID: 7534324315634800335, guid: 8009e87b7c76cb14eaeef7c3a0b57d5a, type: 3}
+  picricParticle: {fileID: 6947465466496335920, guid: e8bef3770cfe53b43835bdaae7b71531, type: 3}

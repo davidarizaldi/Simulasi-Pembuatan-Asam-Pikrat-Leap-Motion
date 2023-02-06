@@ -8,6 +8,7 @@ public class WaterEjector : MonoBehaviour
     [SerializeField] private ParticleSystem phenolParticle;
     [SerializeField] private ParticleSystem sulfuricParticle;
     [SerializeField] private ParticleSystem nitricParticle;
+    [SerializeField] private ParticleSystem picricParticle;
 
     private static int water = 200;
     private bool pour = false;
@@ -42,6 +43,10 @@ public class WaterEjector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             Instantiate(nitricParticle, transform.position, waterParticle.transform.rotation);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Instantiate(picricParticle, transform.position, waterParticle.transform.rotation);
         }
 
         if (Input.GetKeyDown(KeyCode.F))

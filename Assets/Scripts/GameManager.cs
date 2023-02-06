@@ -6,12 +6,15 @@ using LiquidVolumeFX;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject mainFlask;
+    [SerializeField] private GameObject secondFlask;
     [SerializeField] private Canvas objectiveHud;
     [SerializeField] private Canvas centerPopup;
     private LiquidVolume mainFlaskLV;
+    private LiquidVolume secondFlaskLV;
     public static GameManager Instance;
 
     public static float[] mainFlaskLevels = new float[4];
+    public static float secondFlaskLevel;
     public static float temp;
     public static int practicumStep;
 
@@ -61,7 +64,7 @@ public class GameManager : MonoBehaviour
             new Objective()
         },
         {
-            new Objective("Picric Acid"),
+            new Objective(4, "Picric Acid", 5, "g"),
             new Objective(),
             new Objective(),
             new Objective()
@@ -72,6 +75,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         mainFlaskLV = mainFlask.GetComponentInChildren<LiquidVolume>();
+        secondFlaskLV = secondFlask.GetComponentInChildren<LiquidVolume>();
         practicumStep = 0;
         UpdateLevels();
     }
@@ -109,6 +113,7 @@ public class GameManager : MonoBehaviour
                     break;
                 case 5:
                     StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
+                    UpdateSecLevel();
                     break;
                 default:
                     break;
@@ -125,6 +130,21 @@ public class GameManager : MonoBehaviour
         }
 
         CheckLiquidObjectives();
+        objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+    }
+
+    public void UpdateSecLevel()
+    {
+        secondFlaskLevel = secondFlaskLV.liquidLayers[0].amount / 0.002f;
+        if (practicumStep == 5)
+        {
+            Objective objective = objectives[practicumStep, 0];
+            if (secondFlaskLevel >= objective.target)
+            {
+                objective.isDone = true;
+            }
+        }
+
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
     }
 

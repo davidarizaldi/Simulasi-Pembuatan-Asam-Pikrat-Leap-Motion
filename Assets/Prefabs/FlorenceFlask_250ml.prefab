@@ -379,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58dff98848345184e987ab3c06153ff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterParticle: {fileID: 556586873569751361, guid: bcf07bc3987d49c41b23f9c7814d8bf4, type: 3}
+  waterParticle: {fileID: 0}
   levelPerML: 0.002
   underSomeLevel: 0
   levelPerML2: 0

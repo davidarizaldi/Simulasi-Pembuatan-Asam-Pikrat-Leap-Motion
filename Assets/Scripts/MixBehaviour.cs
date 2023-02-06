@@ -13,6 +13,7 @@ public class MixBehaviour : MonoBehaviour
     [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
     [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
     [SerializeField] private bool isPrimaryFlask;
+    [SerializeField] private bool isSecondaryFlask;
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +54,13 @@ public class MixBehaviour : MonoBehaviour
             else
             {
                 lv.level += levelPerML;
+            }
+        }
+        else if (isSecondaryFlask)
+        {
+            if (other.name == "Picric Acid Variant(Clone)")
+            {
+                lv.liquidLayers[0].amount += levelPerML;
             }
         }
         else
