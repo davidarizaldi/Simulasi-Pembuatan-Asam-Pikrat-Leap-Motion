@@ -51,4 +51,13 @@ public class CenterPopupUIHandler : MonoBehaviour
         gameObject.SetActive(false);
         TintedBackground.SetActive(false);
     }
+
+    public IEnumerator ShowSuccess()
+    {
+        popupText.SetText("You completed the practicum!");
+        gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(popupDuration);
+        gameObject.SetActive(false);
+    }
 }

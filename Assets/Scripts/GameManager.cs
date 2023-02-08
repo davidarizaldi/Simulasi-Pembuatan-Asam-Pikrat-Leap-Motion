@@ -6,15 +6,14 @@ using LiquidVolumeFX;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject mainFlask;
-    [SerializeField] private GameObject secondFlask;
+    [SerializeField] private GameObject filter;
     [SerializeField] private Canvas objectiveHud;
     [SerializeField] private Canvas centerPopup;
     private LiquidVolume mainFlaskLV;
-    private LiquidVolume secondFlaskLV;
     public static GameManager Instance;
 
     public static float[] mainFlaskLevels = new float[4];
-    public static float secondFlaskLevel;
+    public static float[] filterLevels;
     public static float temp;
     public static int practicumStep;
 
@@ -48,14 +47,14 @@ public class GameManager : MonoBehaviour
         {
             new Objective(2, "Nitric Acid", 20, "mL"),
             new Objective("Stirred", true),
-            new Objective("No Reaction Left", true),
-            new Objective()
+            new Objective("Heat Off", true),
+            new Objective("No Reaction Left", true)
         },
         {
             new Objective("Off Ice Bath"),
+            new Objective("On Hotplate", true),
             new Objective("Stirred", true),
-            new Objective("Heated"),
-            new Objective()
+            new Objective("Heated")
         },
         {
             new Objective("Stir Off"),
@@ -68,6 +67,12 @@ public class GameManager : MonoBehaviour
             new Objective(),
             new Objective(),
             new Objective()
+        },
+        {
+            new Objective(" "),
+            new Objective(),
+            new Objective(),
+            new Objective()
         }
     };
 
@@ -75,7 +80,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         mainFlaskLV = mainFlask.GetComponentInChildren<LiquidVolume>();
-        secondFlaskLV = secondFlask.GetComponentInChildren<LiquidVolume>();
+        filterLevels = filter.GetComponentInChildren<SaringBehaviour>().mLAmounts;
         practicumStep = 0;
         UpdateLevels();
     }
@@ -113,7 +118,9 @@ public class GameManager : MonoBehaviour
                     break;
                 case 5:
                     StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
-                    UpdateSecLevel();
+                    break;
+                case 6:
+                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowSuccess());
                     break;
                 default:
                     break;
@@ -128,28 +135,22 @@ public class GameManager : MonoBehaviour
         {
             mainFlaskLevels[i] = mainFlaskLV.liquidLayers[i].amount / 0.002f;
         }
+        filterLevels = filter.GetComponentInChildren<SaringBehaviour>().mLAmounts;
 
         CheckLiquidObjectives();
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
     }
 
-    public void UpdateSecLevel()
-    {
-        secondFlaskLevel = secondFlaskLV.liquidLayers[0].amount / 0.002f;
-        if (practicumStep == 5)
-        {
-            Objective objective = objectives[practicumStep, 0];
-            if (secondFlaskLevel >= objective.target)
-            {
-                objective.isDone = true;
-            }
-        }
-
-        objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
-    }
-
     void CheckLiquidObjectives()
     {
+        if (practicumStep == 5)
+        {
+            if (filterLevels[0] >= objectives[5,0].target)
+            {
+                objectives[5, 0].isDone = true;
+            }
+            return;
+        }
         for (int i = 0; i < objectives.GetLength(1); i++)
         {
             Objective objective = objectives[practicumStep, i];

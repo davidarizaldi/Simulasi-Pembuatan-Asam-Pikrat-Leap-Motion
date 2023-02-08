@@ -6,6 +6,7 @@ public class MoveObject : MonoBehaviour
 {
     [SerializeField] private GameObject mainFlask;
     [SerializeField] private GameObject iceBath;
+    [SerializeField] private GameObject magnet;
 
     private readonly Vector3 onIceBath = new(0.2f, 1.0f, -0.2f);
     private readonly Vector3 onHotplate = new(0.0f, 1.1f, 0.0f);
@@ -54,16 +55,23 @@ public class MoveObject : MonoBehaviour
     IEnumerator ToIceBath()
     {
         mainFlask.GetComponent<Rigidbody>().useGravity = false;
-        targetFlask = onIceBath;
+        magnet.GetComponent<Rigidbody>().useGravity = false;
+        magnet.GetComponent<MagnetSpinPull>().enabled = false;
+        targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
         flaskMoving = true;
+        yield return new WaitForSeconds(time);
+        targetFlask = onIceBath;
         yield return new WaitForSeconds(time);
         flaskMoving = false;
         mainFlask.GetComponent<Rigidbody>().useGravity = true;
+        magnet.GetComponent<Rigidbody>().useGravity = true;
+        magnet.GetComponent<MagnetSpinPull>().enabled = true;
     }
 
     IEnumerator ToHotplate()
     {
         mainFlask.GetComponent<Rigidbody>().useGravity = false;
+        magnet.GetComponent<Rigidbody>().useGravity = false;
         targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
         flaskMoving = true;
         yield return new WaitForSeconds(time);
@@ -71,26 +79,27 @@ public class MoveObject : MonoBehaviour
         yield return new WaitForSeconds(time);
         flaskMoving = false;
         mainFlask.GetComponent<Rigidbody>().useGravity = true;
+        magnet.GetComponent<Rigidbody>().useGravity = true;
     }
 
     IEnumerator DoubleTo()
     {
         iceBath.GetComponent<Rigidbody>().isKinematic = true;
-        mainFlask.GetComponent<Rigidbody>().isKinematic = true;
-        targetIceBath = iceBath.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
-        targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
+        //mainFlask.GetComponent<Rigidbody>().isKinematic = true;
+        targetIceBath = iceBath.transform.position + new Vector3(0.0f, 0.15f, 0.0f);
+        //targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
         iceBathMoving = true;
-        flaskMoving = true;
+        //flaskMoving = true;
         yield return new WaitForSeconds(time);
         targetIceBath = onHotplate;
-        targetFlask = onHotplate + new Vector3(0.0f, 0.1f, 0.0f);
+        //targetFlask = onHotplate + new Vector3(0.0f, 0.1f, 0.0f);
         yield return new WaitForSeconds(time);
         iceBathMoving = false;
-        flaskMoving = false;
+        //flaskMoving = false;
         iceBath.GetComponent<Rigidbody>().isKinematic = false;
         yield return new WaitForSeconds(0.5f);
         iceBath.GetComponent<Rigidbody>().isKinematic = true;
-        mainFlask.GetComponent<Rigidbody>().isKinematic = false;
+        //mainFlask.GetComponent<Rigidbody>().isKinematic = false;
         yield return new WaitForSeconds(0.5f);
         iceBath.GetComponent<Rigidbody>().isKinematic = false;
     }

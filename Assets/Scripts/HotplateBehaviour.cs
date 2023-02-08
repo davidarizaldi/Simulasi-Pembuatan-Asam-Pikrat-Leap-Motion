@@ -28,7 +28,7 @@ public class HotplateBehaviour : MonoBehaviour
     {
         rpm = eulerAngle * 8;
         UpdateDisplay();
-        magnet.GetComponent<MagnetSpin>().UpdateRPM(rpm);
+        magnet.GetComponent<MagnetSpinPull>().UpdateRPM(rpm);
 
         if (rpm > 200.0f)
         {

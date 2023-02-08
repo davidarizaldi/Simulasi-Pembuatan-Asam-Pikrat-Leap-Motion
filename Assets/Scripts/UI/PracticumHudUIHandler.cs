@@ -28,9 +28,9 @@ public class PracticumHudUIHandler : MonoBehaviour
             {
                 objectiveText[i].SetText("");
             }
-            else if (objective.target == 4.0f)
+            else if (objective.id == 4.0f)
             {
-                objectiveText[i].SetText(objective.nama + " " + GameManager.secondFlaskLevel + objective.akhiran + "/" + objective.target + objective.akhiran);
+                objectiveText[i].SetText(objective.nama + " " + GameManager.filterLevels[0] + objective.akhiran + "/" + objective.target + objective.akhiran);
             }
             else if (objective.target != 0.0f)
             {

@@ -9,11 +9,10 @@ public class MixBehaviour : MonoBehaviour
     private Rigidbody rb;
     private Collider[] childrenColliders;
 
-    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f, ErlenMeyer250 = 0.002;
+    [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002544f; GraduatedCylinder100 = 0.010111f, ErlenMeyer250 = 0.002f;
     [SerializeField] private float underSomeLevel; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.05f;
     [SerializeField] private float levelPerML2; // FlorenceFlask250 = 0; GraduatedCylinder100 = 0.005f;
     [SerializeField] private bool isPrimaryFlask;
-    [SerializeField] private bool isSecondaryFlask;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +32,7 @@ public class MixBehaviour : MonoBehaviour
         UpdateColliderPos();
     }
 
-    private void OnParticleCollision(GameObject other)
+    void OnParticleCollision(GameObject other)
     {
         if (other.CompareTag("Water Particle"))
         {
@@ -54,13 +53,6 @@ public class MixBehaviour : MonoBehaviour
             else
             {
                 lv.level += levelPerML;
-            }
-        }
-        else if (isSecondaryFlask)
-        {
-            if (other.name == "Picric Acid Variant(Clone)")
-            {
-                lv.liquidLayers[0].amount += levelPerML;
             }
         }
         else
@@ -85,6 +77,9 @@ public class MixBehaviour : MonoBehaviour
                     break;
                 case "Water Particle(Clone)":
                     lv.liquidLayers[3].amount += levelPerML;
+                    break;
+                case "Excess Particle(Clone)":
+                    lv.liquidLayers[0].amount += levelPerML;
                     break;
                 default:
                     break;

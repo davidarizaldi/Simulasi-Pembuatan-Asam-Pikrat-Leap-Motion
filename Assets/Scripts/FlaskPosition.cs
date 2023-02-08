@@ -5,6 +5,7 @@ using UnityEngine;
 public class FlaskPosition : MonoBehaviour
 {
     private GameManager gameManager;
+    [SerializeField] GameObject iceBath;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +20,7 @@ public class FlaskPosition : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.transform.name == "OnHotplateTrigger")
         {
@@ -28,10 +29,11 @@ public class FlaskPosition : MonoBehaviour
         if (other.transform.name == "OnIceBathTrigger")
         {
             gameManager.SetOnIceBath(true);
+            MountToIcebath(true);
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.transform.name == "OnHotplateTrigger")
         {
@@ -40,6 +42,19 @@ public class FlaskPosition : MonoBehaviour
         if (other.transform.name == "OnIceBathTrigger")
         {
             gameManager.SetOnIceBath(false);
+            MountToIcebath(false);
+        }
+    }
+
+    void MountToIcebath(bool mount)
+    {
+        if (mount)
+        {
+            transform.parent = iceBath.transform;
+        }
+        else
+        {
+            transform.parent = null;
         }
     }
 }
