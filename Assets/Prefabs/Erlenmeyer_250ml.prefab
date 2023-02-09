@@ -1,5 +1,50 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1203369763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1203369764}
+  - component: {fileID: 1203369765}
+  m_Layer: 0
+  m_Name: InErlenmeyerTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1203369764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203369763}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 5213482657200693963}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1203369765
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203369763}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 1, z: 0.7}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &5213482657200799465
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,6 +417,7 @@ Transform:
   - {fileID: 5213482657200693961}
   - {fileID: 5213482657200693967}
   - {fileID: 5213482657200693965}
+  - {fileID: 1203369764}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -434,6 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67822e0a8d3f2e246b7e919a2db1a3bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iceBath: {fileID: 0}
 --- !u!1 &5213482657200799469
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,6 +494,7 @@ GameObject:
   - component: {fileID: 5213482657202987055}
   - component: {fileID: 5213482657200830549}
   - component: {fileID: 227008990}
+  - component: {fileID: 1880502024}
   m_Layer: 0
   m_Name: LiquidVolume
   m_TagString: Untagged
@@ -674,7 +722,7 @@ MonoBehaviour:
   _textureScale: {x: 1, y: 1}
   _textureOffset: {x: 0, y: 0}
   _distortionAmount: 1
-  _depthAware: 0
+  _depthAware: 1
   _depthAwareOffset: 0
   _irregularDepthDebug: 0
   _depthAwareCustomPass: 0
@@ -804,6 +852,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   externalSmoke: {fileID: 0}
+--- !u!114 &1880502024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5213482657200799469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dff98848345184e987ab3c06153ff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waterParticle: {fileID: 6947465466496335920, guid: e8bef3770cfe53b43835bdaae7b71531, type: 3}
+  levelPerML: 0.002
+  underSomeLevel: 0
+  levelPerML2: 0
+  isPrimaryFlask: 1
 --- !u!1 &5213482657200799471
 GameObject:
   m_ObjectHideFlags: 0

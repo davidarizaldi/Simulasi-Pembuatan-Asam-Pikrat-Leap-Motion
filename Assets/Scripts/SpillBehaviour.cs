@@ -7,9 +7,11 @@ public class SpillBehaviour : MonoBehaviour
 {
     private LiquidVolume liquidVolume;
     [SerializeField] private ParticleSystem waterParticle;
+
     [SerializeField] private float levelPerML; // FlorenceFlask250 = 0.002f; GraduatedCylinder100 = 0.010111f; Erlenmeyer250 = 0.002f
     [SerializeField] private float underSomeLevel; // GraduatedCylinder100 = 0.05f;
     [SerializeField] private float levelPerML2; // GraduatedCylinder100 = 0.005f;
+    [SerializeField] private bool isPrimaryFlask;
 
     private bool isSpilling = false;
     private Vector3 spillPosition;
@@ -33,6 +35,17 @@ public class SpillBehaviour : MonoBehaviour
 
     void SpawnWater()
     {
+        if (isPrimaryFlask)
+        {
+            Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);
+            int layerCount = liquidVolume.liquidLayers.Length;
+            for (int i = 0; i < layerCount; i++)
+            {
+                liquidVolume.liquidLayers[i].amount -= levelPerML * (liquidVolume.liquidLayers[i].amount / liquidVolume.level);
+            }
+            liquidVolume.UpdateLayers();
+            return;
+        }
         if (liquidVolume.level <= underSomeLevel)
         {
             Instantiate(waterParticle, spillPosition, waterParticle.transform.rotation);

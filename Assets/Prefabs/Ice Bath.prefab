@@ -119,9 +119,9 @@ MonoBehaviour:
   _layersAdjustmentCompact: 1
   _useLightColor: 0
   _directionalLight: {fileID: 0}
-  _liquidColor1: {r: 1, g: 1, b: 1, a: 0.0627451}
+  _liquidColor1: {r: 1, g: 1, b: 1, a: 0.03137255}
   _liquidScale1: 1
-  _liquidColor2: {r: 0.3529412, g: 0.7372549, b: 0.84705883, a: 0.1254902}
+  _liquidColor2: {r: 0.3529412, g: 0.7372549, b: 0.84705883, a: 0.0627451}
   _liquidScale2: 5
   _alpha: 1
   _emissionColor: {r: 0, g: 0, b: 0, a: 1}
@@ -178,7 +178,7 @@ MonoBehaviour:
   _textureScale: {x: 1, y: 1}
   _textureOffset: {x: 0, y: 0}
   _distortionAmount: 1
-  _depthAware: 0
+  _depthAware: 1
   _depthAwareOffset: 0
   _irregularDepthDebug: 0
   _depthAwareCustomPass: 0

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2729507601881638825}
   - component: {fileID: 6289689691100598249}
   - component: {fileID: 5299660090374374476}
-  - component: {fileID: 2879753741620321878}
-  - component: {fileID: 2879753741620321884}
   - component: {fileID: 4770825938834353003}
+  - component: {fileID: 2879753741620321886}
+  - component: {fileID: 2879753741620321887}
   m_Layer: 0
   m_Name: Magnet
   m_TagString: Untagged
@@ -118,31 +118,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2879753741620321878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7767421216454987866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9822128342f0f4283aa23f05833cf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2879753741620321884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7767421216454987866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75686607b405da44ab85c2f0ae069307, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  magneticObject: {fileID: 0}
 --- !u!114 &4770825938834353003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,3 +149,29 @@ MonoBehaviour:
     layerIndex: 0
   _eventTable:
     _entries: []
+--- !u!114 &2879753741620321886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767421216454987866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0ddf575d45f6f4198ae5f562c1611e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  erlenmeyer: {fileID: 0}
+--- !u!114 &2879753741620321887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767421216454987866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226a7455f885dc840a111a882fe618f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magneticObject: {fileID: 0}

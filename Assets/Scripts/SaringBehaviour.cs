@@ -10,7 +10,7 @@ public class SaringBehaviour : MonoBehaviour
     private Collider[] childrenColliders;
     [SerializeField] private GameObject excessFlask;
 
-    public float[] mLAmounts;
+    [HideInInspector] public float[] mLAmounts;
     private float mLSum;
     private readonly float maxML = 50;
     private readonly float maxVolume = 0.261799387799f;
@@ -46,10 +46,13 @@ public class SaringBehaviour : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        if (other.CompareTag("Water Particle"))
+        if (mLSum < maxML)
         {
-            AddAmount(other);
-            Destroy(other);
+            if (other.CompareTag("Water Particle"))
+            {
+                AddAmount(other);
+                Destroy(other);
+            }
         }
     }
 
@@ -73,13 +76,19 @@ public class SaringBehaviour : MonoBehaviour
 
     void UpdateLevel()
     {
-        double volumeSum = mLSum * multiplier;
-        float heightPerML = CalcHeight(volumeSum) / mLSum;
+        double volumeAmount0 = mLAmounts[0] * multiplier;
+        float heightPerML = CalcHeight(volumeAmount0) / mLAmounts[0];
         if (float.IsNaN(heightPerML))
             heightPerML = 0.0f;
         lv.liquidLayers[0].amount = heightPerML * mLAmounts[0];
-        lv.liquidLayers[1].amount = heightPerML * mLAmounts[1];
+
+        double volumeSum = mLSum * multiplier;
+        float height = CalcHeight(volumeSum);
+        if (float.IsNaN(height))
+            height = 0.0f;
+        lv.liquidLayers[1].amount = height - heightPerML * mLAmounts[0];
         lv.UpdateLayers();
+        GameObject.Find("GameManager").GetComponent<GameManager>().UpdateLevels();
     }
 
     float CalcHeight(double volume)

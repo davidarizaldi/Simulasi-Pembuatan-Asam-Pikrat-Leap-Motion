@@ -62,4 +62,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainFlask: {fileID: 0}
   iceBath: {fileID: 0}
+  magnet: {fileID: 0}
   speed: 0.5

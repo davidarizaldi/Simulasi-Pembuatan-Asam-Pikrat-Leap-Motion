@@ -50,6 +50,10 @@ public class MoveObject : MonoBehaviour
         {
             StartCoroutine(DoubleTo());
         }
+        if (Input.GetKey(KeyCode.R))
+        {
+            iceBath.SetActive(false);
+        }
     }
 
     IEnumerator ToIceBath()

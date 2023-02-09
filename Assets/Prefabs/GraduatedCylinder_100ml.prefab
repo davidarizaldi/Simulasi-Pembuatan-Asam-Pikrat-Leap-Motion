@@ -384,6 +384,7 @@ MonoBehaviour:
   levelPerML: 0.010111
   underSomeLevel: 0.05
   levelPerML2: 0.005
+  isPrimaryFlask: 0
 --- !u!1 &220034005845951356
 GameObject:
   m_ObjectHideFlags: 0
