@@ -8,7 +8,6 @@ public class MoveObject : MonoBehaviour
     [SerializeField] private GameObject iceBath;
     [SerializeField] private GameObject magnet;
 
-    private readonly Vector3 onIceBath = new(0.2f, 1.0f, -0.2f);
     private readonly Vector3 onHotplate = new(0.0f, 1.1f, 0.0f);
     private Vector3 targetFlask;
     private Vector3 targetIceBath;
@@ -54,6 +53,10 @@ public class MoveObject : MonoBehaviour
         {
             iceBath.SetActive(false);
         }
+        if (Input.GetKey(KeyCode.O))
+        {
+            StartCoroutine(ToOut());
+        }
     }
 
     IEnumerator ToIceBath()
@@ -64,7 +67,23 @@ public class MoveObject : MonoBehaviour
         targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
         flaskMoving = true;
         yield return new WaitForSeconds(time);
-        targetFlask = onIceBath;
+        targetFlask = iceBath.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
+        yield return new WaitForSeconds(time);
+        flaskMoving = false;
+        mainFlask.GetComponent<Rigidbody>().useGravity = true;
+        magnet.GetComponent<Rigidbody>().useGravity = true;
+        magnet.GetComponent<MagnetSpinPull>().enabled = true;
+    }
+
+    IEnumerator ToOut()
+    {
+        mainFlask.GetComponent<Rigidbody>().useGravity = false;
+        magnet.GetComponent<Rigidbody>().useGravity = false;
+        magnet.GetComponent<MagnetSpinPull>().enabled = false;
+        targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.2f, 0.0f);
+        flaskMoving = true;
+        yield return new WaitForSeconds(time);
+        targetFlask = targetFlask + new Vector3(0.2f, 0.0f, 0.0f);
         yield return new WaitForSeconds(time);
         flaskMoving = false;
         mainFlask.GetComponent<Rigidbody>().useGravity = true;

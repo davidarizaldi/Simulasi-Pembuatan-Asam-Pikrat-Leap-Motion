@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Canvas centerPopup;
     private LiquidVolume mainFlaskLV;
     public static GameManager Instance;
+    private Objects ob;
 
     public static float[] mainFlaskLevels = new float[4];
     public static float[] filterLevels;
@@ -79,9 +80,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ob = GameObject.Find("Objects").GetComponent<Objects>();
         mainFlaskLV = mainFlask.GetComponentInChildren<LiquidVolume>();
         filterLevels = filter.GetComponentInChildren<SaringBehaviour>().mLAmounts;
-        practicumStep = 0;
         UpdateLevels();
     }
 
@@ -91,41 +92,7 @@ public class GameManager : MonoBehaviour
         if (AllIsDone())
         {
             practicumStep += 1;
-            switch (practicumStep)
-            {
-                case 1:
-                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowWaitFor(30));
-                    mainFlaskLV.liquidLayers[0].color.a = 0.039f;
-                    mainFlaskLV.liquidLayers[0].miscible = true;
-                    mainFlaskLV.liquidLayers[1].miscible = true;
-                    break;
-                case 2:
-                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
-                    mainFlaskLV.liquidLayers[2].miscible = true;
-                    break;
-                case 3:
-                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
-                    break;
-                case 4:
-                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowWaitFor(120));
-                    mainFlaskLV.liquidLayers[0].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
-                    mainFlaskLV.liquidLayers[1].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
-                    mainFlaskLV.liquidLayers[2].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
-                    mainFlaskLV.liquidLayers[3].color = new Color(0.0f, 1.0f, 0.25f, 0.5f);
-                    mainFlaskLV.liquidLayers[3].murkiness = 0.1f;
-                    mainFlaskLV.UpdateLayers();
-                    mainFlaskLV.liquidLayers[3].miscible = true;
-                    break;
-                case 5:
-                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowObjectivesCompleted());
-                    break;
-                case 6:
-                    StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowSuccess());
-                    break;
-                default:
-                    break;
-            }
-            objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+            StartCoroutine(TransitionState(practicumStep));
         }
     }
 
@@ -176,6 +143,66 @@ public class GameManager : MonoBehaviour
             }
         }
         return allIsDone;
+    }
+
+    IEnumerator TransitionState(int practicumState)
+    {
+        CenterPopupUIHandler popUpHandler = centerPopup.GetComponent<CenterPopupUIHandler>();
+        
+        switch (practicumState)
+        {
+            case 1:
+                StartCoroutine(popUpHandler.ShowWaitFor(30));
+                yield return new WaitForSeconds(popUpHandler.popupDuration + 30 / popUpHandler.minPerSec);
+
+                mainFlaskLV.liquidLayers[0].color.a = 0.039f;
+                mainFlaskLV.liquidLayers[0].miscible = true;
+                mainFlaskLV.liquidLayers[1].miscible = true;
+                ob.objects[1].SetActive(false);
+                ob.objects[2].SetActive(false);
+                ob.objects[3].SetActive(false);
+                ob.objects[4].transform.position = new Vector3(0.0f, ob.objects[4].transform.position.y, -0.25f);
+                break;
+            case 2:
+                StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                yield return new WaitForSeconds(popUpHandler.popupDuration);
+
+                mainFlaskLV.liquidLayers[2].miscible = true;
+                ob.objects[5].transform.position = new Vector3(0.0f, ob.objects[5].transform.position.y, -0.2f);
+                ob.objects[6].transform.position = new Vector3(-0.13f, ob.objects[6].transform.position.y, -0.2f);
+                break;
+            case 3:
+                StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                ob.objects[5].SetActive(false);
+                ob.objects[6].SetActive(false);
+                break;
+            case 4:
+                StartCoroutine(popUpHandler.ShowWaitFor(120));
+                yield return new WaitForSeconds(popUpHandler.popupDuration + 120 / popUpHandler.minPerSec);
+
+                mainFlaskLV.liquidLayers[0].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                mainFlaskLV.liquidLayers[1].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                mainFlaskLV.liquidLayers[2].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+                mainFlaskLV.liquidLayers[3].color = new Color(0.0f, 1.0f, 0.25f, 0.5f);
+                mainFlaskLV.liquidLayers[3].murkiness = 0.1f;
+                mainFlaskLV.UpdateLayers();
+                mainFlaskLV.liquidLayers[3].miscible = true;
+                ob.objects[4].SetActive(false);
+                ob.objects[7].transform.position = new Vector3(0.0f, ob.objects[7].transform.position.y, -0.2f);
+                break;
+            case 5:
+                StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                ob.objects[7].SetActive(false);
+                ob.objects[8].transform.position = new Vector3(0.0f, ob.objects[8].transform.position.y, -0.25f);
+                break;
+            case 6:
+                StartCoroutine(popUpHandler.ShowSuccess());
+                break;
+            default:
+                break;
+        }
+        objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+        yield return new WaitForSeconds(0);
     }
 
     public void SetStirred(bool value)

@@ -62,6 +62,7 @@ public class WaterEjector : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
+            transform.position = new Vector3(0.0f, 1.08f, -0.25f);
             pourPicric = 50;
         }
     }
