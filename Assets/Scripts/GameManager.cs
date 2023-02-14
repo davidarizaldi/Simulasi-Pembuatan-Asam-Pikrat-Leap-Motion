@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public static float[] filterLevels;
     public static float temp;
     public static int practicumStep;
+    public static bool isRunning = true;
 
     void Awake()
     {
@@ -89,7 +90,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (AllIsDone())
+        if (isRunning && AllIsDone())
         {
             practicumStep += 1;
             StartCoroutine(TransitionState(practicumStep));
@@ -275,5 +276,12 @@ public class GameManager : MonoBehaviour
             }
         }
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+    }
+
+    public void DangerousLiquidDrop(string liquidName)
+    {
+        isRunning = false;
+        liquidName = liquidName.Remove(liquidName.Length - 24);
+        StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowFailed(liquidName));
     }
 }

@@ -8,7 +8,7 @@ public class MoveObject : MonoBehaviour
     [SerializeField] private GameObject iceBath;
     [SerializeField] private GameObject magnet;
 
-    private readonly Vector3 onHotplate = new(0.0f, 1.1f, 0.0f);
+    private readonly Vector3 onHotplate = new(0.0f, 1.1f, 0.05f);
     private Vector3 targetFlask;
     private Vector3 targetIceBath;
     private bool flaskMoving = false;
@@ -83,7 +83,7 @@ public class MoveObject : MonoBehaviour
         targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.2f, 0.0f);
         flaskMoving = true;
         yield return new WaitForSeconds(time);
-        targetFlask = targetFlask + new Vector3(0.2f, 0.0f, 0.0f);
+        targetFlask += new Vector3(0.15f, 0.0f, -0.05f);
         yield return new WaitForSeconds(time);
         flaskMoving = false;
         mainFlask.GetComponent<Rigidbody>().useGravity = true;

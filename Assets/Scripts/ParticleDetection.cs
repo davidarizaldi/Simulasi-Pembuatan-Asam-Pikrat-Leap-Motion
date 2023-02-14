@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticleCounter : MonoBehaviour
+public class ParticleDetection : MonoBehaviour
 {
+    private GameManager gameManager;
     [SerializeField] private int counter = 0;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameManager = GameManager.Instance;
     }
 
     // Update is called once per frame
@@ -20,13 +21,10 @@ public class ParticleCounter : MonoBehaviour
 
     void OnParticleCollision(GameObject other)
     {
-        if (other.name == "Water Particle" || other.name == "Water Particle(Clone)")
+        if (other.name == "Water Particle" || other.name == "Water Particle(Clone)") { }
+        else
         {
-            counter += 1;
-        }
-        else if (other.name == "Water Particle Medium Variant" || other.name == "Water Particle Medium Variant(Clone)")
-        {
-            counter += 10;
+            gameManager.DangerousLiquidDrop(other.name);
         }
         Destroy(other);
     }

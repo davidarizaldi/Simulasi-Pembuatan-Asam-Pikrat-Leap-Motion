@@ -62,6 +62,17 @@ public class CenterPopupUIHandler : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public IEnumerator ShowFailed(string liquidName)
+    {
+        popupText.SetText("You failed the practicum!\n " + liquidName + " is spilled.");
+        popupText.rectTransform.sizeDelta = new Vector3(640.0f, 64.0f);
+        gameObject.SetActive(true);
+        yield return new WaitForSeconds(popupDuration * 5);
+
+        popupText.rectTransform.sizeDelta = new Vector3(640.0f, 48.0f);
+        gameObject.SetActive(false);
+    }
+
     void UpdateWaitingMinutes()
     {
         popupText.SetText("Waiting time: " + $"{(int)(timer * minPerSec), 2}" + "/" + (targetTime * minPerSec) + " minutes.");
