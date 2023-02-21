@@ -28,13 +28,13 @@ public class PracticumHudUIHandler : MonoBehaviour
             {
                 objectiveText[i].SetText("");
             }
-            else if (objective.id == 4.0f)
+            else if (objective.id == 4)
             {
                 objectiveText[i].SetText(objective.nama + " " + GameManager.filterLevels[0] + objective.akhiran + "/" + objective.target + objective.akhiran);
             }
             else if (objective.target != 0.0f)
             {
-                objectiveText[i].SetText(objective.nama + " " + GameManager.mainFlaskLevels[objective.id] + objective.akhiran + "/" + objective.target + objective.akhiran);
+                objectiveText[i].SetText(objective.nama + " " + (int)(objective.id == 7 ? GameManager.temp : GameManager.mainFlaskLevels[objective.id]) + objective.akhiran + "/" + objective.target + objective.akhiran);
             }
             else
             {
@@ -42,6 +42,10 @@ public class PracticumHudUIHandler : MonoBehaviour
             }
 
             objectiveText[i].color = (objective.isDone ? Color.green : Color.white);
+            if (objective.nama == "Heat Off" && GameManager.temp > 25)
+            {
+                objectiveText[i].color = Color.red;
+            }
         }
     }
 }

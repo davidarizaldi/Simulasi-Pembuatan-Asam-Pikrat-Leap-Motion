@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public static int practicumStep;
     public static bool isRunning = true;
 
+    private static readonly float targetTemp = 75.0f;
+
     void Awake()
     {
         if (Instance == null)
@@ -37,10 +39,10 @@ public class GameManager : MonoBehaviour
             new Objective(0, "Phenol", 5, "g"),
             new Objective(1, "Sulfuric Acid", 7, "mL"),
             new Objective("Stirred"),
-            new Objective("Heated")
+            new Objective(7, "Heated", targetTemp, "°")
         },
         {
-            new Objective("Heat Off"),
+            new Objective(7, "Heat Off", 25, "°"),
             new Objective("On Ice Bath"),
             new Objective("On Hotplate", true),
             new Objective("Stirred", true)
@@ -49,18 +51,18 @@ public class GameManager : MonoBehaviour
         {
             new Objective(2, "Nitric Acid", 20, "mL"),
             new Objective("Stirred", true),
-            new Objective("Heat Off", true),
+            new Objective(7, "Heat Off", 25, "°", true),
             new Objective("No Reaction Left", true)
         },
         {
             new Objective("Off Ice Bath"),
             new Objective("On Hotplate", true),
             new Objective("Stirred", true),
-            new Objective("Heated")
+            new Objective(7, "Heated", targetTemp, "°")
         },
         {
             new Objective("Stir Off"),
-            new Objective("Heat Off"),
+            new Objective(7, "Heat Off", 25, "°"),
             new Objective(3, "Water", 200, "mL"),
             new Objective()
         },
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < objectives.GetLength(1); i++)
         {
             Objective objective = objectives[practicumStep, i];
-            if (objective.target != 0.0f)
+            if (objective.id >= 0 && objective.id <= 3)
             {
                 if (mainFlaskLevels[objective.id] >= objective.target)
                 {
@@ -220,6 +222,20 @@ public class GameManager : MonoBehaviour
             }
         }
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
+    }
+
+    public void SetHeat(float value)
+    {
+        temp = value;
+
+        if (temp > targetTemp)
+        {
+            SetHeated(true);
+        }
+        else
+        {
+            SetHeated(false);
+        }
     }
 
     public void SetHeated(bool value)

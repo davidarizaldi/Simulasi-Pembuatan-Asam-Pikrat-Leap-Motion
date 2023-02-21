@@ -44,14 +44,7 @@ public class HotplateBehaviour : MonoBehaviour
     {
         temp = eulerAngle * 3 + 25.0f;
 
-        if (temp > 50.0f)
-        {
-            gameManager.SetHeated(true);
-        }
-        else
-        {
-            gameManager.SetHeated(false);
-        }
+        gameManager.SetHeat(temp);
     }
 
     void UpdateDisplay()
