@@ -15,9 +15,11 @@ public class GameManager : MonoBehaviour
 
     public static float[] mainFlaskLevels = new float[4];
     public static float[] filterLevels;
-    public static float temp;
+    public static float temperature;
+    public static bool isStirring;
     public static int practicumStep;
-    public static bool isRunning = true;
+    public static bool practicumRunning = true;
+    public static bool popupIsActive;
 
     private static readonly float targetTemp = 75.0f;
 
@@ -37,21 +39,32 @@ public class GameManager : MonoBehaviour
     {
         {
             new Objective(0, "Phenol", 5, "g"),
+            new Objective(),
+            new Objective(),
+            new Objective()
+        },
+        {
             new Objective(1, "Sulfuric Acid", 7, "mL"),
+            new Objective(),
+            new Objective(),
+            new Objective()
+        },
+        {
             new Objective("Stirred"),
-            new Objective(7, "Heated", targetTemp, "°")
+            new Objective(7, "Heated", targetTemp, "°"),
+            new Objective(),
+            new Objective()
         },
         {
             new Objective(7, "Heat Off", 25, "°"),
             new Objective("On Ice Bath"),
             new Objective("On Hotplate", true),
-            new Objective("Stirred", true)
-            
+            new Objective()
         },
         {
-            new Objective(2, "Nitric Acid", 20, "mL"),
             new Objective("Stirred", true),
             new Objective(7, "Heat Off", 25, "°", true),
+            new Objective(2, "Nitric Acid", 20, "mL"),
             new Objective("No Reaction Left", true)
         },
         {
@@ -92,7 +105,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isRunning && AllIsDone())
+        if (practicumRunning && AllIsDone())
         {
             practicumStep += 1;
             StartCoroutine(TransitionState(practicumStep));
@@ -113,11 +126,11 @@ public class GameManager : MonoBehaviour
 
     void CheckLiquidObjectives()
     {
-        if (practicumStep == 5)
+        if (practicumStep == 7)
         {
-            if (filterLevels[0] >= objectives[5,0].target)
+            if (filterLevels[0] >= objectives[7,0].target)
             {
-                objectives[5, 0].isDone = true;
+                objectives[7, 0].isDone = true;
             }
             return;
         }
@@ -155,31 +168,47 @@ public class GameManager : MonoBehaviour
         switch (practicumState)
         {
             case 1:
+                StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                yield return new WaitForSeconds(popUpHandler.popupDuration);
+
+                ob.objects[1].SetActive(false);
+                ob.objects[2].transform.position = new Vector3(0.0f, ob.objects[2].transform.position.y, -0.2f);
+                ob.objects[3].transform.position = new Vector3(-0.13f, ob.objects[3].transform.position.y, -0.2f);
+                break;
+            case 2:
+                StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                yield return new WaitForSeconds(popUpHandler.popupDuration);
+
+                ob.objects[2].SetActive(false);
+                ob.objects[3].SetActive(false);
+                break;
+            case 3:
                 StartCoroutine(popUpHandler.ShowWaitFor(30));
                 yield return new WaitForSeconds(popUpHandler.popupDuration + 30 / popUpHandler.minPerSec);
 
                 mainFlaskLV.liquidLayers[0].color.a = 0.039f;
                 mainFlaskLV.liquidLayers[0].miscible = true;
                 mainFlaskLV.liquidLayers[1].miscible = true;
-                ob.objects[1].SetActive(false);
-                ob.objects[2].SetActive(false);
-                ob.objects[3].SetActive(false);
                 ob.objects[4].transform.position = new Vector3(0.0f, ob.objects[4].transform.position.y, -0.25f);
                 break;
-            case 2:
+            case 4:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                SetStirred(isStirring);
+                SetHeat(temperature);
                 yield return new WaitForSeconds(popUpHandler.popupDuration);
 
                 mainFlaskLV.liquidLayers[2].miscible = true;
                 ob.objects[5].transform.position = new Vector3(0.0f, ob.objects[5].transform.position.y, -0.2f);
                 ob.objects[6].transform.position = new Vector3(-0.13f, ob.objects[6].transform.position.y, -0.2f);
                 break;
-            case 3:
+            case 5:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                yield return new WaitForSeconds(popUpHandler.popupDuration);
+
                 ob.objects[5].SetActive(false);
                 ob.objects[6].SetActive(false);
                 break;
-            case 4:
+            case 6:
                 StartCoroutine(popUpHandler.ShowWaitFor(120));
                 yield return new WaitForSeconds(popUpHandler.popupDuration + 120 / popUpHandler.minPerSec);
 
@@ -193,23 +222,26 @@ public class GameManager : MonoBehaviour
                 ob.objects[4].SetActive(false);
                 ob.objects[7].transform.position = new Vector3(0.0f, ob.objects[7].transform.position.y, -0.2f);
                 break;
-            case 5:
+            case 7:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
+                yield return new WaitForSeconds(popUpHandler.popupDuration);
+
                 ob.objects[7].SetActive(false);
                 ob.objects[8].transform.position = new Vector3(0.0f, ob.objects[8].transform.position.y, -0.25f);
                 break;
-            case 6:
+            case 8:
                 StartCoroutine(popUpHandler.ShowSuccess());
                 break;
             default:
                 break;
         }
+        yield return new WaitForSeconds(0.1f);
         objectiveHud.GetComponent<PracticumHudUIHandler>().UpdateObjectiveHud();
-        yield return new WaitForSeconds(0);
     }
 
     public void SetStirred(bool value)
     {
+        isStirring = value;
         for (int i = 0; i < objectives.GetLength(1); i++)
         {
             if (objectives[practicumStep, i].nama == "Stirred")
@@ -226,9 +258,9 @@ public class GameManager : MonoBehaviour
 
     public void SetHeat(float value)
     {
-        temp = value;
+        temperature = value;
 
-        if (temp > targetTemp)
+        if (temperature > targetTemp)
         {
             SetHeated(true);
         }
@@ -296,7 +328,7 @@ public class GameManager : MonoBehaviour
 
     public void DangerousLiquidDrop(string liquidName)
     {
-        isRunning = false;
+        practicumRunning = false;
         liquidName = liquidName.Remove(liquidName.Length - 24);
         StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowFailed(liquidName));
     }

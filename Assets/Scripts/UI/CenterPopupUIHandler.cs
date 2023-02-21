@@ -8,7 +8,7 @@ public class CenterPopupUIHandler : MonoBehaviour
     [SerializeField] private TMP_Text popupText;
     [SerializeField] private GameObject TintedBackground;
 
-    public readonly int popupDuration = 2;
+    public readonly float popupDuration = 1.5f;
     public readonly int minPerSec = 10;
     private float timer;
     private float targetTime;
@@ -31,15 +31,18 @@ public class CenterPopupUIHandler : MonoBehaviour
 
     public IEnumerator ShowObjectivesCompleted()
     {
+        GameManager.popupIsActive = true;
         popupText.SetText("Objectives completed!");
         gameObject.SetActive(true);
         yield return new WaitForSeconds(popupDuration);
 
+        GameManager.popupIsActive = false;
         gameObject.SetActive(false);
     }
 
     public IEnumerator ShowWaitFor(int minutes)
     {
+        GameManager.popupIsActive = true;
         popupText.SetText("Objectives completed!");
         gameObject.SetActive(true);
         yield return new WaitForSeconds(popupDuration);
@@ -49,6 +52,7 @@ public class CenterPopupUIHandler : MonoBehaviour
         popupText.SetText("Waiting time " + $"{(int)(timer * minPerSec),2}" + "/" + (targetTime * minPerSec) + " minutes.");
         yield return new WaitForSeconds(minutes / minPerSec);
 
+        GameManager.popupIsActive = false;
         gameObject.SetActive(false);
         TintedBackground.SetActive(false);
     }

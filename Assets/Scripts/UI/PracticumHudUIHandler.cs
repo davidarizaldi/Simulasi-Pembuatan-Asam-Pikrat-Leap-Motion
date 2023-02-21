@@ -6,11 +6,12 @@ using TMPro;
 public class PracticumHudUIHandler : MonoBehaviour
 {
     [SerializeField] private TMP_Text[] objectiveText;
+    private GuideHudUIHandler guideHud;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        guideHud = GameObject.Find("Guide HUD").GetComponent<GuideHudUIHandler>();
     }
 
     // Update is called once per frame
@@ -21,6 +22,11 @@ public class PracticumHudUIHandler : MonoBehaviour
 
     public void UpdateObjectiveHud()
     {
+        if (GameManager.popupIsActive)
+        {
+            return;
+        }
+        guideHud.UpdateGuideHud();
         for (int i = 0; i < GameManager.objectives.GetLength(1); i++)
         {
             Objective objective = GameManager.objectives[GameManager.practicumStep, i];
@@ -34,7 +40,7 @@ public class PracticumHudUIHandler : MonoBehaviour
             }
             else if (objective.target != 0.0f)
             {
-                objectiveText[i].SetText(objective.nama + " " + (int)(objective.id == 7 ? GameManager.temp : GameManager.mainFlaskLevels[objective.id]) + objective.akhiran + "/" + objective.target + objective.akhiran);
+                objectiveText[i].SetText(objective.nama + " " + (int)(objective.id == 7 ? GameManager.temperature : GameManager.mainFlaskLevels[objective.id]) + objective.akhiran + "/" + objective.target + objective.akhiran);
             }
             else
             {
@@ -42,7 +48,7 @@ public class PracticumHudUIHandler : MonoBehaviour
             }
 
             objectiveText[i].color = (objective.isDone ? Color.green : Color.white);
-            if (objective.nama == "Heat Off" && GameManager.temp > 25)
+            if (objective.nama == "Heat Off" && GameManager.temperature > 25)
             {
                 objectiveText[i].color = Color.red;
             }
