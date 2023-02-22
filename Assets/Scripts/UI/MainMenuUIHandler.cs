@@ -37,9 +37,4 @@ public class MainMenuUIHandler : MonoBehaviour
 #endif
         Application.Quit();
     }
-
-    public void NavMainMenuPage()
-    {
-        SceneManager.LoadScene(0);
-    }
 }

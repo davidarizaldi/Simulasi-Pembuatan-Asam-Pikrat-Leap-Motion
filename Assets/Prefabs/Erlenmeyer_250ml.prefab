@@ -608,37 +608,37 @@ MonoBehaviour:
     density: 1
     color: {r: 0, g: 1, b: 0, a: 0}
     miscible: 0
-    murkiness: 0.5
+    murkiness: 0
     murkColor: {r: 0, g: 0, b: 0, a: 1}
     scale: 0.3
     viscosity: 1
     adjustmentSpeed: 1
-    bubblesOpacity: 1
+    bubblesOpacity: 0
     baseLevel: 0
     currentBaseLevel: 0
     currentAmount: 0
     currentColor: {r: 0, g: 1, b: 0, a: 0}
-    currentMurkiness: 0.5
+    currentMurkiness: 0
     currentColor2: {r: 0, g: 0, b: 0, a: 1}
-    currentBubblesOpacity: 1
+    currentBubblesOpacity: 0
   - layerName: Layer 2
     amount: 0
     density: 1
     color: {r: 0, g: 1, b: 0, a: 0}
     miscible: 0
-    murkiness: 0.5
+    murkiness: 0
     murkColor: {r: 0, g: 0, b: 0, a: 1}
     scale: 0.3
     viscosity: 1
     adjustmentSpeed: 1
-    bubblesOpacity: 1
+    bubblesOpacity: 0
     baseLevel: 0
     currentBaseLevel: 0
     currentAmount: 0
     currentColor: {r: 0, g: 1, b: 0, a: 0}
-    currentMurkiness: 0.5
+    currentMurkiness: 0
     currentColor2: {r: 0, g: 0, b: 0, a: 1}
-    currentBubblesOpacity: 1
+    currentBubblesOpacity: 0
   - layerName: Layer 3
     amount: 0
     density: 1
@@ -687,7 +687,7 @@ MonoBehaviour:
   _foamTurbulence: 1
   _foamVisibleFromBottom: 1
   _smokeEnabled: 0
-  _smokeColor: {r: 0.64705884, g: 0.16470589, b: 0.16470589, a: 0.5019608}
+  _smokeColor: {r: 0.47058824, g: 0.23529412, b: 0.078431375, a: 0.39215687}
   _smokeScale: 0.01
   _smokeBaseObscurance: 10
   _smokeHeightAtten: 0

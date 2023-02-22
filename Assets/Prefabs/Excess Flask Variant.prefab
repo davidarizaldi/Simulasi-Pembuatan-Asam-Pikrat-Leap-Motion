@@ -1,5 +1,146 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &279972612706708697
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4842809039369296221}
+    m_Modifications:
+    - target: {fileID: 309868460849721333, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_Name
+      value: Corong Pengisap
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _alpha
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].color.b
+      value: 0.54901963
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].color.g
+      value: 0.8627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].murkiness
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].murkiness
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].bubblesOpacity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].currentColor.b
+      value: 0.54901963
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].bubblesOpacity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].currentColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].currentColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].currentColor.g
+      value: 0.8627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].currentColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].currentMurkiness
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].currentMurkiness
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].currentBubblesOpacity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285369664161, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: _liquidLayers.Array.data[1].currentBubblesOpacity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616349285858516153, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: excessFlask
+      value: 
+      objectReference: {fileID: 4842809039369782653}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.08085567
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1082850821139019087, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4570876605870447561, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc4fcf770d6df5d4aa62495201215c22, type: 3}
 --- !u!1001 &823912387444947862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17,7 +158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -25,7 +166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.25
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -60,16 +201,24 @@ PrefabInstance:
       value: Excess Flask
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
+      propertyPath: _alpha
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].color.a
-      value: 0.1254902
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].color.b
-      value: 0.2509804
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].color.g
+      value: 0.8627451
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].color.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].murkiness
@@ -77,15 +226,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].currentColor.a
-      value: 0.1254902
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].currentColor.b
-      value: 0.2509804
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
+      propertyPath: _liquidLayers.Array.data[0].currentColor.g
+      value: 0.8627451
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].currentColor.r
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _liquidLayers.Array.data[0].currentMurkiness
@@ -97,3 +250,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
+--- !u!4 &4842809039369296221 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
+  m_PrefabInstance: {fileID: 823912387444947862}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4842809039369782653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5213482657200799467, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
+  m_PrefabInstance: {fileID: 823912387444947862}
+  m_PrefabAsset: {fileID: 0}

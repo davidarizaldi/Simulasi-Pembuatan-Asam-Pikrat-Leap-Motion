@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(popUpHandler.ShowWaitFor(30));
                 yield return new WaitForSeconds(popUpHandler.popupDuration + 30 / popUpHandler.minPerSec);
 
+                mainFlaskLV.liquidLayers[0].murkiness = 0.0f;
                 mainFlaskLV.liquidLayers[0].color.a = 0.039f;
                 mainFlaskLV.liquidLayers[0].miscible = true;
                 mainFlaskLV.liquidLayers[1].miscible = true;
@@ -212,11 +213,11 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(popUpHandler.ShowWaitFor(120));
                 yield return new WaitForSeconds(popUpHandler.popupDuration + 120 / popUpHandler.minPerSec);
 
-                mainFlaskLV.liquidLayers[0].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
-                mainFlaskLV.liquidLayers[1].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
-                mainFlaskLV.liquidLayers[2].color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
-                mainFlaskLV.liquidLayers[3].color = new Color(0.0f, 1.0f, 0.25f, 0.5f);
-                mainFlaskLV.liquidLayers[3].murkiness = 0.1f;
+                mainFlaskLV.liquidLayers[0].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.liquidLayers[1].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.liquidLayers[2].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.liquidLayers[3].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.alpha = 0.15f;
                 mainFlaskLV.UpdateLayers();
                 mainFlaskLV.liquidLayers[3].miscible = true;
                 ob.objects[4].SetActive(false);
