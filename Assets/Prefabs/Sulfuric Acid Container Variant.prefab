@@ -57,11 +57,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2229937921960332703, guid: a1d4c80e40d32f044895bca3a7086fc7, type: 3}
       propertyPath: m_Name
-      value: Sulfuric Acid Container
+      value: Sulfuric Acid Container Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2229937921962333017, guid: a1d4c80e40d32f044895bca3a7086fc7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2229937921962333023, guid: a1d4c80e40d32f044895bca3a7086fc7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 77d7d4a4dd5be364cb51e92e81edc06e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1d4c80e40d32f044895bca3a7086fc7, type: 3}

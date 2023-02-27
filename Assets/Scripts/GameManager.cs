@@ -172,8 +172,10 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(popUpHandler.popupDuration);
 
                 ob.objects[1].SetActive(false);
+                ob.objects[11].SetActive(false);
                 ob.objects[2].transform.position = new Vector3(0.0f, ob.objects[2].transform.position.y, -0.2f);
                 ob.objects[3].transform.position = new Vector3(-0.13f, ob.objects[3].transform.position.y, -0.2f);
+                ob.objects[12].transform.position = new Vector3(0.0f, ob.objects[12].transform.position.y, -0.275f);
                 break;
             case 2:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
@@ -181,6 +183,7 @@ public class GameManager : MonoBehaviour
 
                 ob.objects[2].SetActive(false);
                 ob.objects[3].SetActive(false);
+                ob.objects[12].SetActive(false);
                 break;
             case 3:
                 StartCoroutine(popUpHandler.ShowWaitFor(30));
@@ -191,6 +194,7 @@ public class GameManager : MonoBehaviour
                 mainFlaskLV.liquidLayers[0].miscible = true;
                 mainFlaskLV.liquidLayers[1].miscible = true;
                 ob.objects[4].transform.position = new Vector3(0.0f, ob.objects[4].transform.position.y, -0.25f);
+                ob.objects[13].transform.position = new Vector3(0.0f, ob.objects[13].transform.position.y, -0.4f);
                 break;
             case 4:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
@@ -201,6 +205,8 @@ public class GameManager : MonoBehaviour
                 mainFlaskLV.liquidLayers[2].miscible = true;
                 ob.objects[5].transform.position = new Vector3(0.0f, ob.objects[5].transform.position.y, -0.2f);
                 ob.objects[6].transform.position = new Vector3(-0.13f, ob.objects[6].transform.position.y, -0.2f);
+                ob.objects[14].transform.position = new Vector3(0.0f, ob.objects[14].transform.position.y, -0.275f);
+                ob.objects[13].SetActive(false);
                 break;
             case 5:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
@@ -208,6 +214,7 @@ public class GameManager : MonoBehaviour
 
                 ob.objects[5].SetActive(false);
                 ob.objects[6].SetActive(false);
+                ob.objects[14].SetActive(false);
                 break;
             case 6:
                 StartCoroutine(popUpHandler.ShowWaitFor(120));
@@ -222,6 +229,7 @@ public class GameManager : MonoBehaviour
                 mainFlaskLV.liquidLayers[3].miscible = true;
                 ob.objects[4].SetActive(false);
                 ob.objects[7].transform.position = new Vector3(0.0f, ob.objects[7].transform.position.y, -0.2f);
+                ob.objects[15].transform.position = new Vector3(0.0f, ob.objects[15].transform.position.y, -0.275f);
                 break;
             case 7:
                 StartCoroutine(popUpHandler.ShowObjectivesCompleted());
@@ -229,6 +237,7 @@ public class GameManager : MonoBehaviour
 
                 ob.objects[7].SetActive(false);
                 ob.objects[8].transform.position = new Vector3(0.0f, ob.objects[8].transform.position.y, -0.25f);
+                ob.objects[15].SetActive(false);
                 break;
             case 8:
                 StartCoroutine(popUpHandler.ShowSuccess());
