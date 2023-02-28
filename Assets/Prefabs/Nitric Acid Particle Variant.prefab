@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8444291810978118618, guid: 328bd0a81614a104e8f47b994e9f8f7b, type: 3}
       propertyPath: m_Name
-      value: Nitric Acid Particle
+      value: Nitric Acid Particle Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 328bd0a81614a104e8f47b994e9f8f7b, type: 3}

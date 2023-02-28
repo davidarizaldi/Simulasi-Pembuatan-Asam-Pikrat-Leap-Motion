@@ -162,7 +162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.8191443
+      value: 0.8694999
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200693963, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -198,7 +198,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200799467, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: m_Name
-      value: Excess Flask
+      value: Excess Flask Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5213482657200830549, guid: fe5c4fc8098f5884e808b0da136d11f2, type: 3}
       propertyPath: _alpha
