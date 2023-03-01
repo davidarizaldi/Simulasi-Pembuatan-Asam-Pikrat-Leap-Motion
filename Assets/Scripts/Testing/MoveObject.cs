@@ -8,12 +8,12 @@ public class MoveObject : MonoBehaviour
     [SerializeField] private GameObject iceBath;
     [SerializeField] private GameObject magnet;
 
-    private readonly Vector3 onHotplate = new(0.0f, 1.1f, 0.05f);
+    private static readonly Vector3 onHotplate = new(0.0f, 1.1f, 0.05f);
     private Vector3 targetFlask;
     private Vector3 targetIceBath;
     private bool flaskMoving = false;
     private bool iceBathMoving = false;
-    public float speed = 1.0f;
+    private const float speed = 0.5f;
     private float time;
 
     // Start is called before the first frame update
@@ -80,7 +80,7 @@ public class MoveObject : MonoBehaviour
         mainFlask.GetComponent<Rigidbody>().useGravity = false;
         magnet.GetComponent<Rigidbody>().useGravity = false;
         magnet.GetComponent<MagnetSpinPull>().enabled = false;
-        targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.2f, 0.0f);
+        targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
         flaskMoving = true;
         yield return new WaitForSeconds(time);
         targetFlask += new Vector3(0.15f, 0.0f, -0.05f);
@@ -98,7 +98,7 @@ public class MoveObject : MonoBehaviour
         targetFlask = mainFlask.transform.position + new Vector3(0.0f, 0.1f, 0.0f);
         flaskMoving = true;
         yield return new WaitForSeconds(time);
-        targetFlask = onHotplate;
+        targetFlask = onHotplate + new Vector3(-0.01f, 0.0f, 0.0f);
         yield return new WaitForSeconds(time);
         flaskMoving = false;
         mainFlask.GetComponent<Rigidbody>().useGravity = true;

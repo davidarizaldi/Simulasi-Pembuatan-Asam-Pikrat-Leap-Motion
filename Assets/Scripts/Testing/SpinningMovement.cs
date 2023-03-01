@@ -6,13 +6,7 @@ public class SpinningMovement : MonoBehaviour
 {
     [SerializeField] private GameObject rotatorSpin;
     [SerializeField] private GameObject rotatorHeat;
-    [SerializeField] private float rotateChange = 500;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private const float rotateChange = 0.01f;
 
     // Update is called once per frame
     void Update()

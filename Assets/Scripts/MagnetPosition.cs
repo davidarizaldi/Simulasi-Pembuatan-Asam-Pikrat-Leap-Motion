@@ -4,20 +4,8 @@ using UnityEngine;
 
 public class MagnetPosition : MonoBehaviour
 {
-    [SerializeField] GameObject erlenmeyer;
+    [SerializeField] private GameObject erlenmeyer;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.name == "InErlenmeyerTrigger")

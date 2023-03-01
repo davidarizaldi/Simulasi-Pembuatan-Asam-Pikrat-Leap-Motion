@@ -36,12 +36,6 @@ public class InstructionPageUIHandler : MonoBehaviour
         UpdatePage();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void NavMainMenuPage()
     {
         SceneManager.LoadScene(0);

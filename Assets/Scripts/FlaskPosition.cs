@@ -14,12 +14,6 @@ public class FlaskPosition : MonoBehaviour
         gameManager.SetOnHotplate(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.transform.name == "OnHotplateTrigger")

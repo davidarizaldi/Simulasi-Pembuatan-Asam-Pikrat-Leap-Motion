@@ -10,21 +10,15 @@ public class SmokeBehaviour : MonoBehaviour
     private GameManager gameManager;
 
     private static float reactionVolume = 0.0f;
-    private readonly float maxReactionVolume = 20.0f;
+    private const float maxReactionVolume = 20.0f;
     private float reactionPercent = 0.0f;
-    private readonly float reactionSmokeDuration = 10.0f;
+    private const float reactionSmokeDuration = 10.0f;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameManager.Instance;
         lv = transform.GetComponent<LiquidVolume>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void NitricAcidAdded()

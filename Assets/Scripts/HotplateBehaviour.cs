@@ -18,12 +18,6 @@ public class HotplateBehaviour : MonoBehaviour
         gameManager = GameManager.Instance;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void UpdateSpin(float eulerAngle)
     {
         rpm = eulerAngle * 8;

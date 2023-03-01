@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public static bool practicumRunning = true;
     public static bool popupIsActive;
 
-    private static readonly float targetTemp = 75.0f;
+    private const float targetTemp = 75.0f;
 
     void Awake()
     {

@@ -12,8 +12,8 @@ public class SaringBehaviour : MonoBehaviour
 
     [HideInInspector] public float[] mLAmounts;
     private float mLSum;
-    private readonly float maxML = 50;
-    private readonly float maxVolume = 0.261799387799f;
+    private const float maxML = 50;
+    private const float maxVolume = 0.261799387799f;
     private float multiplier;
     private float waterCounter;
 
@@ -36,12 +36,6 @@ public class SaringBehaviour : MonoBehaviour
         mLAmounts = new float[2];
 
         InvokeRepeating(nameof(FilterOut), 0.15f, 0.15f);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void OnParticleCollision(GameObject other)

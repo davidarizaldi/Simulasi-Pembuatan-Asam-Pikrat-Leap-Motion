@@ -5,18 +5,11 @@ using UnityEngine;
 public class ParticleDetection : MonoBehaviour
 {
     private GameManager gameManager;
-    [SerializeField] private int counter = 0;
     
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameManager.Instance;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void OnParticleCollision(GameObject other)

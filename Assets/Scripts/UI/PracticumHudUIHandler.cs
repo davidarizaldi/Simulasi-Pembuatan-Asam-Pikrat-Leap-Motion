@@ -14,12 +14,6 @@ public class PracticumHudUIHandler : MonoBehaviour
         guideHud = GameObject.Find("Guide HUD").GetComponent<GuideHudUIHandler>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void UpdateObjectiveHud()
     {
         if (GameManager.popupIsActive)

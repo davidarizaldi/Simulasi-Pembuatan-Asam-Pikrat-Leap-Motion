@@ -19,18 +19,6 @@ public class GuideHudUIHandler : MonoBehaviour
         "Filter with a suction funnel."
     };
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void UpdateGuideHud()
     {
         guideText.SetText(guides[GameManager.practicumStep]);

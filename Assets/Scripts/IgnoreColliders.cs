@@ -19,10 +19,4 @@ public class IgnoreColliders : MonoBehaviour
             }
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
