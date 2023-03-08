@@ -13,11 +13,11 @@ public class InstructionPageUIHandler : MonoBehaviour
     private int page = 0;
     private static readonly string[] instructions =
     {
-        "This simulation captures your hand gestures to interact with the objects in the practicum.\n\nRaise your hands up to be captured.",
+        "This simulation captures your hand gestures to interact with the objects in the practicum.\nRaise your hands up to be captured.",
         "You can lift objects with your hand by pinching the object.",
-        "You could also rotate the object around while the object is being carried.\n\nRotating the flask will make the substance in it spills.",
-        "Instructions are displayed in the top left corner of the screen to be followed.\n\nThe goals of each scene is displayed in the top right corner of the screen.",
-        "Do not spill any substance on the table!\n\nSpilling any of it counts as failing the practicum as the substances used in this practicum is dangerous.",
+        "You could also rotate the object around while the object is being carried.\nRotating the flask will make the substance in it spills.",
+        "Instructions are displayed in the top left corner of the screen to be followed.\nThe goals of each scene is displayed in the top right corner of the screen.",
+        "Do not spill any substance on the table!\nSpilling any of it counts as failing the practicum as the substances used in this practicum is dangerous.",
         "Good luck!"
     };
     private static readonly string[] videoSources =
