@@ -16,12 +16,6 @@ public class MoveCamera : MonoBehaviour
     private static readonly Vector3 posUp = new(0.0f, 1.4f, -0.3f);
     private static readonly Vector3 rotUp = new(40.0f, 0.0f, 0.0f);
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
