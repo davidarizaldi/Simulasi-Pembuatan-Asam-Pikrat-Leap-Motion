@@ -11,7 +11,6 @@ public class FlaskPosition : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
-        gameManager.SetOnHotplate(true);
     }
 
     void OnTriggerEnter(Collider other)

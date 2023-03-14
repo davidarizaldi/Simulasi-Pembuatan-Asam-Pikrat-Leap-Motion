@@ -211,7 +211,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 4373441724085727774}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.005
   m_Height: 0.08
   m_Direction: 1
@@ -225,7 +225,7 @@ MeshCollider:
   m_GameObject: {fileID: 4373441724085727774}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
