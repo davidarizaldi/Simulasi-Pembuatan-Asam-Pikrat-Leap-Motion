@@ -7,7 +7,7 @@ using UnityEngine.Windows.Speech;
 public class VoiceRecognition : MonoBehaviour
 {
     private KeywordRecognizer keywordRecognizer;
-    private static readonly Dictionary<string, System.Action> keywords = new();
+    private Dictionary<string, System.Action> keywords = new();
     
     // Start is called before the first frame update
     void Start()

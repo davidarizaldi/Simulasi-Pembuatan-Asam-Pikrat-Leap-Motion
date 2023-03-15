@@ -13,12 +13,12 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     private Objects ob;
 
-    public static float[] mainFlaskLevels = new float[4];
+    public static float[] mainFlaskLevels;
     public static float[] filterLevels;
     public static float temperature;
     public static bool isStirring;
     public static int practicumStep;
-    public static bool practicumRunning = true;
+    public static bool practicumRunning;
     public static bool popupIsActive;
 
     private const float targetTemp = 75.0f;
@@ -35,70 +35,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static Objective[,] objectives =
-    {
-        {
-            new Objective(0, "Phenol", 5, "g"),
-            new Objective(),
-            new Objective(),
-            new Objective()
-        },
-        {
-            new Objective(1, "Sulfuric Acid", 7, "mL"),
-            new Objective(),
-            new Objective(),
-            new Objective()
-        },
-        {
-            new Objective("Stirred"),
-            new Objective(7, "Heated", targetTemp, "°"),
-            new Objective(),
-            new Objective()
-        },
-        {
-            new Objective(7, "Heat Off", 25, "°"),
-            new Objective("On Ice Bath"),
-            new Objective("On Hotplate", true),
-            new Objective()
-        },
-        {
-            new Objective("Stirred", true),
-            new Objective(7, "Heat Off", 25, "°", true),
-            new Objective(2, "Nitric Acid", 20, "mL"),
-            new Objective("No Reaction Left", true)
-        },
-        {
-            new Objective("Off Ice Bath"),
-            new Objective("On Hotplate", true),
-            new Objective("Stirred", true),
-            new Objective(7, "Heated", targetTemp, "°")
-        },
-        {
-            new Objective("Stir Off"),
-            new Objective(7, "Heat Off", 25, "°"),
-            new Objective(3, "Water", 200, "mL"),
-            new Objective()
-        },
-        {
-            new Objective(4, "Picric Acid", 5, "g"),
-            new Objective(),
-            new Objective(),
-            new Objective()
-        },
-        {
-            new Objective(" "),
-            new Objective(),
-            new Objective(),
-            new Objective()
-        }
-    };
+    public static Objective[,] objectives;
 
     // Start is called before the first frame update
     void Start()
     {
-        ob = GameObject.Find("Objects").GetComponent<Objects>();
-        mainFlaskLV = mainFlask.GetComponentInChildren<LiquidVolume>();
-        filterLevels = filter.GetComponentInChildren<SaringBehaviour>().mLAmounts;
+        Initialize();
         UpdateLevels();
     }
 
@@ -110,6 +52,78 @@ public class GameManager : MonoBehaviour
             practicumStep += 1;
             StartCoroutine(TransitionState(practicumStep));
         }
+    }
+
+    void Initialize()
+    {
+        mainFlaskLevels = new float[4];
+        filterLevels = filter.GetComponentInChildren<SaringBehaviour>().mLAmounts;
+        temperature = 25.0f;
+        isStirring = false;
+        practicumStep = 0;
+        practicumRunning = true;
+        popupIsActive = false;
+
+        ob = GameObject.Find("Objects").GetComponent<Objects>();
+        mainFlaskLV = mainFlask.GetComponentInChildren<LiquidVolume>();
+
+        objectives = new Objective[,]
+        {
+            {
+                new Objective(0, "Phenol", 5, "g"),
+                new Objective(),
+                new Objective(),
+                new Objective()
+            },
+            {
+                new Objective(1, "Sulfuric Acid", 7, "mL"),
+                new Objective(),
+                new Objective(),
+                new Objective()
+            },
+            {
+                new Objective("Stirred"),
+                new Objective(7, "Heated", targetTemp, "°"),
+                new Objective(),
+                new Objective()
+            },
+            {
+                new Objective(7, "Heat Off", 25, "°"),
+                new Objective("On Ice Bath"),
+                new Objective("On Hotplate", true),
+                new Objective()
+            },
+            {
+                new Objective("Stirred", true),
+                new Objective(7, "Heat Off", 25, "°", true),
+                new Objective(2, "Nitric Acid", 20, "mL"),
+                new Objective("No Reaction Left", true)
+            },
+            {
+                new Objective("Off Ice Bath"),
+                new Objective("On Hotplate", true),
+                new Objective("Stirred", true),
+                new Objective(7, "Heated", targetTemp, "°")
+            },
+            {
+                new Objective("Stir Off"),
+                new Objective(7, "Heat Off", 25, "°"),
+                new Objective(3, "Water", 200, "mL"),
+                new Objective()
+            },
+            {
+                new Objective(4, "Picric Acid", 5, "g"),
+                new Objective(),
+                new Objective(),
+                new Objective()
+            },
+            {
+                new Objective(" "),
+                new Objective(),
+                new Objective(),
+                new Objective()
+            }
+        };
     }
 
     public void UpdateLevels()
