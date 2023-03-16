@@ -8,9 +8,27 @@ using UnityEditor;
 
 public class MainMenuUIHandler : MonoBehaviour
 {
-    public void StartSimulation()
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private GameObject levelSelect;
+
+    public static int selectedLevel = 0;
+
+    public void StartSimulation(int level)
     {
         SceneManager.LoadScene(2);
+        selectedLevel = level;
+    }
+
+    public void NavLevelSelect()
+    {
+        mainMenu.SetActive(false);
+        levelSelect.SetActive(true);
+    }
+
+    public void ReturnToMenu()
+    {
+        levelSelect.SetActive(false);
+        mainMenu.SetActive(true);
     }
 
     public void NavInstructionPage()

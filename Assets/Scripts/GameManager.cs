@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     {
         Initialize();
         UpdateLevels();
+        LevelSelect(MainMenuUIHandler.selectedLevel);
     }
 
     // Update is called once per frame
@@ -124,6 +125,87 @@ public class GameManager : MonoBehaviour
                 new Objective()
             }
         };
+    }
+
+    void LevelSelect(int selectedLevel)
+    {
+        switch(selectedLevel)
+        {
+            case 7:
+                mainFlaskLV.alpha = 0.15f;
+                mainFlaskLV.liquidLayers[3].miscible = true;
+                goto case 6;
+            case 6:
+                if (selectedLevel == 6)
+                {
+                    ob.objects[9].transform.localEulerAngles = new Vector3(ob.objects[9].transform.localEulerAngles.x, ob.objects[9].transform.localEulerAngles.y, 30);
+                    ob.objects[10].transform.localEulerAngles = new Vector3(ob.objects[10].transform.localEulerAngles.x, ob.objects[10].transform.localEulerAngles.y, 30);
+                }
+                mainFlaskLV.liquidLayers[0].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.liquidLayers[1].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.liquidLayers[2].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                mainFlaskLV.liquidLayers[3].color = new Color(1.0f, 0.862f, 0.0f, 1.0f);
+                ob.objects[4].SetActive(false);
+                goto case 5;
+            case 5:
+                mainFlaskLV.liquidLayers[2].amount = 0.04f;
+                if (selectedLevel == 5)
+                {
+                    mainFlaskLV.liquidLayers[0].color = new Color(0.47f, 0.235f, 0.078f, 0.5f);
+                    mainFlaskLV.liquidLayers[1].color = new Color(0.47f, 0.235f, 0.078f, 0.5f);
+                    mainFlaskLV.liquidLayers[2].color = new Color(0.47f, 0.235f, 0.078f, 0.5f);
+                    ob.objects[9].transform.localEulerAngles = new Vector3(ob.objects[9].transform.localEulerAngles.x, ob.objects[9].transform.localEulerAngles.y, 30);
+                }
+                
+                ob.objects[5].SetActive(false);
+                ob.objects[6].SetActive(false);
+                ob.objects[14].SetActive(false);
+                goto case 4;
+            case 4:
+                ob.objects[0].transform.position = new(0.0f, 1.07f, 0.05f);
+                ob.objects[4].transform.position = new(0.0f, 1.07f, 0.05f);
+                if (selectedLevel == 4)
+                {
+                    ob.objects[9].transform.localEulerAngles = new Vector3(ob.objects[9].transform.localEulerAngles.x, ob.objects[9].transform.localEulerAngles.y, 30);
+                }
+
+                mainFlaskLV.liquidLayers[2].miscible = true;
+                ob.objects[13].SetActive(false);
+                goto case 3;
+            case 3:
+                if (selectedLevel == 3)
+                {
+                    ob.objects[9].transform.localEulerAngles = new Vector3(ob.objects[9].transform.localEulerAngles.x, ob.objects[9].transform.localEulerAngles.y, 30);
+                    ob.objects[10].transform.localEulerAngles = new Vector3(ob.objects[10].transform.localEulerAngles.x, ob.objects[10].transform.localEulerAngles.y, 30);
+                }
+                else
+                {
+                    mainFlaskLV.liquidLayers[0].murkiness = 0.0f;
+                    mainFlaskLV.liquidLayers[0].color.a = 0.039f;
+                    mainFlaskLV.liquidLayers[0].miscible = true;
+                    mainFlaskLV.liquidLayers[1].miscible = true;
+                }
+                goto case 2;
+            case 2:
+                mainFlaskLV.liquidLayers[1].amount = 0.014f;
+
+                ob.objects[2].SetActive(false);
+                ob.objects[3].SetActive(false);
+                ob.objects[12].SetActive(false);
+                goto case 1;
+            case 1:
+                mainFlaskLV.liquidLayers[0].amount = 0.01f;
+
+                ob.objects[1].SetActive(false);
+                ob.objects[11].SetActive(false);
+                goto case 0;
+            case 0:
+                UpdateLevels();
+                practicumStep = selectedLevel;
+                mainFlaskLV.UpdateLayers();
+                StartCoroutine(TransitionState(practicumStep));
+                break;
+        }
     }
 
     public void UpdateLevels()
