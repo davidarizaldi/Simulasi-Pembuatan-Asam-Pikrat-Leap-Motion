@@ -14,6 +14,7 @@ public class VoiceRecognition : MonoBehaviour
     {
         keywords.Add("up", Camera.main.GetComponent<MoveCamera>().MoveUp);
         keywords.Add("down", Camera.main.GetComponent<MoveCamera>().MoveDown);
+        keywords.Add("left", Camera.main.GetComponent<MoveCamera>().MoveLeft);
 
         keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
         keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;

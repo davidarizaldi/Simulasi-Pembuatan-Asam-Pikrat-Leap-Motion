@@ -16,6 +16,9 @@ public class MoveCamera : MonoBehaviour
     private static readonly Vector3 posUp = new(0.0f, 1.4f, -0.3f);
     private static readonly Vector3 rotUp = new(40.0f, 0.0f, 0.0f);
 
+    private static readonly Vector3 posLeft = new(-0.2f, 1.3f, -0.4f);
+    private static readonly Vector3 rotLeft = new(25.0f, 25.0f, 0.0f);
+
     // Update is called once per frame
     void Update()
     {
@@ -51,6 +54,13 @@ public class MoveCamera : MonoBehaviour
         isMoving = true;
     }
 
+    public void MoveLeft()
+    {
+        targetPos = posLeft;
+        targetRot = rotLeft;
+        isMoving = true;
+    }
+
     void KeyboardInput()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -60,6 +70,10 @@ public class MoveCamera : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             MoveDown();
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            MoveLeft();
         }
     }
 }
