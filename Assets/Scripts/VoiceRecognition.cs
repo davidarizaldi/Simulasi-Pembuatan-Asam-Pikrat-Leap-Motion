@@ -12,7 +12,7 @@ public class VoiceRecognition : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        keywords.Add("up", Camera.main.GetComponent<MoveCamera>().MoveUp);
+        keywords.Add("close", Camera.main.GetComponent<MoveCamera>().MoveUp);
         keywords.Add("down", Camera.main.GetComponent<MoveCamera>().MoveDown);
         keywords.Add("left", Camera.main.GetComponent<MoveCamera>().MoveLeft);
 

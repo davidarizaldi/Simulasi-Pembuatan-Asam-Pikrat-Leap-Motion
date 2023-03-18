@@ -295,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterParticle: {fileID: 2580711262869384732, guid: c7e1ea5f0d6d52947a5c5f469311ebf6, type: 3}
-  levelPerML: 0.05
+  levelPerML: 0.25
   underSomeLevel: 0
   levelPerML2: 0
   isPrimaryFlask: 0
