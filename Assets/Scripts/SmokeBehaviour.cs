@@ -9,7 +9,7 @@ public class SmokeBehaviour : MonoBehaviour
     [SerializeField] private ParticleSystem externalSmoke;
     private GameManager gameManager;
 
-    private static float reactionVolume = 0.0f;
+    private static float reactionVolume;
     private const float maxReactionVolume = 20.0f;
     private float reactionPercent = 0.0f;
     private const float reactionSmokeDuration = 10.0f;
@@ -19,6 +19,8 @@ public class SmokeBehaviour : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         lv = transform.GetComponent<LiquidVolume>();
+
+        reactionVolume = 0.0f;
     }
 
     public void NitricAcidAdded()

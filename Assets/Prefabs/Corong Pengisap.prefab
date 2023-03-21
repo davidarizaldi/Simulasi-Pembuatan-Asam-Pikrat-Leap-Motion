@@ -128,8 +128,6 @@ GameObject:
   - component: {fileID: 1861845689797064142}
   - component: {fileID: 4212118621327468984}
   - component: {fileID: 5621790908844719999}
-  - component: {fileID: 1044739698}
-  - component: {fileID: 1044739699}
   m_Layer: 0
   m_Name: Corong
   m_TagString: Untagged
@@ -202,34 +200,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &1044739698
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4373441724085727774}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.005
-  m_Height: 0.08
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.04, z: 0}
---- !u!64 &1044739699
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4373441724085727774}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3272232238946641653, guid: f468bef26a82b9e4b9641dcfc2ea890c, type: 3}
 --- !u!1 &8253332528546922851
 GameObject:
   m_ObjectHideFlags: 0
