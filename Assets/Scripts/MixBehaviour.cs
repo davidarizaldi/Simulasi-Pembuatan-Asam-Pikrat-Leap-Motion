@@ -60,7 +60,7 @@ public class MixBehaviour : MonoBehaviour
             switch (other.name)
             {
                 case "Phenol Particle Variant(Clone)":
-                    lv.liquidLayers[0].amount += levelPerML * 5;
+                    lv.liquidLayers[0].amount += levelPerML;
                     break;
                 case "Sulfuric Acid Particle Variant(Clone)":
                     lv.liquidLayers[1].amount += levelPerML;

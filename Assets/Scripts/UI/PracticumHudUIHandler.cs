@@ -16,7 +16,7 @@ public class PracticumHudUIHandler : MonoBehaviour
 
     public void UpdateObjectiveHud()
     {
-        if (GameManager.popupIsActive)
+        if (GameManager.popupIsActive || !GameManager.practicumRunning)
         {
             return;
         }

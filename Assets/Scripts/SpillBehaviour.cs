@@ -15,6 +15,7 @@ public class SpillBehaviour : MonoBehaviour
 
     private bool isSpilling = false;
     private Vector3 spillPosition;
+    private Vector3 lastSpillPos;
     
     // Start is called before the first frame update
     void Start()
@@ -29,11 +30,19 @@ public class SpillBehaviour : MonoBehaviour
 
         if (isSpilling)
         {
-            SpawnWater();
+            SpawnWater(spillPosition);
+            lastSpillPos = spillPosition;
+        }
+        else if (Vector3.Dot(transform.up, Vector3.down) > 0.4f)
+        {
+            if (liquidVolume.level > 0)
+            {
+                SpawnWater(lastSpillPos);
+            }
         }
     }
 
-    void SpawnWater()
+    void SpawnWater(Vector3 spillPosition)
     {
         if (isPrimaryFlask)
         {

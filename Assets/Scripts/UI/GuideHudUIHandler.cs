@@ -10,7 +10,7 @@ public class GuideHudUIHandler : MonoBehaviour
     private static readonly string[] guides =
     {
         "Add 5 grams of phenol into the 250 ml round bottom flask.",
-        "Add 7 ml of concentrated sulfuric acid.",
+        "Add 7 ml of concentrated sulfuric acid.\n\n(Sulfuric acid in the graduated cylinder is pre-measured)",
         "Heat it with a water heater for 30 minutes while shaking it.",
         "Cool the flask in a mixture of water and ice then place them on the hotplate.",
         "While the liquid is stirred, add 20 ml of concentrated nitric acid.\n\nLet stand for a few moments until a reaction occurs and a red smoke formed.",

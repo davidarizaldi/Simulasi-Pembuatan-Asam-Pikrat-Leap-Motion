@@ -280,7 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _topology: 1
   _detail: 11
-  _level: 0.72
+  _level: 0.77
   _levelMultiplier: 1
   _liquidLayers: []
   _smoothContactSurface: 3

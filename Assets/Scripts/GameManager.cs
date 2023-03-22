@@ -334,11 +334,12 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(popUpHandler.popupDuration);
 
                 ob.objects[7].SetActive(false);
-                ob.objects[8].transform.position = new Vector3(0.0f, ob.objects[8].transform.position.y, -0.20f);
+                ob.objects[8].transform.position = new Vector3(0.0f, ob.objects[8].transform.position.y, -0.2f);
                 ob.objects[15].SetActive(false);
                 break;
             case 8:
                 StartCoroutine(popUpHandler.ShowSuccess());
+                practicumRunning = false;
                 break;
             default:
                 break;
