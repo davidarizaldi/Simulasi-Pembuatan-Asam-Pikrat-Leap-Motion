@@ -43,11 +43,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8023574450176
-    m_Localized: You failed the practicum!
-    m_Metadata:
-      m_Items: []
-  - m_Id: 8774933680128
-    m_Localized: ' is spilled.'
+    m_Localized: ' has spilled, you failed the practicum!
+
+      Press [Enter] to
+      retry. '
     m_Metadata:
       m_Items: []
   references:

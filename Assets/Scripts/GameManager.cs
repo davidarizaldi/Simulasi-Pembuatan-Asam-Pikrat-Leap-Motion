@@ -438,7 +438,6 @@ public class GameManager : MonoBehaviour
     public void DangerousLiquidDrop(string liquidName)
     {
         practicumRunning = false;
-        liquidName = liquidName.Remove(liquidName.Length - 24);
-        StartCoroutine(centerPopup.GetComponent<CenterPopupUIHandler>().ShowFailed(liquidName));
+        centerPopup.GetComponent<CenterPopupUIHandler>().ShowFailed(liquidName);
     }
 }

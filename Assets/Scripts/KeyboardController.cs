@@ -13,5 +13,14 @@ public class KeyboardController : MonoBehaviour
             Destroy(GameManager.Instance.gameObject);
             SceneManager.LoadScene(0);
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (!GameManager.practicumRunning)
+            {
+                Destroy(GameManager.Instance.gameObject);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        }
     }
 }

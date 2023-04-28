@@ -61,15 +61,23 @@ public class CenterPopupUIHandler : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public IEnumerator ShowFailed(string liquidName)
+    public void ShowFailed(string liquidName)
     {
-        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "PRACTICUM_FAILED") + "\n" + liquidName + LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "SPILLED"));
+        liquidName = liquidName.Remove(liquidName.Length - 24);
+        if (MainMenuUIHandler.localeID == 1)
+        {
+            switch (liquidName)
+            {
+                case "Phenol": liquidName = "Fenol"; break;
+                case "Sulfuric Acid": liquidName = "Asam Sulfat"; break;
+                case "Nitric Acid": liquidName = "Asam Nitrat"; break;
+                case "Picric Acid": liquidName = "Asam Pikrat"; break;
+                default: break;
+            }
+        }
+        popupText.SetText(liquidName + LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "PRACTICUM_FAILED"));
         popupText.rectTransform.sizeDelta = new Vector3(640.0f, 64.0f);
         gameObject.SetActive(true);
-        yield return new WaitForSeconds(popupDuration * 5);
-
-        popupText.rectTransform.sizeDelta = new Vector3(640.0f, 48.0f);
-        gameObject.SetActive(false);
     }
 
     void UpdateWaitingMinutes()

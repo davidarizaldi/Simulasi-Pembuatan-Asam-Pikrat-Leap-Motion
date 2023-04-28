@@ -43,10 +43,6 @@ MonoBehaviour:
     m_Key: PRACTICUM_FAILED
     m_Metadata:
       m_Items: []
-  - m_Id: 8774933680128
-    m_Key: SPILLED
-    m_Metadata:
-      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

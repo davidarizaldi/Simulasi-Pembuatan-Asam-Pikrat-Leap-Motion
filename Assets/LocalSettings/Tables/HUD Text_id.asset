@@ -43,11 +43,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8023574450176
-    m_Localized: Anda gagal dalam praktikum
-    m_Metadata:
-      m_Items: []
-  - m_Id: 8774933680128
-    m_Localized: ' tumpah.'
+    m_Localized: ' tumpah, praktikum gagal!
+
+      Tekan [Enter] untuk mencoba lagi.'
     m_Metadata:
       m_Items: []
   references:
