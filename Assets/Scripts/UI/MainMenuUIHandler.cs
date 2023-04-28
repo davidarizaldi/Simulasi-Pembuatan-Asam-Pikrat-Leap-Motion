@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Localization.Settings;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,6 +13,8 @@ public class MainMenuUIHandler : MonoBehaviour
     [SerializeField] private GameObject levelSelect;
 
     public static int selectedLevel = 0;
+    public static int localeID = 0;
+    private bool localeIsChanging;
 
     public void StartSimulation(int level)
     {
@@ -42,5 +45,27 @@ public class MainMenuUIHandler : MonoBehaviour
         EditorApplication.ExitPlaymode();
 #endif
         Application.Quit();
+    }
+
+    public void ChangeLocale()
+    {
+        if (localeIsChanging) return;
+        if (localeID == 0)
+        {
+            StartCoroutine(SetLocale(1));
+            localeID = 1;
+        } else
+        {
+            StartCoroutine(SetLocale(0));
+            localeID = 0;
+        }
+    }
+
+    IEnumerator SetLocale(int id)
+    {
+        localeIsChanging = true;
+        yield return LocalizationSettings.InitializationOperation;
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[id];
+        localeIsChanging = false;
     }
 }

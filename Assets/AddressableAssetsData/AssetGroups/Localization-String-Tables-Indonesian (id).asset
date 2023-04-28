@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Indonesian (id)
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-Indonesian (id)
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c4451fc9d23c70346a3d6480391c8391
+  m_SerializeEntries:
+  - m_GUID: d5fd985c59787ca4dbe9972fde868c04
+    m_Address: UI Text_id
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-id
+    - Preload
+  - m_GUID: b2095824fa98a824184caf6a69b38b1d
+    m_Address: Guides_id
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-id
+    - Preload
+  - m_GUID: 27a8e8939737bef4ba0628dca9e8d71b
+    m_Address: Instructions_id
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-id
+    - Preload
+  - m_GUID: 656500c6e65ede244bc6a226d3e36168
+    m_Address: HUD Text_id
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-id
+    - Preload
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 63b28995dd53a4940a8227642df6cfb7, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2f69a79eb2f617b4da8b3a8292e01f8d, type: 2}
+    - {fileID: 11400000, guid: 5233b15d2a0c8ac4bb6ebd74b9b2452a, type: 2}

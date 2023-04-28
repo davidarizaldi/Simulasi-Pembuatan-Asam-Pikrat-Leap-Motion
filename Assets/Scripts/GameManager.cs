@@ -71,55 +71,55 @@ public class GameManager : MonoBehaviour
         objectives = new Objective[,]
         {
             {
-                new Objective(0, "Phenol", 5, "g"),
+                new Objective(0, "Phenol", "Fenol", 5, "g"),
                 new Objective(),
                 new Objective(),
                 new Objective()
             },
             {
-                new Objective(1, "Sulfuric Acid", 7, "mL"),
+                new Objective(1, "Sulfuric Acid", "Asam Sulfat", 7, "mL"),
                 new Objective(),
                 new Objective(),
                 new Objective()
             },
             {
-                new Objective("Stirred"),
-                new Objective(7, "Heated", targetTemp, "°"),
+                new Objective("Stirred", "Diaduk"),
+                new Objective(7, "Heated", "Dipanaskan", targetTemp, "°"),
                 new Objective(),
                 new Objective()
             },
             {
-                new Objective(7, "Heat Off", 25, "°"),
-                new Objective("On Ice Bath"),
-                new Objective("On Hotplate", true),
+                new Objective(7, "Heat Off", "Didinginkan", 25, "°"),
+                new Objective("On Ice Bath", "Di Atas Ice Bath"),
+                new Objective("On Hotplate", "Di Atas Hotplate", true),
                 new Objective()
             },
             {
-                new Objective("Stirred", true),
-                new Objective(7, "Heat Off", 25, "°", true),
-                new Objective(2, "Nitric Acid", 20, "mL"),
-                new Objective("No Reaction Left", true)
+                new Objective("Stirred", "Diaduk", true),
+                new Objective(7, "Heat Off", "Didinginkan", 25, "°", true),
+                new Objective(2, "Nitric Acid", "Asam Nitrat", 20, "mL"),
+                new Objective("No Reaction Left", "Tidak Ada Asap Reaksi", true)
             },
             {
-                new Objective("Off Ice Bath"),
-                new Objective("On Hotplate", true),
-                new Objective("Stirred", true),
-                new Objective(7, "Heated", targetTemp, "°")
+                new Objective("Off Ice Bath", "Di Luar Ice Bath"),
+                new Objective("On Hotplate", "Di Atas Hotplate", true),
+                new Objective("Stirred", "Diaduk", true),
+                new Objective(7, "Heated", "Dipanaskan", targetTemp, "°")
             },
             {
-                new Objective("Stir Off"),
-                new Objective(7, "Heat Off", 25, "°"),
-                new Objective(3, "Water", 200, "mL"),
+                new Objective("Stir Off", "Pengaduk Off"),
+                new Objective(7, "Heat Off", "Didinginkan", 25, "°"),
+                new Objective(3, "Water", "Air", 200, "mL"),
                 new Objective()
             },
             {
-                new Objective(4, "Picric Acid", 5, "g"),
+                new Objective(4, "Picric Acid", "Asam Pikrat", 5, "g"),
                 new Objective(),
                 new Objective(),
                 new Objective()
             },
             {
-                new Objective(" "),
+                new Objective(" ", " "),
                 new Objective(),
                 new Objective(),
                 new Objective()

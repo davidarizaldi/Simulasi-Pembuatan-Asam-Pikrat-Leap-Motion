@@ -232,6 +232,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1103552027}
     m_Modifications:
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_UpdateString.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_UpdateString.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2838549864504822906, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -647,6 +667,7 @@ GameObject:
   - component: {fileID: 572259630}
   - component: {fileID: 572259632}
   - component: {fileID: 572259631}
+  - component: {fileID: 572259633}
   m_Layer: 5
   m_Name: Instructions Page Title Text
   m_TagString: Untagged
@@ -771,6 +792,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 572259629}
   m_CullTransparentMesh: 1
+--- !u!114 &572259633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572259629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:79284dceb18cf804b804d26da267629a
+    m_TableEntryReference:
+      m_KeyId: 35693662179328
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 572259631}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &689757219
 GameObject:
   m_ObjectHideFlags: 0
@@ -1649,6 +1710,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 559512072}
     m_Modifications:
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 29887313207296
+      objectReference: {fileID: 0}
     - target: {fileID: 2838549864504822906, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1983,6 +2048,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1103552027}
     m_Modifications:
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_UpdateString.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554938142, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
+      propertyPath: m_UpdateString.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2838549864504822906, guid: dbadab39363fa1441bd31b2080e91e26, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1

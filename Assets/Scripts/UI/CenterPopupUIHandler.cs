@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 public class CenterPopupUIHandler : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class CenterPopupUIHandler : MonoBehaviour
     public IEnumerator ShowObjectivesCompleted()
     {
         GameManager.popupIsActive = true;
-        popupText.SetText("Objectives completed!");
+        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "OBJECTIVES_COMPLETED"));
         gameObject.SetActive(true);
         yield return new WaitForSeconds(popupDuration);
 
@@ -37,13 +38,13 @@ public class CenterPopupUIHandler : MonoBehaviour
     public IEnumerator ShowWaitFor(int minutes)
     {
         GameManager.popupIsActive = true;
-        popupText.SetText("Objectives completed!");
+        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "OBJECTIVES_COMPLETED"));
         gameObject.SetActive(true);
         yield return new WaitForSeconds(popupDuration);
 
         TintedBackground.SetActive(true);
         StartCountTo(minutes / minPerSec);
-        popupText.SetText("Waiting time " + $"{(int)(timer * minPerSec),2}" + "/" + (targetTime * minPerSec) + " minutes.");
+        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "WAITING_TIME") + $"{(int)(timer * minPerSec),2}" + "/" + (targetTime * minPerSec) + LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "MINUTES"));
         yield return new WaitForSeconds(minutes / minPerSec);
 
         GameManager.popupIsActive = false;
@@ -53,7 +54,7 @@ public class CenterPopupUIHandler : MonoBehaviour
 
     public IEnumerator ShowSuccess()
     {
-        popupText.SetText("You completed the practicum!");
+        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "PRACTICUM_COMPLETED"));
         gameObject.SetActive(true);
         yield return new WaitForSeconds(popupDuration * 2);
 
@@ -62,7 +63,7 @@ public class CenterPopupUIHandler : MonoBehaviour
 
     public IEnumerator ShowFailed(string liquidName)
     {
-        popupText.SetText("You failed the practicum!\n " + liquidName + " is spilled.");
+        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "PRACTICUM_FAILED") + "\n" + liquidName + LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "SPILLED"));
         popupText.rectTransform.sizeDelta = new Vector3(640.0f, 64.0f);
         gameObject.SetActive(true);
         yield return new WaitForSeconds(popupDuration * 5);
@@ -73,7 +74,7 @@ public class CenterPopupUIHandler : MonoBehaviour
 
     void UpdateWaitingMinutes()
     {
-        popupText.SetText("Waiting time: " + $"{(int)(timer * minPerSec), 2}" + "/" + (targetTime * minPerSec) + " minutes.");
+        popupText.SetText(LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "WAITING_TIME") + $"{(int)(timer * minPerSec), 2}" + "/" + (targetTime * minPerSec) + LocalizationSettings.StringDatabase.GetLocalizedString("HUD Text", "MINUTES"));
     }
 
     void StartCountTo(float targetTime)

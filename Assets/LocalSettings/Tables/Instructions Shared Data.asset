@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Instructions Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Instructions
+  m_TableCollectionNameGuidString: 6fe81788dd45aa64a8968e0cd14a8e6e
+  m_Entries:
+  - m_Id: 21838684160
+    m_Key: INSTRUCTION_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 79187402752
+    m_Key: INSTRUCTION_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 82849030144
+    m_Key: INSTRUCTION_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 85625659392
+    m_Key: INSTRUCTION_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88179990528
+    m_Key: INSTRUCTION_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91359272960
+    m_Key: INSTRUCTION_5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 147948822528
+    m_Key: INSTRUCTION_6
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5758680695780147269
+  references:
+    version: 2
+    RefIds:
+    - rid: 5758680695780147269
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1682670159003

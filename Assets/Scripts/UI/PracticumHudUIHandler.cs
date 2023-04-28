@@ -30,15 +30,15 @@ public class PracticumHudUIHandler : MonoBehaviour
             }
             else if (objective.id == 4)
             {
-                objectiveText[i].SetText(objective.nama + " " + GameManager.filterLevels[0] + objective.akhiran + "/" + objective.target + objective.akhiran);
+                objectiveText[i].SetText((MainMenuUIHandler.localeID == 0 ? objective.nama : objective.namaID) + " " + GameManager.filterLevels[0] + objective.akhiran + "/" + objective.target + objective.akhiran);
             }
             else if (objective.target != 0.0f)
             {
-                objectiveText[i].SetText(objective.nama + " " + (int)(objective.id == 7 ? GameManager.temperature : GameManager.mainFlaskLevels[objective.id]) + objective.akhiran + "/" + objective.target + objective.akhiran);
+                objectiveText[i].SetText((MainMenuUIHandler.localeID == 0 ? objective.nama : objective.namaID) + " " + (int)(objective.id == 7 ? GameManager.temperature : GameManager.mainFlaskLevels[objective.id]) + objective.akhiran + "/" + objective.target + objective.akhiran);
             }
             else
             {
-                objectiveText[i].SetText(objective.nama + " (" + (objective.isDone ? "OK" : "X") + ")");
+                objectiveText[i].SetText((MainMenuUIHandler.localeID == 0 ? objective.nama : objective.namaID) + " (" + (objective.isDone ? "OK" : "X") + ")");
             }
 
             objectiveText[i].color = (objective.isDone ? Color.green : Color.white);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
@@ -74,7 +75,8 @@ public class InstructionPageUIHandler : MonoBehaviour
 
     void UpdatePage()
     {
-        instructionText.SetText(instructions[page]);
+        string text = LocalizationSettings.StringDatabase.GetLocalizedString("Instructions", "INSTRUCTION_" + page);
+        instructionText.SetText(text);
         videoPlayer.clip = Resources.Load<VideoClip>(videoSources[page]);
         videoPlayerPov.clip = Resources.Load<VideoClip>(videoSourcesPov[page]);
     }

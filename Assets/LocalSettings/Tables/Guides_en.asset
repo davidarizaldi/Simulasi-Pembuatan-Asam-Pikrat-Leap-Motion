@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Guides_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: b57b99ab9590d2c4c8cdad3537c0f2c1, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 2644482449408
+    m_Localized: Add 5 grams of phenol into the 250 ml round bottom flask.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8940652847104
+    m_Localized: 'Add 7 ml of concentrated sulfuric acid.
+
+
+      (Sulfuric acid
+      in the graduated cylinder is pre-measured)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8966091300864
+    m_Localized: Heat it with a water heater for 30 minutes while shaking it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9046156369920
+    m_Localized: Cool the flask in a mixture of water and ice then place them on
+      the hotplate.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9056109453312
+    m_Localized: 'While the liquid is stirred, add 20 ml of concentrated nitric acid.
+
+
+      Let
+      stand for a few moments until a reaction occurs and a red smoke formed.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9067341799424
+    m_Localized: When the reaction stops, remove the ice bath, then heat it for 1.5
+      - 2 hours while shaking it on the water heater.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9092302102528
+    m_Localized: 'Turn off the hotplate.
+
+
+      Pour in 200 ml of cold water.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9438407680000
+    m_Localized: Filter with a suction funnel.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

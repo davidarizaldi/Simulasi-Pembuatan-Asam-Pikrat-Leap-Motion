@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Guides_id
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: id
+  m_SharedData: {fileID: 11400000, guid: b57b99ab9590d2c4c8cdad3537c0f2c1, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 2644482449408
+    m_Localized: Masukkan 5 gram fenol ke dalam labu alas bulat 250 ml.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8940652847104
+    m_Localized: 'Masukkan 7 ml asam sulfat pekat.
+
+
+      (Asam sulfat dalam gelas
+      ukur telah terukur)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8966091300864
+    m_Localized: Panaskan dengan water heater selama 30 menit sambil diaduk.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9046156369920
+    m_Localized: Dinginkan labu dalam ice bath, lalu letakkan di atas hotplate.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9056109453312
+    m_Localized: 'Sambil diaduk, masukkan 20 ml asam nitrat pekat.
+
+
+      Diamkan
+      beberapa saat hingga terjadi reaksi dan terbentuk asap merah.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9067341799424
+    m_Localized: Saat reaksi berhenti, keluarkan penangas es, lalu panaskan selama
+      1,5 - 2 jam sambil diaduk di atas hotplate.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9092302102528
+    m_Localized: 'Matikan hotplate.
+
+
+      Tuangkan 200 ml air dingin.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9438407680000
+    m_Localized: Saring dengan corong hisap.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
